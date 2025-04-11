@@ -1,5 +1,218 @@
 /* __________styles.css__________ */
 
+/*CSS Meyer Reset*/
+/* http://meyerweb.com/eric/tools/css/reset/ 
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed, 
+figure, figcaption, footer, header, hgroup, 
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, 
+footer, header, hgroup, menu, nav, section {
+	display: block;
+}
+
+body {
+	line-height: 1;
+}
+
+ol, ul {
+	list-style: none;
+}
+
+blockquote, q {
+	quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+	content: '';
+	content: none;
+}
+
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+}
+
+/*__________Colour Scheme__________*/
+
+
+:root {
+--softened-black: rgba(0, 0, 0, 0.898);
+--translucent-white: rgb(255, 255, 255, 0.8);
+
+}
+
+
+/*__________Root Styles__________*/
+
+* {
+    margin: 0;
+    padding: 0;
+    /*remove default margin/padding */
+    box-sizing: border-box;
+    /*change box-size to include padding and border */
+}
+
+html {
+    font-size: 16px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 body {
     background-color: aquamarine;
+    display: grid;
+    grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 100px;
+    grid-template-columns: 150px 1fr 150px;
 }
+
+.header {
+    grid-area: 1 / 1 / 2 / 4;
+     /* row-start / column-start / row-end / column-end */
+     display: grid;
+     grid-template-columns: 150px 1fr 150px;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo img {
+    width: 30px;
+    height: 30px;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.date-div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.left-sidebar {
+    grid-area: 2 / 1 / 4 / 2;
+    display: grid;
+    grid-template-rows: 200px 1fr 200px;
+}
+
+.left-sidebar nav:first-child,
+.left-sidebar nav:nth-child(2) {
+    display: flex;
+    flex-direction: column;
+    margin: 20px 0px;
+}
+
+.left-sidebar nav:first-child {
+    justify-content: space-evenly;
+}
+
+.my-projects {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+}
+
+.user-created-projects div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+#content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 0px;
+}
+
+#content div {
+    width: 80%;
+    height: 200px;
+    display: grid;
+    grid-template-rows: 50px 30px 1fr 30px;
+    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 20px);
+    background-color:aliceblue;
+    margin-bottom: 20px;
+}
+
+#content div h3 {
+    grid-area: 1 / 2 / 2 / 7;
+    background-color:aqua
+}
+
+.right-sidebar {
+    grid-area: 2 / 3 / 3 / 4;
+    display: grid;
+    grid-template-rows: 140px 1fr;
+}
+
+.calendar-display {
+    display: flex;
+   
+    align-items: center;
+    text-align: center;
+    background-color: aqua;
+}
+
+.footer {
+    grid-area: 3 / 3 / 4 / 4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.footer-text {
+font-size: 0.8rem;
+}
+
+.footer-icon > a {
+    display: flex;
+}
+
+.footer-icon > a > .svg{
+    height: 35px;
+    margin-left: 8px;
+}
+
+.svg:hover {
+    -webkit-transform: scale(1.1);
+    -ms-transform: scale(1.1);
+    transform: scale(1.1);
+    transition: 0.3s ease;
+}
+
+
+
+
+
+
+
+
