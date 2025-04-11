@@ -71,3 +71,8 @@ Resources:
 When starting webpack always use the filename: webpack.config.js
 https://stackoverflow.com/questions/53039834/webpack-not-reading-webpack-config-js/53039960
 
+Add a checkbox to DOM with JS:
+https://www.w3schools.com/jsref/dom_obj_checkbox.asp
+
+Remove an item from an array by its value:
+https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value
