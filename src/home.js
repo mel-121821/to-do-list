@@ -17,6 +17,13 @@ const masterTaskList = [
         priority: "high",
         description: "Complete before 5pm"
     },
+    {
+        title: "Wash cat dishes",
+        projectType: "Pets",
+        dueDate: "08/04/2025",
+        priority: "normal",
+        description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro."
+    }
 ]
 
 export {masterTaskList};
