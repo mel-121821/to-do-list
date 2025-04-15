@@ -76,3 +76,12 @@ https://www.w3schools.com/jsref/dom_obj_checkbox.asp
 
 Remove an item from an array by its value:
 https://stackoverflow.com/questions/3954438/how-to-remove-item-from-array-by-value
+
+Setting div size to match its content (fit-content)
+https://stackoverflow.com/questions/450903/how-can-i-make-a-div-not-larger-than-its-contents
+
+fit-content
+https://developer.mozilla.org/en-US/docs/Web/CSS/fit-content
+
+https://www.yahubaba.com/css/css-grid-fit-content
+
