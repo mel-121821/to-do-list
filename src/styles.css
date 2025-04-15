@@ -87,6 +87,9 @@ body {
     grid-template-columns: 150px 1fr 150px;
 }
 
+
+/*__________Header__________*/
+
 .header {
     grid-area: 1 / 1 / 2 / 4;
      /* row-start / column-start / row-end / column-end */
@@ -117,6 +120,9 @@ body {
     justify-content: center;
 }
 
+
+/*__________Left Sidebar__________*/
+
 .left-sidebar {
     grid-area: 2 / 1 / 4 / 2;
     display: grid;
@@ -146,6 +152,9 @@ body {
     margin-bottom: 10px;
 }
 
+
+/*__________Main Content__________*/
+
 #content {
     display: flex;
     flex-direction: column;
@@ -153,19 +162,109 @@ body {
     padding: 20px 0px;
 }
 
-#content div {
+#content > div {
     width: 80%;
-    height: 200px;
+    height: fit-content;
     display: grid;
-    grid-template-rows: 50px 30px 1fr 30px;
-    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 20px);
+    grid-template-rows: 50px 30px 10px 30px 10px;
+    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
     background-color:aliceblue;
     margin-bottom: 20px;
 }
 
+#content.expanded > div {
+    grid-template-rows: 50px 30px fit-content(200px) fit-content(200px) 30px 10px;
+    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
+}
+
 #content div h3 {
     grid-area: 1 / 2 / 2 / 7;
-    background-color:aqua
+    background-color:aqua;
+    display: flex;
+    align-items: center;
+    padding-left: 20px;
+}
+
+#content div:nth-child(5) {
+    /* project category div */
+    grid-area: 2 / 2 / 3 / 7;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+#content > div div:nth-child(1) {
+    /* project type */
+    background-color: greenyellow;  
+}
+
+#content > div div:nth-child(2) {
+    /* due date */
+    background-color: violet;
+}
+
+#content > div div:nth-child(3) {
+    /* priority */
+    background-color: greenyellow;
+}
+
+#content.expanded p:nth-child(6) {
+    /* description */
+    background-color: rgb(190, 183, 255);
+    grid-area: 3 / 2 / 4 / 7;
+    display: flex;
+    align-items: center;
+}
+
+#content.expanded div:nth-child(7) {
+    /* user-added checklist items div*/
+    grid-area: 4 / 2 / 5 / 7;
+    display: flex;
+    flex-direction: column;
+}
+
+#content ol {
+    display: flex;
+    margin: 10px 0px;
+}
+
+#content ol p {
+    margin-left: 10px;
+}
+
+#content ol input[type="checkbox"] {
+    width: 20px;
+    height: auto;
+}
+
+#content.expanded div:nth-child(7) button {
+    /* user added checklist button */
+    align-self: flex-start;
+}
+
+#content div:nth-child(6) {
+    /* save/cancel btn div */
+    grid-area: 4 / 5 / 5 / 8;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#content.expanded div:nth-child(8) {
+    grid-area: 5 / 5 / 6 / 8;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#content div:nth-child(6) button {
+    /* save & cancel btn */
+    padding: 3px 4px;
+    align-self: flex-end;
+}
+
+#content.expanded div:nth-child(8) button {
+    /* save & cancel btn */
+    padding: 3px 4px;
+    align-self: flex-end;
 }
 
 .right-sidebar {
