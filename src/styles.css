@@ -111,7 +111,7 @@ body {
 .title {
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around
 }
 
 .date-div {
@@ -153,7 +153,7 @@ body {
 }
 
 
-/*__________Main Content__________*/
+/*__________Main Content (Tasks Collapsed)__________*/
 
 #content {
     display: flex;
@@ -172,17 +172,20 @@ body {
     margin-bottom: 20px;
 }
 
-#content.expanded > div {
-    grid-template-rows: 50px 30px fit-content(200px) fit-content(200px) 30px 10px;
-    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
-}
-
 #content div h3 {
     grid-area: 1 / 2 / 2 / 7;
     background-color:aqua;
     display: flex;
     align-items: center;
     padding-left: 20px;
+}
+
+#content div button:nth-child(3),
+#content div button:nth-child(4) {
+    /* expand btn */
+    display: flex; 
+    align-self: center;
+    justify-content: center;
 }
 
 #content div:nth-child(5) {
@@ -208,7 +211,28 @@ body {
     background-color: greenyellow;
 }
 
-#content.expanded p:nth-child(6) {
+#content div:nth-child(6) {
+    /* save/cancel btn div */
+    grid-area: 4 / 5 / 5 / 8;
+    display: flex;
+    justify-content: space-evenly;
+}
+
+#content div:nth-child(6) button {
+    /* save & cancel btns */
+    padding: 3px 4px;
+    align-self: flex-end;
+}
+
+
+/*__________Main Content (Tasks Expanded)__________*/
+
+#content > div.expanded {
+    grid-template-rows: 50px 30px fit-content(200px) fit-content(200px) 30px 10px;
+    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
+}
+
+#content > div.expanded p:nth-child(6) {
     /* description */
     background-color: rgb(190, 183, 255);
     grid-area: 3 / 2 / 4 / 7;
@@ -216,7 +240,7 @@ body {
     align-items: center;
 }
 
-#content.expanded div:nth-child(7) {
+#content > div.expanded div:nth-child(7) {
     /* user-added checklist items div*/
     grid-area: 4 / 2 / 5 / 7;
     display: flex;
@@ -237,35 +261,25 @@ body {
     height: auto;
 }
 
-#content.expanded div:nth-child(7) button {
+#content > div.expanded div:nth-child(7) button {
     /* user added checklist button */
     align-self: flex-start;
 }
 
-#content div:nth-child(6) {
-    /* save/cancel btn div */
-    grid-area: 4 / 5 / 5 / 8;
-    display: flex;
-    justify-content: space-evenly;
-}
-
-#content.expanded div:nth-child(8) {
+#content > div.expanded div:nth-child(8) {
+    /* save & cancel div */
     grid-area: 5 / 5 / 6 / 8;
     display: flex;
     justify-content: space-evenly;
 }
 
-#content div:nth-child(6) button {
-    /* save & cancel btn */
+#content > div.expanded div:nth-child(8) button {
+    /* save & cancel btns */
     padding: 3px 4px;
     align-self: flex-end;
 }
 
-#content.expanded div:nth-child(8) button {
-    /* save & cancel btn */
-    padding: 3px 4px;
-    align-self: flex-end;
-}
+/*__________Right Sidebar__________*/
 
 .right-sidebar {
     grid-area: 2 / 3 / 3 / 4;
@@ -275,11 +289,13 @@ body {
 
 .calendar-display {
     display: flex;
-   
     align-items: center;
     text-align: center;
     background-color: aqua;
 }
+
+
+/*__________Footer__________*/
 
 .footer {
     grid-area: 3 / 3 / 4 / 4;
