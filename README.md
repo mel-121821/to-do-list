@@ -87,3 +87,5 @@ https://www.yahubaba.com/css/css-grid-fit-content
 
 Selecting read-only elements on the Dom (used to expand/collapse tasks)
 https://developer.mozilla.org/en-US/docs/Web/API/Element/children
+
+https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection/item
