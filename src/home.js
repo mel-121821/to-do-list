@@ -6,28 +6,28 @@ const masterTaskList = [
     {
         title: "Make grocery list",
         category: "Food",
-        dueDate: "08/04/2025",
+        dueDate: "2025-04-09",
         priority: "low",
         description: "Need eggs, black forest ham, sliced cheese and english muffins"
     },
     {
         title: "Collect sheets",
         category: "Laundry",
-        dueDate: "08/04/2025",
+        dueDate: "2025-04-18",
         priority: "high",
         description: "Complete before 5pm"
     },
     {
         title: "Wash cat dishes",
         category: "Pets",
-        dueDate: "08/04/2025",
+        dueDate: "2025-04-16",
         priority: "normal",
         description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro."
     },
     {
         title: "Make dinner",
         category: "Food",
-        dueDate: "08/04/2025",
+        dueDate: "2025-04-09",
         priority: "low",
         description: "Take meat out of the freezer by noon"
     },
