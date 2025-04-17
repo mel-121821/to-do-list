@@ -3,6 +3,9 @@
 import "./styles.css";
 import { test } from "./home.js"
 
+// packages
+import { format } from "date-fns"
+
 // data
 import { masterTaskList } from "./home.js";
 import { categories } from "./home.js"
@@ -14,15 +17,15 @@ import { getCategories } from "./home.js";
 
 console.log(test);
 console.log(masterTaskList);
-console.log(typeof((getCategories(categories))))
 console.log(categories)
+const date = format(new Date(2014, 4, 4), "MM/dd/yyyy");
+console.log(date)
 
 
 
 // for rendering
 
 function renderTaskList (obj, categories) {
-    // create elements
     const content = document.querySelector("#content");
     obj.forEach((task, index) => {
         const taskDiv = document.createElement("div");
@@ -35,7 +38,8 @@ function renderTaskList (obj, categories) {
         // second row
         const taskCategoriesDiv = document.createElement("div")
         createCategoryDropdown(task, categories, taskCategoriesDiv)
-        const dueDate = document.createElement("div");
+        createDatePicker(taskCategoriesDiv, task);
+        // const dueDate = document.createElement("div");
         const priority = document.createElement("div");
 
         // third row
@@ -51,7 +55,7 @@ function renderTaskList (obj, categories) {
         const cancelBtn = document.createElement("button");
 
         // populate info
-        dueDate.textContent = `${task.dueDate}`;
+        // dueDate.textContent = `${task.dueDate}`;
         priority.textContent = `${task.priority}`;
         description.textContent = `${task.description}`;
         userAddedChecklistItem.textContent = "User's input goes here";
@@ -60,7 +64,7 @@ function renderTaskList (obj, categories) {
         cancelBtn.textContent = "Cancel"
 
         // append
-        taskCategoriesDiv.append(dueDate, priority);
+        taskCategoriesDiv.append(priority);
         userChecklist.append(userAddedCheckbox, userAddedChecklistItem)
         userChecklistDiv.append(userChecklist, btnAddChecklistItem);
         btnDiv.append(saveBtn, cancelBtn)
@@ -157,7 +161,16 @@ function createCategoryDropdown(task, categories, taskCategoriesDiv) {
     taskCategoriesDiv.appendChild(categoryDropdown);
 }
 
-
+function createDatePicker(taskCategoriesDiv, task) {
+    const datePicker = document.createElement("input")
+    datePicker.setAttribute("type", "date");
+    datePicker.defaultValue = task.dueDate;
+    datePicker.addEventListener("change", function(e) {
+        task.dueDate = e.target.value
+        console.log(task.dueDate)
+    })
+    taskCategoriesDiv.appendChild(datePicker)
+}
 
 
 
