@@ -96,5 +96,11 @@ https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection/item
 Add a dropdown list with JS:
 https://stackoverflow.com/questions/17001961/how-to-add-drop-down-list-select-programmatically
 
+Event listener not working with select element:
+https://www.tutorialspoint.com/why-addeventlistener-to-select-element-does-not-work-in-javascript
+
 Filtering duplicates from an array:
 https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
+
+Add a default value to a date picker:
+https://www.w3schools.com/jsref/prop_date_defaultvalue.asp
