@@ -3,22 +3,25 @@
 import "./styles.css";
 import { test } from "./home.js"
 
+// data
 import { masterTaskList } from "./home.js";
+import { categories } from "./home.js"
+
+// functions
 import { getCategories } from "./home.js";
+
 
 
 console.log(test);
 console.log(masterTaskList);
-console.log(getCategories(masterTaskList))
-// console.log(allProjectCategories.userCategories[0]);
+console.log(typeof((getCategories(categories))))
+console.log(categories)
 
 
-
-// populate data
 
 // for rendering
 
-function renderTaskList (obj) {
+function renderTaskList (obj, categories) {
     // create elements
     const content = document.querySelector("#content");
     obj.forEach((task, index) => {
@@ -30,8 +33,8 @@ function renderTaskList (obj) {
         createDeleteBtn(index, taskDiv, masterTaskList);
 
         // second row
-        const taskCategories = document.createElement("div")
-        createCategoryDropdown(task, masterTaskList, taskCategories)
+        const taskCategoriesDiv = document.createElement("div")
+        createCategoryDropdown(task, categories, taskCategoriesDiv)
         const dueDate = document.createElement("div");
         const priority = document.createElement("div");
 
@@ -57,17 +60,17 @@ function renderTaskList (obj) {
         cancelBtn.textContent = "Cancel"
 
         // append
-        taskCategories.append(dueDate, priority);
+        taskCategoriesDiv.append(dueDate, priority);
         userChecklist.append(userAddedCheckbox, userAddedChecklistItem)
         userChecklistDiv.append(userChecklist, btnAddChecklistItem);
         btnDiv.append(saveBtn, cancelBtn)
-        taskDiv.append(taskCategories, description, userChecklistDiv, btnDiv);
+        taskDiv.append(taskCategoriesDiv, description, userChecklistDiv, btnDiv);
         taskDiv.dataset.index = index;
         content.appendChild(taskDiv);
     })  
 }
 
-renderTaskList(masterTaskList);
+renderTaskList(masterTaskList, categories);
 
 
 // create taskDiv components
@@ -131,10 +134,10 @@ function deleteTask(masterTaskList, index) {
     return masterTaskList;
 }
 
-function createCategoryDropdown(task, masterTaskList, taskCategories) {
-    const allProjectCategories = getCategories(masterTaskList);
+function createCategoryDropdown(task, categories, taskCategoriesDiv) {
+    const allProjectCategories = getCategories(categories);
     const categoryDropdown = document.createElement("select");
-    categoryDropdown.id = "category-dropdown";
+    // categoryDropdown.id = "category-dropdown";
     for (const category of allProjectCategories) {
         const option = document.createElement("option")
         option.value = category;
@@ -151,12 +154,10 @@ function createCategoryDropdown(task, masterTaskList, taskCategories) {
         console.log(e.target.value);
         console.log(task.category)
     })
-    taskCategories.appendChild(categoryDropdown);
+    taskCategoriesDiv.appendChild(categoryDropdown);
 }
 
-// function changeCategoryValue(task) {
-//     task.category = 
-// }
+
 
 
 
@@ -200,7 +201,7 @@ function refreshTaskData() {
     //         const title = document.createElement("h3");
     //         const expandBtn = document.createElement("button");
     //         const deleteBtn = document.createElement("button");
-    //         const taskCategories = document.createElement("div")
+    //         const taskCategoriesDiv = document.createElement("div")
     //         const category = document.createElement("div");
     //         const dueDate = document.createElement("div");
     //         const priority = document.createElement("div");
@@ -219,9 +220,9 @@ function refreshTaskData() {
     //         cancelBtn.textContent = "Cancel"
     
     //         // append
-    //         taskCategories.append(category, dueDate, priority);
+    //         taskCategoriesDiv.append(category, dueDate, priority);
     //         btnDiv.append(saveBtn, cancelBtn)
-    //         taskDiv.append(taskCheckbox, title, expandBtn, deleteBtn, taskCategories, btnDiv);
+    //         taskDiv.append(taskCheckbox, title, expandBtn, deleteBtn, taskCategoriesDiv, btnDiv);
     //         content.appendChild(taskDiv);
     //     }
     // }
