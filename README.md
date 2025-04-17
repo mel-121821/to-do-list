@@ -85,7 +85,16 @@ https://developer.mozilla.org/en-US/docs/Web/CSS/fit-content
 
 https://www.yahubaba.com/css/css-grid-fit-content
 
+How to create a collapsable section:
+https://www.w3schools.com/howto/howto_js_collapsible.asp
+
 Selecting read-only elements on the Dom (used to expand/collapse tasks)
 https://developer.mozilla.org/en-US/docs/Web/API/Element/children
 
 https://developer.mozilla.org/en-US/docs/Web/API/HTMLCollection/item
+
+Add a dropdown list with JS:
+https://stackoverflow.com/questions/17001961/how-to-add-drop-down-list-select-programmatically
+
+Filtering duplicates from an array:
+https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-array
