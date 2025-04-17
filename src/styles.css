@@ -153,7 +153,7 @@ body {
 }
 
 
-/*__________Main Content (Tasks Collapsed)__________*/
+/*__________Main Content__________*/
 
 #content {
     display: flex;
@@ -166,7 +166,10 @@ body {
     width: 80%;
     height: fit-content;
     display: grid;
-    grid-template-rows: 50px 30px 10px 30px 10px;
+    /* Collapsed styles */
+    /* grid-template-rows: 50px 30px 10px 30px 10px;
+    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px); */
+    grid-template-rows: 50px 30px fit-content(200px) fit-content(200px) 30px 10px;
     grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
     background-color:aliceblue;
     margin-bottom: 20px;
@@ -183,6 +186,12 @@ body {
 #content div button:nth-child(3),
 #content div button:nth-child(4) {
     /* expand btn */
+    display: flex; 
+    align-self: center;
+    justify-content: center;
+}
+
+.exp-col-btn {
     display: flex; 
     align-self: center;
     justify-content: center;
@@ -211,9 +220,29 @@ body {
     background-color: greenyellow;
 }
 
-#content div:nth-child(6) {
-    /* save/cancel btn div */
-    grid-area: 4 / 5 / 5 / 8;
+#content > div p:nth-child(6) {
+    /* description  */
+    background-color: rgb(190, 183, 255);
+    grid-area: 3 / 2 / 4 / 7;
+    display: flex;
+    align-items: center;
+}
+
+#content > div div:nth-child(7) {
+    /* user-added checklist items div */
+    grid-area: 4 / 2 / 5 / 7;
+    display: flex;
+    flex-direction: column;
+}
+
+#content > div div:nth-child(7) button {
+    /* user added checklist button */
+    align-self: flex-start;
+}
+
+#content > div div:nth-child(8) {
+    /* save & cancel div */
+    grid-area: 5 / 5 / 6 / 8;
     display: flex;
     justify-content: space-evenly;
 }
@@ -224,27 +253,10 @@ body {
     align-self: flex-end;
 }
 
-
-/*__________Main Content (Tasks Expanded)__________*/
-
-#content > div.expanded {
-    grid-template-rows: 50px 30px fit-content(200px) fit-content(200px) 30px 10px;
-    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
-}
-
-#content > div.expanded p:nth-child(6) {
-    /* description */
-    background-color: rgb(190, 183, 255);
-    grid-area: 3 / 2 / 4 / 7;
-    display: flex;
-    align-items: center;
-}
-
-#content > div.expanded div:nth-child(7) {
-    /* user-added checklist items div*/
-    grid-area: 4 / 2 / 5 / 7;
-    display: flex;
-    flex-direction: column;
+#content > div div:nth-child(8) button {
+    /* save & cancel btns  */
+    padding: 3px 4px;
+    align-self: flex-end;
 }
 
 #content ol {
@@ -261,23 +273,6 @@ body {
     height: auto;
 }
 
-#content > div.expanded div:nth-child(7) button {
-    /* user added checklist button */
-    align-self: flex-start;
-}
-
-#content > div.expanded div:nth-child(8) {
-    /* save & cancel div */
-    grid-area: 5 / 5 / 6 / 8;
-    display: flex;
-    justify-content: space-evenly;
-}
-
-#content > div.expanded div:nth-child(8) button {
-    /* save & cancel btns */
-    padding: 3px 4px;
-    align-self: flex-end;
-}
 
 /*__________Right Sidebar__________*/
 
@@ -327,6 +322,49 @@ font-size: 0.8rem;
 
 
 
+/*__________Unused Code (Delete when finished)__________*/
+
+
+
+/*__________Main Content (Tasks Expanded)__________*/
+
+/* #content > div.expanded {
+    grid-template-rows: 50px 30px fit-content(200px) fit-content(200px) 30px 10px;
+    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
+} */
+
+/* #content > div.expanded p:nth-child(6) {
+    /* description 
+    background-color: rgb(190, 183, 255);
+    grid-area: 3 / 2 / 4 / 7;
+    display: flex;
+    align-items: center;
+} */
+
+/* #content > div.expanded div:nth-child(7) {
+    /* user-added checklist items div
+    grid-area: 4 / 2 / 5 / 7;
+    display: flex;
+    flex-direction: column;
+} */
+
+/* #content > div.expanded div:nth-child(7) button {
+    /* user added checklist button
+    align-self: flex-start;
+} */
+
+/* #content > div.expanded div:nth-child(8) {
+    /* save & cancel div
+    grid-area: 5 / 5 / 6 / 8;
+    display: flex;
+    justify-content: space-evenly;
+} */
+
+/* #content > div.expanded div:nth-child(8) button {
+    /* save & cancel btns 
+    padding: 3px 4px;
+    align-self: flex-end;
+} */
 
 
 
