@@ -55,19 +55,18 @@ const categories = [
 function getCategories(categories) {
     const allProjectCategories = [];
     for (const item of categories) {
-        console.log(item.name)
         allProjectCategories.push(`${item.name}`)
     }
     return allProjectCategories;
-    // console.log(allProjectCategories.sort())
-
-    // return allProjectCategories.sort().filter(function (item, index, arr) {
-    //     return !index || item != arr[index -1];
-    // });
 }
 
+const priorityOptions = ["low", "normal", "high"]
 
+const getPriorities = () => priorityOptions;
 
 export{masterTaskList};
 export {categories}
 export {getCategories};
+
+export {priorityOptions}
+export {getPriorities}
