@@ -169,10 +169,11 @@ body {
     /* Collapsed styles */
     /* grid-template-rows: 50px 30px 10px 30px 10px;
     grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px); */
-    grid-template-rows: 50px 30px fit-content(200px) fit-content(200px) 30px 10px;
+    grid-template-rows: 50px 50px fit-content(100px) fit-content(200px) 30px 10px;
     grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
     background-color:aliceblue;
     margin-bottom: 20px;
+    border-radius: 5px;
 }
 
 #content div h3 {
@@ -220,12 +221,16 @@ body {
     background-color: greenyellow;
 }
 
-#content > div p:nth-child(6) {
+#content > div textarea {
     /* description  */
     background-color: rgb(190, 183, 255);
     grid-area: 3 / 2 / 4 / 7;
     display: flex;
     align-items: center;
+    padding: 7px;
+    border-radius: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 0.9rem;
 }
 
 #content > div div:nth-child(7) {
