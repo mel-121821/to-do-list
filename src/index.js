@@ -40,10 +40,12 @@ function renderTaskList (obj, categories) {
         createCategoryDropdown(task, categories, taskCategoriesDiv)
         createDatePicker(taskCategoriesDiv, task);
         createPriorityDropdown(taskCategoriesDiv, task);
-        // const priority = document.createElement("div");
+        taskDiv.appendChild(taskCategoriesDiv);
 
         // third row
-        const description = document.createElement("p");
+        createDescription(taskDiv, task);
+
+        // fourth row
         const userChecklistDiv = document.createElement("div");
         const userChecklist = document.createElement("ol");
         const userAddedCheckbox = document.createElement("input");
@@ -57,7 +59,7 @@ function renderTaskList (obj, categories) {
         // populate info
         // dueDate.textContent = `${task.dueDate}`;
         // priority.textContent = `${task.priority}`;
-        description.textContent = `${task.description}`;
+        // description.textContent = `${task.description}`;
         userAddedChecklistItem.textContent = "User's input goes here";
         btnAddChecklistItem.textContent = "+"
         saveBtn.textContent = "Save"
@@ -67,7 +69,7 @@ function renderTaskList (obj, categories) {
         userChecklist.append(userAddedCheckbox, userAddedChecklistItem)
         userChecklistDiv.append(userChecklist, btnAddChecklistItem);
         btnDiv.append(saveBtn, cancelBtn)
-        taskDiv.append(taskCategoriesDiv, description, userChecklistDiv, btnDiv);
+        taskDiv.append(userChecklistDiv, btnDiv);
         taskDiv.dataset.index = index;
         content.appendChild(taskDiv);
     })  
@@ -193,7 +195,13 @@ function createPriorityDropdown (taskCategoriesDiv, task) {
     taskCategoriesDiv.appendChild(priorityDropdown);
 }
 
-
+function createDescription (taskDiv, task) {
+    const description = document.createElement("textarea")
+    description.maxLength = 3000;
+    description.rows = 30;
+    description.textContent = task.description;
+    taskDiv.appendChild(description);
+}
 
 function refreshTaskData() {
     while (content.firstChild) {
