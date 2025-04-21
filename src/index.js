@@ -1,7 +1,6 @@
 //__________index.js__________
 
 import "./styles.css";
-import { test } from "./home.js"
 
 // packages
 import { format } from "date-fns"
@@ -9,17 +8,18 @@ import { format } from "date-fns"
 // data
 import { masterTaskList } from "./home.js";
 import { categories } from "./home.js"
+import { priorities } from "./home.js"
 
 // functions
 import { getCategories } from "./home.js";
+import { getPriorities } from "./home.js";
 
 
-
-console.log(test);
 console.log(masterTaskList);
 console.log(categories)
 const date = format(new Date(2014, 4, 4), "MM/dd/yyyy");
 console.log(date)
+console.log(getPriorities())
 
 
 
@@ -39,8 +39,8 @@ function renderTaskList (obj, categories) {
         const taskCategoriesDiv = document.createElement("div")
         createCategoryDropdown(task, categories, taskCategoriesDiv)
         createDatePicker(taskCategoriesDiv, task);
-        // const dueDate = document.createElement("div");
-        const priority = document.createElement("div");
+        createPriorityDropdown(taskCategoriesDiv, task);
+        // const priority = document.createElement("div");
 
         // third row
         const description = document.createElement("p");
@@ -56,7 +56,7 @@ function renderTaskList (obj, categories) {
 
         // populate info
         // dueDate.textContent = `${task.dueDate}`;
-        priority.textContent = `${task.priority}`;
+        // priority.textContent = `${task.priority}`;
         description.textContent = `${task.description}`;
         userAddedChecklistItem.textContent = "User's input goes here";
         btnAddChecklistItem.textContent = "+"
@@ -64,7 +64,6 @@ function renderTaskList (obj, categories) {
         cancelBtn.textContent = "Cancel"
 
         // append
-        taskCategoriesDiv.append(priority);
         userChecklist.append(userAddedCheckbox, userAddedChecklistItem)
         userChecklistDiv.append(userChecklist, btnAddChecklistItem);
         btnDiv.append(saveBtn, cancelBtn)
@@ -170,6 +169,28 @@ function createDatePicker(taskCategoriesDiv, task) {
         console.log(task.dueDate)
     })
     taskCategoriesDiv.appendChild(datePicker)
+}
+
+function createPriorityDropdown (taskCategoriesDiv, task) {
+   const priorities = getPriorities();
+    const priorityDropdown = document.createElement("select");
+    for (const priority of priorities) {
+        const option = document.createElement("option");
+        option.value = priority;
+        option.textContent = priority;
+        if (option.textContent === task.priority) {
+            option.selected = true;
+        } else {
+            // do nothing
+        }
+        priorityDropdown.appendChild(option)
+    }
+    priorityDropdown.addEventListener("change", (e) => {
+        task.priority = e.target.value
+        console.log(e.target.value);
+        console.log(task.priority)
+    })
+    taskCategoriesDiv.appendChild(priorityDropdown);
 }
 
 
