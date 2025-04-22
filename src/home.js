@@ -1,5 +1,27 @@
 //__________home.js__________
 
+function Task(title, category, dueDate, priority, description, userChecklist = []) {
+    // the userChecklist = [] allows an empty array to be used as the default value
+
+    // direct user input
+    this.title = title;
+    
+    // selected from dropdown - functions set on proto?
+    this.category = category;
+    this.dueDate = dueDate;
+    this.priority = priority;
+
+    // direct user input
+    this.description = description;
+
+    // user input + function set on instance
+    this.userChecklist = userChecklist;
+}
+
+function addTaskToMasterList (title, category, dueDate, priority, description, userChecklist = []) {
+    masterTaskList.push(new Task(title, category, dueDate, priority, description, userChecklist));
+};
+
 const masterTaskList = [
     {
         title: "Make grocery list",
@@ -42,6 +64,8 @@ const masterTaskList = [
         ]
     },
 ]
+
+addTaskToMasterList("Say hello", "Pets", "2025-04-22", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
 const categories = [
     {
