@@ -240,6 +240,20 @@ body {
     flex-direction: column;
 }
 
+#content > div legend {
+    font-size: 0.9rem;
+    align-self: center;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+}
+
+#content > div div:nth-child(7) label {
+    display: flex;
+    font-size: 0.8rem;
+}
+
 #content > div div:nth-child(7) button {
     /* user added checklist button */
     align-self: flex-start;
@@ -266,7 +280,7 @@ body {
 
 #content ol {
     display: flex;
-    margin: 10px 0px;
+    margin: 3px 0px;
 }
 
 #content ol p {
