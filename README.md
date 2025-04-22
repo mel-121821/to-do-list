@@ -104,3 +104,9 @@ https://stackoverflow.com/questions/9229645/remove-duplicate-values-from-js-arra
 
 Add a default value to a date picker:
 https://www.w3schools.com/jsref/prop_date_defaultvalue.asp
+
+Create a checkbox with label using JS:
+https://stackoverflow.com/questions/7608266/how-to-create-label-and-check-box-dynamically-in-javascript/7608609
+
+Using an array inside a constructor:
+https://stackoverflow.com/questions/50032748/using-an-array-inside-a-constructor-using-javascript/50032773#50032773
