@@ -46,11 +46,12 @@ function renderTaskList (obj, categories) {
         createDescription(taskDiv, task);
 
         // fourth row
-        const userChecklistDiv = document.createElement("div");
-        const userChecklist = document.createElement("ol");
-        const userAddedCheckbox = document.createElement("input");
-        userAddedCheckbox.setAttribute("type", "checkbox");
-        const userAddedChecklistItem = document.createElement("p");
+        createUserChecklistDiv(taskDiv, task)
+        // const userChecklistDiv = document.createElement("div");
+        // const userChecklist = document.createElement("ol");
+        // const userAddedCheckbox = document.createElement("input");
+        // userAddedCheckbox.setAttribute("type", "checkbox");
+        // const userAddedChecklistItem = document.createElement("p");
         const btnAddChecklistItem = document.createElement("button");
         const btnDiv = document.createElement("div");
         const saveBtn = document.createElement("button");
@@ -60,16 +61,16 @@ function renderTaskList (obj, categories) {
         // dueDate.textContent = `${task.dueDate}`;
         // priority.textContent = `${task.priority}`;
         // description.textContent = `${task.description}`;
-        userAddedChecklistItem.textContent = "User's input goes here";
-        btnAddChecklistItem.textContent = "+"
+        // userAddedChecklistItem.textContent = "User's input goes here";
+        // btnAddChecklistItem.textContent = "+"
         saveBtn.textContent = "Save"
         cancelBtn.textContent = "Cancel"
 
         // append
-        userChecklist.append(userAddedCheckbox, userAddedChecklistItem)
-        userChecklistDiv.append(userChecklist, btnAddChecklistItem);
+        // userChecklist.append(userAddedCheckbox, userAddedChecklistItem)
+        // userChecklistDiv.append(userChecklist, btnAddChecklistItem);
         btnDiv.append(saveBtn, cancelBtn)
-        taskDiv.append(userChecklistDiv, btnDiv);
+        taskDiv.append( btnDiv);
         taskDiv.dataset.index = index;
         content.appendChild(taskDiv);
     })  
@@ -202,6 +203,54 @@ function createDescription (taskDiv, task) {
     description.textContent = task.description;
     taskDiv.appendChild(description);
 }
+
+function createUserChecklistDiv (taskDiv, task) {
+    const userChecklistDiv = document.createElement("div");
+    const legend = document.createElement("legend");
+    legend.textContent = "Your checklist items";
+    userChecklistDiv.appendChild(legend);
+    createUserChecklistItems(task, userChecklistDiv)
+    taskDiv.appendChild(userChecklistDiv);
+} 
+
+// Needs decoupling
+
+function createUserChecklistItems(task, userChecklistDiv) {
+    const checklist = task.userChecklist;
+    checklist.forEach((item, index) => {
+        const userItemDiv = document.createElement("ol");
+        const itemCheckbox = document.createElement("input");
+        itemCheckbox.setAttribute("type", "checkbox");
+        itemCheckbox.id = item;
+        const label = document.createElement("label");
+        label.setAttribute("for", `${item}`)
+        label.innerHTML = `${item}`;
+        const deleteBtn = createUserChecklistDeleteBtn(checklist, index);
+        userItemDiv.append(itemCheckbox, label, deleteBtn)
+        userChecklistDiv.appendChild(userItemDiv);
+    })
+}
+
+function createUserChecklistDeleteBtn(checklist, index) {
+    const deleteBtn = document.createElement("button");
+    deleteBtn.textContent = "-"
+    deleteBtn.addEventListener("click", function(e) { deleteChecklistItem(checklist, index)
+        console.log(checklist)
+    })
+    return deleteBtn
+}
+
+function deleteChecklistItem(checklist, index) {
+    checklist.splice(index, 1);
+    return checklist;
+}
+
+function refreshUserChecklistData() {
+    while (checklist.firstChild) {
+        checklist.removeChild(checklist.lastChild);
+    }
+}
+
 
 function refreshTaskData() {
     while (content.firstChild) {
