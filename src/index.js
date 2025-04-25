@@ -1,4 +1,5 @@
 //__________index.js__________
+//__________DOM Manipulation__________
 
 import "./styles.css";
 
@@ -13,82 +14,113 @@ import { priorities } from "./home.js"
 // functions
 import { getCategories } from "./home.js";
 import { getPriorities } from "./home.js";
+import { getMasterTaskList } from "./home.js";
+import { completedTaskList } from "./home.js";
 
 
-console.log(masterTaskList);
-console.log(categories)
-const date = format(new Date(2014, 4, 4), "MM/dd/yyyy");
-console.log(date)
-console.log(getPriorities())
+// display obj IIFE
+const taskDisplay = (function() {
 
+    // cacheDOM
+    const addTaskBtn = document.querySelector(".title > button")
+    const content = document.querySelector("#content")
 
+    // get data
+    const allTasks = getMasterTaskList();
+    const allCategories = getCategories(); 
+    const allPriorities = getPriorities();
 
-// for rendering
+    // render
 
-function renderTaskList (obj, categories) {
-    const content = document.querySelector("#content");
-    obj.forEach((task, index) => {
-        const taskDiv = document.createElement("div");
-        // first row
-        createTaskCheckbox(index, taskDiv);
-        createTaskTitle(task, taskDiv);
-        createExpandCollapseBtn(taskDiv);
-        createDeleteBtn(index, taskDiv, masterTaskList);
+    function renderTaskList (allTasks, allCategories) {
+        allTasks.forEach((task, index) => {
+            const taskDiv = document.createElement("div");
+            // first row
+            createTaskCheckbox(taskDiv);
+            createTaskTitle(task, taskDiv);
+            createExpandCollapseBtn(taskDiv);
+            createDeleteBtn(index, taskDiv, allTasks);
 
-        // second row
-        const taskCategoriesDiv = document.createElement("div")
-        createCategoryDropdown(task, categories, taskCategoriesDiv)
-        createDatePicker(taskCategoriesDiv, task);
-        createPriorityDropdown(taskCategoriesDiv, task);
-        taskDiv.appendChild(taskCategoriesDiv);
+            // second row
+            const taskDetails = document.createElement("div")
+            // fn append details
+            createCategoryDropdown(task, allCategories, taskDetails)
+            createDatePicker(taskDetails, task);
+            createPriorityDropdown(taskDetails, task);
+            taskDiv.appendChild(taskDetails);
 
-        // third row
-        createDescription(taskDiv, task);
+            // third row
+            createDescription(taskDiv, task);
 
-        // fourth row
-        createUserChecklistDiv(taskDiv, task)
-        // const userChecklistDiv = document.createElement("div");
-        // const userChecklist = document.createElement("ol");
-        // const userAddedCheckbox = document.createElement("input");
-        // userAddedCheckbox.setAttribute("type", "checkbox");
-        // const userAddedChecklistItem = document.createElement("p");
-        const btnAddChecklistItem = document.createElement("button");
-        const btnDiv = document.createElement("div");
-        const saveBtn = document.createElement("button");
-        const cancelBtn = document.createElement("button");
+            // fourth row
+            createUserChecklistDiv(taskDiv, task)
+        
+            const btnAddChecklistItem = document.createElement("button");
+            const btnDiv = document.createElement("div");
+            const saveBtn = document.createElement("button");
+            const cancelBtn = document.createElement("button");
 
-        // populate info
-        // dueDate.textContent = `${task.dueDate}`;
-        // priority.textContent = `${task.priority}`;
-        // description.textContent = `${task.description}`;
-        // userAddedChecklistItem.textContent = "User's input goes here";
-        // btnAddChecklistItem.textContent = "+"
-        saveBtn.textContent = "Save"
-        cancelBtn.textContent = "Cancel"
+            saveBtn.textContent = "Save"
+            cancelBtn.textContent = "Cancel"
 
-        // append
-        // userChecklist.append(userAddedCheckbox, userAddedChecklistItem)
-        // userChecklistDiv.append(userChecklist, btnAddChecklistItem);
-        btnDiv.append(saveBtn, cancelBtn)
-        taskDiv.append( btnDiv);
-        taskDiv.dataset.index = index;
-        content.appendChild(taskDiv);
-    })  
-}
+            btnDiv.append(saveBtn, cancelBtn)
+            taskDiv.append( btnDiv);
+            taskDiv.dataset.index = index;
+            content.appendChild(taskDiv);
+        })  
+    }
+    renderTaskList(allTasks, allCategories)
+})();
 
-renderTaskList(masterTaskList, categories);
+// renderTaskList(allTasks, categories);
 
 
 // create taskDiv components
 
-function createTaskCheckbox(index, taskDiv) {
-    // add function to get completed taskList
+function createTaskCheckbox(taskDiv) {
+    // add function to subscribe to completed taskList
     const taskCheckbox = document.createElement("input");
     taskCheckbox.setAttribute("type", "checkbox");
-    taskCheckbox.addEventListener("click", function(e) {
-        console.log(`Send index ${index} to the completed tasks list`)
-    })
+
+    // make this into a seperate fn
+    taskCheckbox.addEventListener("click", completeTask)
+    // no brackets after completeTask, otherwise the function will be called immediately
     taskDiv.appendChild(taskCheckbox);
+}
+
+function completeTask() {
+    // get the index from dataset
+    const taskSelected = this.parentNode
+    const dataObj = this.parentNode.dataset
+    // it's given as a DOMStringMap (which is an obj), so you need to get the val from the key:val pair
+    Object.keys(dataObj)[0]
+    let key = Object.keys(dataObj)[0];
+    let index = dataObj[key]
+    console.log(taskSelected)
+    console.log(index)
+    
+    let removed = getMasterTaskList().splice(index, 1)
+    console.log(getMasterTaskList())
+    console.log(removed)
+    moveTaskToCompleted(...removed);
+
+    // call fn to add removed to completed list
+
+    // allTasks.splice(index, 1)
+    // console.log(allTasks)
+    // event.target.push(completed)
+    // event.target.remove()
+    // fn get completed task list
+    console.log(`This fn when called will send index ${index} to the completed tasks list `)
+}
+
+function updateMasterTaskList () {
+
+}
+
+function moveTaskToCompleted(removed) {
+    completedTaskList.push(removed)
+    console.log(completedTaskList)
 }
 
 function createTaskTitle(task, taskDiv) {
@@ -121,26 +153,26 @@ function collapseTask(taskDiv) {
     };
 };
 
-function createDeleteBtn (index, taskDiv, masterTaskList) {
+function createDeleteBtn (index, taskDiv, allTasks) {
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "del"
     deleteBtn.classList.add("delete-btn");
     deleteBtn.addEventListener("click", function (e) {
         console.log("Delete btn clicked");
         console.log(taskDiv.dataset.index);
-        deleteTask(masterTaskList, index);
-        console.log(masterTaskList);
+        deleteTask(allTasks, index);
+        console.log(allTasks);
         // function to re-render taskList
     })
     taskDiv.appendChild(deleteBtn);
 }
 
-function deleteTask(masterTaskList, index) {
-    masterTaskList.splice(index, 1);
-    return masterTaskList;
+function deleteTask(allTasks, index) {
+    allTasks.splice(index, 1);
+    return allTasks;
 }
 
-function createCategoryDropdown(task, categories, taskCategoriesDiv) {
+function createCategoryDropdown(task, allCategories, taskDetails) {
     const allProjectCategories = getCategories(categories);
     const categoryDropdown = document.createElement("select");
     // categoryDropdown.id = "category-dropdown";
@@ -160,10 +192,10 @@ function createCategoryDropdown(task, categories, taskCategoriesDiv) {
         console.log(e.target.value);
         console.log(task.category)
     })
-    taskCategoriesDiv.appendChild(categoryDropdown);
+    taskDetails.appendChild(categoryDropdown);
 }
 
-function createDatePicker(taskCategoriesDiv, task) {
+function createDatePicker(taskDetails, task) {
     const datePicker = document.createElement("input")
     datePicker.setAttribute("type", "date");
     datePicker.defaultValue = task.dueDate;
@@ -171,10 +203,10 @@ function createDatePicker(taskCategoriesDiv, task) {
         task.dueDate = e.target.value
         console.log(task.dueDate)
     })
-    taskCategoriesDiv.appendChild(datePicker)
+    taskDetails.appendChild(datePicker)
 }
 
-function createPriorityDropdown (taskCategoriesDiv, task) {
+function createPriorityDropdown (taskDetails, task) {
    const priorities = getPriorities();
     const priorityDropdown = document.createElement("select");
     for (const priority of priorities) {
@@ -193,7 +225,7 @@ function createPriorityDropdown (taskCategoriesDiv, task) {
         console.log(e.target.value);
         console.log(task.priority)
     })
-    taskCategoriesDiv.appendChild(priorityDropdown);
+    taskDetails.appendChild(priorityDropdown);
 }
 
 function createDescription (taskDiv, task) {
@@ -268,6 +300,12 @@ function refreshTaskData() {
 //__________Unused Code (Delete when finished)__________
 
 
+// console.log(masterTaskList);
+// console.log(categories)
+// const date = format(new Date(2014, 4, 4), "MM/dd/yyyy");
+// console.log(date)
+// console.log(getPriorities())
+
 // const expBtns = document.querySelectorAll(".expand");
 // console.log(expBtns);
 // console.log(typeof(expBtns))
@@ -292,7 +330,7 @@ function refreshTaskData() {
     //         const title = document.createElement("h3");
     //         const expandBtn = document.createElement("button");
     //         const deleteBtn = document.createElement("button");
-    //         const taskCategoriesDiv = document.createElement("div")
+    //         const taskDetails = document.createElement("div")
     //         const category = document.createElement("div");
     //         const dueDate = document.createElement("div");
     //         const priority = document.createElement("div");
@@ -311,9 +349,9 @@ function refreshTaskData() {
     //         cancelBtn.textContent = "Cancel"
     
     //         // append
-    //         taskCategoriesDiv.append(category, dueDate, priority);
+    //         taskDetails.append(category, dueDate, priority);
     //         btnDiv.append(saveBtn, cancelBtn)
-    //         taskDiv.append(taskCheckbox, title, expandBtn, deleteBtn, taskCategoriesDiv, btnDiv);
+    //         taskDiv.append(taskCheckbox, title, expandBtn, deleteBtn, taskDetails, btnDiv);
     //         content.appendChild(taskDiv);
     //     }
     // }
