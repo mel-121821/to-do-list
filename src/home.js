@@ -1,27 +1,39 @@
 //__________home.js__________
+//__________Logic__________
 
+
+// constructor
 function Task(title, category, dueDate, priority, description, userChecklist = []) {
     // the userChecklist = [] allows an empty array to be used as the default value
 
     // direct user input
     this.title = title;
     
-    // selected from dropdown - functions set on proto?
+    // selected from dropdown
     this.category = category;
     this.dueDate = dueDate;
     this.priority = priority;
 
     // direct user input
     this.description = description;
-
-    // user input + function set on instance
     this.userChecklist = userChecklist;
+
+    // add fn to add checklist item
+    // add fn to remove checklist item
 }
 
+
+
+// fn()s to add tasks
 function addTaskToMasterList (title, category, dueDate, priority, description, userChecklist = []) {
     masterTaskList.push(new Task(title, category, dueDate, priority, description, userChecklist));
 };
 
+addTaskToMasterList("Say hello", "Pets", "2025-04-22", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
+
+
+
+// data lists
 const masterTaskList = [
     {
         title: "Make grocery list",
@@ -64,9 +76,6 @@ const masterTaskList = [
         ]
     },
 ]
-
-addTaskToMasterList("Say hello", "Pets", "2025-04-22", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
-
 const categories = [
     {
         icon: "all-icon",
@@ -85,22 +94,31 @@ const categories = [
         name: "Pets"
     }
 ]
-
-function getCategories(categories) {
-    const allProjectCategories = [];
-    for (const item of categories) {
-        allProjectCategories.push(`${item.name}`)
-    }
-    return allProjectCategories;
-}
-
 const priorities = ["low", "normal", "high"]
+const completedTaskList = [];
 
+
+
+// get data fn()s
+// fn()s get original lists (not copies), which can be modified
+const getMasterTaskList = () => masterTaskList;
+const categoryArr = categories.map(function(category){
+    return category.name
+})
+const getCategories = () => categoryArr
 const getPriorities = () => priorities;
+const getCompletedTaskList = () => completedTaskList
 
+
+// exports
 export{masterTaskList};
+export{getMasterTaskList};
+
 export {categories}
 export {getCategories};
 
 export {priorities}
 export {getPriorities}
+
+export {completedTaskList}
+export {getCompletedTaskList}
