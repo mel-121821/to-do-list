@@ -119,3 +119,6 @@ https://stackoverflow.com/questions/24927783/how-to-get-the-value-of-the-only-ke
 
 Spread syntax:
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
+
+Removing the parent node of an event.target
+https://stackoverflow.com/questions/46665554/remove-parent-element-on-click-with-plain-javascript
