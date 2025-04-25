@@ -110,3 +110,12 @@ https://stackoverflow.com/questions/7608266/how-to-create-label-and-check-box-dy
 
 Using an array inside a constructor:
 https://stackoverflow.com/questions/50032748/using-an-array-inside-a-constructor-using-javascript/50032773#50032773
+
+Create a new array by extracting object values:
+https://www.youtube.com/watch?v=zGxREak6DQs
+
+How to get the value out of a key value pair in an obj:
+https://stackoverflow.com/questions/24927783/how-to-get-the-value-of-the-only-key-value-pair-in-object
+
+Spread syntax:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spread_syntax
