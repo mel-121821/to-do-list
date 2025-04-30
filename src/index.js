@@ -1,21 +1,25 @@
 //__________index.js__________
 //__________DOM Manipulation__________
 
+// Reassessed plan, set index.js to only do the following:
+// interact with DOM via query selectors
+// generate popups to gather user data
+// local storage??
+// event listeners
+
+// home.js should include logic in the following categories:
+// DOM manipulation
+// To-do data managment
+
+// Have all elements render on page whether they are displayed or not
+
 import "./styles.css";
 
 // packages
 import { format } from "date-fns"
 
-// data
-import { masterTaskList } from "./home.js";
-import { categories } from "./home.js"
-import { priorities } from "./home.js"
-
-// functions
-import { getCategories } from "./home.js";
-import { getPriorities } from "./home.js";
-import { getMasterTaskList } from "./home.js";
-import { completedTaskList } from "./home.js";
+// logic functions
+import { toDoManager } from "./home.js";
 
 
 // display obj IIFE
@@ -26,34 +30,35 @@ const taskDisplay = (function() {
     const content = document.querySelector("#content")
 
     // get data
-    const allTasks = getMasterTaskList();
-    const allCategories = getCategories(); 
-    const allPriorities = getPriorities();
+    const allTasks = toDoManager.getMasterTaskList();
+    const allCategories = toDoManager.getCategories(); 
+    const allPriorities = toDoManager.getPriorities();
 
     // render
 
-    function renderTaskList (allTasks, allCategories) {
+    function renderTaskList (allTasks) {
         allTasks.forEach((task, index) => {
             const taskDiv = document.createElement("div");
+            taskDiv.dataset.index = index;
+            taskDiv.dataset.project = task.category
+
             // first row
-            createTaskCheckbox(taskDiv);
-            createTaskTitle(task, taskDiv);
-            createExpandCollapseBtn(taskDiv);
-            createDeleteBtn(index, taskDiv, allTasks);
+            const taskCheckbox = createTaskCheckbox();
+            const taskTitle = createTaskTitle(task);
+            const ExpColBtn = createExpandCollapseBtn(taskDiv);
+            const deleteBtn = createDeleteBtn(index, allTasks);
 
             // second row
             const taskDetails = document.createElement("div")
-            // fn append details
-            createCategoryDropdown(task, allCategories, taskDetails)
-            createDatePicker(taskDetails, task);
-            createPriorityDropdown(taskDetails, task);
-            taskDiv.appendChild(taskDetails);
+            const categoryDropdown = createCategoryDropdown(task)
+            const datePicker = createDatePicker(task);
+            const priorityDropdown = createPriorityDropdown(task);
 
             // third row
-            createDescription(taskDiv, task);
+            const taskDescription = createDescription(task);
 
             // fourth row
-            createUserChecklistDiv(taskDiv, task)
+            const checklistDiv = createUserChecklistDiv(task);
         
             const btnAddChecklistItem = document.createElement("button");
             const btnDiv = document.createElement("div");
@@ -63,9 +68,27 @@ const taskDisplay = (function() {
             saveBtn.textContent = "Save"
             cancelBtn.textContent = "Cancel"
 
+            // append first row
+            taskDiv.appendChild(taskCheckbox);
+            taskDiv.appendChild(taskTitle);
+            taskDiv.appendChild(ExpColBtn);
+            taskDiv.appendChild(deleteBtn);
+
+            // append details row in own div
+            taskDetails.appendChild(categoryDropdown);
+            taskDetails.appendChild(datePicker);
+            taskDetails.appendChild(priorityDropdown);
+            taskDiv.appendChild(taskDetails);
+
+            // append description
+            taskDiv.appendChild(taskDescription);
+
+            // append user checklist
+            taskDiv.appendChild(checklistDiv);
+
+
             btnDiv.append(saveBtn, cancelBtn)
             taskDiv.append( btnDiv);
-            taskDiv.dataset.index = index;
             content.appendChild(taskDiv);
         })  
     }
@@ -77,15 +100,15 @@ const taskDisplay = (function() {
 
 // create taskDiv components
 
-function createTaskCheckbox(taskDiv) {
+function createTaskCheckbox() {
     // add function to subscribe to completed taskList
     const taskCheckbox = document.createElement("input");
     taskCheckbox.setAttribute("type", "checkbox");
 
     // make this into a seperate fn
     taskCheckbox.addEventListener("click", completeTask)
-    // no brackets after completeTask, otherwise the function will be called immediately
-    taskDiv.appendChild(taskCheckbox);
+    // no brackets after completeTask, otherwise the function will be called immediately   
+    return taskCheckbox
 }
 
 function completeTask() {
@@ -99,18 +122,12 @@ function completeTask() {
     console.log(taskSelected)
     console.log(index)
     
-    let removed = getMasterTaskList().splice(index, 1)
-    console.log(getMasterTaskList())
+    const removed = toDoManager.getMasterTaskList().splice(index, 1)
+    console.log(toDoManager.getMasterTaskList())
     console.log(removed)
+    // need spread syntax here, otherwise removed will be placed into the completed list as an array of one
     moveTaskToCompleted(...removed);
 
-    // call fn to add removed to completed list
-
-    // allTasks.splice(index, 1)
-    // console.log(allTasks)
-    // event.target.push(completed)
-    // event.target.remove()
-    // fn get completed task list
     console.log(`This fn when called will send index ${index} to the completed tasks list `)
 }
 
@@ -119,14 +136,14 @@ function updateMasterTaskList () {
 }
 
 function moveTaskToCompleted(removed) {
-    completedTaskList.push(removed)
-    console.log(completedTaskList)
+    toDoManager.getCompletedTaskList().push(removed)
+    console.log(toDoManager.getCompletedTaskList)
 }
 
-function createTaskTitle(task, taskDiv) {
+function createTaskTitle(task) {
     const taskTitle = document.createElement("h3");
     taskTitle.textContent = `${task.title}`
-    taskDiv.appendChild(taskTitle);
+    return taskTitle
 }
 
 function createExpandCollapseBtn(taskDiv) {
@@ -137,7 +154,7 @@ function createExpandCollapseBtn(taskDiv) {
         console.log(taskDiv.dataset.index)
         collapseTask(taskDiv);
     });
-    taskDiv.appendChild(expandBtn);    
+    return expandBtn;   
 }
 
 function collapseTask(taskDiv) {
@@ -153,27 +170,28 @@ function collapseTask(taskDiv) {
     };
 };
 
-function createDeleteBtn (index, taskDiv, allTasks) {
+function createDeleteBtn (index, allTasks) {
     const deleteBtn = document.createElement("button");
     deleteBtn.textContent = "del"
     deleteBtn.classList.add("delete-btn");
     deleteBtn.addEventListener("click", function (e) {
         console.log("Delete btn clicked");
-        console.log(taskDiv.dataset.index);
-        deleteTask(allTasks, index);
+        // console.log(taskDiv.dataset.index);
+        console.log(`User wishes to remove the following task: ${e.target.parentNode} at index: ${e.target.parentNode.dataset.index}`)
+        deleteTask(allTasks, e);
         console.log(allTasks);
         // function to re-render taskList
     })
-    taskDiv.appendChild(deleteBtn);
+    return deleteBtn
 }
 
-function deleteTask(allTasks, index) {
-    allTasks.splice(index, 1);
+function deleteTask(allTasks, e) {
+    allTasks.splice(e.target.parentNode.dataset.index, 1);
     return allTasks;
 }
 
-function createCategoryDropdown(task, allCategories, taskDetails) {
-    const allProjectCategories = getCategories(categories);
+function createCategoryDropdown(task) {
+    const allProjectCategories = toDoManager.getCategories();
     const categoryDropdown = document.createElement("select");
     // categoryDropdown.id = "category-dropdown";
     for (const category of allProjectCategories) {
@@ -192,10 +210,10 @@ function createCategoryDropdown(task, allCategories, taskDetails) {
         console.log(e.target.value);
         console.log(task.category)
     })
-    taskDetails.appendChild(categoryDropdown);
+    return categoryDropdown;
 }
 
-function createDatePicker(taskDetails, task) {
+function createDatePicker(task) {
     const datePicker = document.createElement("input")
     datePicker.setAttribute("type", "date");
     datePicker.defaultValue = task.dueDate;
@@ -203,11 +221,11 @@ function createDatePicker(taskDetails, task) {
         task.dueDate = e.target.value
         console.log(task.dueDate)
     })
-    taskDetails.appendChild(datePicker)
+    return datePicker;
 }
 
-function createPriorityDropdown (taskDetails, task) {
-   const priorities = getPriorities();
+function createPriorityDropdown (task) {
+   const priorities = toDoManager.getPriorities();
     const priorityDropdown = document.createElement("select");
     for (const priority of priorities) {
         const option = document.createElement("option");
@@ -225,24 +243,29 @@ function createPriorityDropdown (taskDetails, task) {
         console.log(e.target.value);
         console.log(task.priority)
     })
-    taskDetails.appendChild(priorityDropdown);
+    return priorityDropdown;
 }
 
-function createDescription (taskDiv, task) {
+function createDescription (task) {
     const description = document.createElement("textarea")
     description.maxLength = 3000;
     description.rows = 30;
     description.textContent = task.description;
-    taskDiv.appendChild(description);
+    return description;
 }
 
-function createUserChecklistDiv (taskDiv, task) {
+function createUserChecklistDiv (task) {
     const userChecklistDiv = document.createElement("div");
+    userChecklistDiv.classList.add("user-checklist-div");
     const legend = document.createElement("legend");
     legend.textContent = "Your checklist items";
+    const addBtn = createUserCheckListAddBtn()
+    
     userChecklistDiv.appendChild(legend);
+    
     createUserChecklistItems(task, userChecklistDiv)
-    taskDiv.appendChild(userChecklistDiv);
+    userChecklistDiv.append(addBtn);
+    return userChecklistDiv;
 } 
 
 // Needs decoupling
@@ -259,7 +282,7 @@ function createUserChecklistItems(task, userChecklistDiv) {
         label.innerHTML = `${item}`;
         const deleteBtn = createUserChecklistDeleteBtn(checklist, index);
         userItemDiv.append(itemCheckbox, label, deleteBtn)
-        userChecklistDiv.appendChild(userItemDiv);
+        userChecklistDiv.appendChild(userItemDiv)
     })
 }
 
@@ -270,6 +293,14 @@ function createUserChecklistDeleteBtn(checklist, index) {
         console.log(checklist)
     })
     return deleteBtn
+}
+
+function createUserCheckListAddBtn() {
+    const checklistAddBtn = document.createElement("button");
+    checklistAddBtn.textContent = "+"
+    checklistAddBtn.addEventListener("click", e => console.log(`user wishes to add a checklist item to ${e.target.parentNode.parentNode.dataset.index}`))
+    // selects event target > checklistDiv > taskDiv > dataset.index
+    return checklistAddBtn
 }
 
 function deleteChecklistItem(checklist, index) {
