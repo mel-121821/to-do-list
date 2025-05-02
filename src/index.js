@@ -37,6 +37,7 @@ const taskDisplay = (function() {
     // render
 
     function renderTaskList (allTasks) {
+        content.innerHTML = "";
         allTasks.forEach((task, index) => {
 
             // create div for each task
@@ -121,13 +122,14 @@ const taskDisplay = (function() {
             // append user checklist
             taskDiv.appendChild(checklistDiv);
 
-
+            // append btns
             btnDiv.append(saveBtn, cancelBtn)
             taskDiv.append( btnDiv);
             content.appendChild(taskDiv);
         })  
     }
-    renderTaskList(allTasks, allCategories)
+    renderTaskList(allTasks)
+    return{ renderTaskList }
 })();
 
 
@@ -136,6 +138,7 @@ function completeTask() {
     const taskRemoved = removeTaskFromList(index)
     // need spread syntax here, otherwise taskRemoved will be placed into the completed list as an array of one
     moveTaskToCompleted(...taskRemoved);
+    console.log(toDoManager.getMasterTaskList())
 }
 
 function removeTaskFromList(index) {
@@ -144,6 +147,7 @@ function removeTaskFromList(index) {
     console.log(toDoManager.getMasterTaskList())
     console.log("The following task has been removed:")
     console.log(removed)
+    taskDisplay.renderTaskList(toDoManager.getMasterTaskList())
     return removed
 }
 
@@ -269,7 +273,7 @@ function createUserChecklistDiv (task) {
 
 function createUserChecklistItems(task, userChecklistDiv) {
     const checklist = task.userChecklist;
-    console.log()
+    console.log(this)
     checklist.forEach((item, index) => {
         const userItemDiv = document.createElement("ol");
         userItemDiv.dataset.itemNum = index
@@ -318,6 +322,7 @@ function strikethroughChecklistItem() {
 function addChecklistItem() {
     const parentDivIndex = this.parentNode.parentNode.dataset.index;
     toDoManager.getMasterTaskList()[parentDivIndex].userChecklist.push("Checklist item added")
+    createUserChecklistItems();
 
     // Remove when finished    
     console.log("User added a new checklist item:")
@@ -327,6 +332,8 @@ function addChecklistItem() {
 function saveTaskInfo() {
     console.log("User saves task info for the following task:")
     console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].title)
+    // re-render when clicked
+    // taskDisplay.renderTaskList(toDoManager.getMasterTaskList())
 }
 
 
