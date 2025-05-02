@@ -38,40 +38,75 @@ const taskDisplay = (function() {
 
     function renderTaskList (allTasks) {
         allTasks.forEach((task, index) => {
+
+            // create div for each task
             const taskDiv = document.createElement("div");
             taskDiv.dataset.index = index;
             taskDiv.dataset.project = task.category
 
-            // first row
-            const taskCheckbox = createTaskCheckbox();
-            const taskTitle = createTaskTitle(task);
-            const ExpColBtn = createExpandCollapseBtn(taskDiv);
-            const deleteBtn = createDeleteBtn(index, allTasks);
+            // 1st row
+            // task checkbox
+            const taskCheckbox = document.createElement("input");
+            taskCheckbox.setAttribute("type", "checkbox");
+            taskCheckbox.addEventListener("click", completeTask)
+            // no brackets after completeTask, otherwise the function will be called immediately   
 
-            // second row
+            // task title
+            const taskTitle = document.createElement("h3");
+            taskTitle.textContent = `${task.title}`
+            taskTitle.addEventListener("click", collapseTask)
+            
+            // expand/collapse btn
+            const expandBtn = document.createElement("button");
+            expandBtn.textContent = "exp";
+            expandBtn.classList.add("exp-col-btn")
+            expandBtn.addEventListener("click", collapseTask)
+
+            // delete btn
+            const deleteBtn = document.createElement("button");
+            deleteBtn.textContent = "del"
+            deleteBtn.classList.add("delete-btn");
+            deleteBtn.addEventListener("click", deleteTask)
+            
+            // 2nd row - details section in own div 
             const taskDetails = document.createElement("div")
-            const categoryDropdown = createCategoryDropdown(task)
-            const datePicker = createDatePicker(task);
-            const priorityDropdown = createPriorityDropdown(task);
 
-            // third row
+            // keeping these fn()s seperate from render fn() as they are more complex
+            // change event listeners to submit rather than change
+            // category dropdown
+            const categoryDropdown = createCategoryDropdown(task)
+            categoryDropdown.addEventListener("change", changeCategory) 
+
+            // date picker
+            const datePicker = createDatePicker(task);
+            datePicker.addEventListener("change", changeDueDate)
+
+            // priority dropdown
+            const priorityDropdown = createPriorityDropdown(task);
+            priorityDropdown.addEventListener("change", changePriority)
+
+            // 3rd row - description
             const taskDescription = createDescription(task);
 
-            // fourth row
+            // 4th row - user checklist
             const checklistDiv = createUserChecklistDiv(task);
-        
-            const btnAddChecklistItem = document.createElement("button");
+            
+            // 5th row save and cancel section - has own  div
             const btnDiv = document.createElement("div");
-            const saveBtn = document.createElement("button");
-            const cancelBtn = document.createElement("button");
 
+            // save btn
+            const saveBtn = document.createElement("button");
             saveBtn.textContent = "Save"
+            saveBtn.addEventListener("click", saveTaskInfo)
+
+            // cancel btn
+            const cancelBtn = document.createElement("button");
             cancelBtn.textContent = "Cancel"
 
             // append first row
             taskDiv.appendChild(taskCheckbox);
             taskDiv.appendChild(taskTitle);
-            taskDiv.appendChild(ExpColBtn);
+            taskDiv.appendChild(expandBtn);
             taskDiv.appendChild(deleteBtn);
 
             // append details row in own div
@@ -95,72 +130,34 @@ const taskDisplay = (function() {
     renderTaskList(allTasks, allCategories)
 })();
 
-// renderTaskList(allTasks, categories);
-
-
-// create taskDiv components
-
-function createTaskCheckbox() {
-    // add function to subscribe to completed taskList
-    const taskCheckbox = document.createElement("input");
-    taskCheckbox.setAttribute("type", "checkbox");
-
-    // make this into a seperate fn
-    taskCheckbox.addEventListener("click", completeTask)
-    // no brackets after completeTask, otherwise the function will be called immediately   
-    return taskCheckbox
-}
 
 function completeTask() {
-    // get the index from dataset
-    const taskSelected = this.parentNode
-    const dataObj = this.parentNode.dataset
-    // it's given as a DOMStringMap (which is an obj), so you need to get the val from the key:val pair
-    Object.keys(dataObj)[0]
-    let key = Object.keys(dataObj)[0];
-    let index = dataObj[key]
-    console.log(taskSelected)
-    console.log(index)
-    
-    const removed = toDoManager.getMasterTaskList().splice(index, 1)
-    console.log(toDoManager.getMasterTaskList())
-    console.log(removed)
-    // need spread syntax here, otherwise removed will be placed into the completed list as an array of one
-    moveTaskToCompleted(...removed);
-
-    console.log(`This fn when called will send index ${index} to the completed tasks list `)
+    const index = this.parentNode.dataset.index;
+    const taskRemoved = removeTaskFromList(index)
+    // need spread syntax here, otherwise taskRemoved will be placed into the completed list as an array of one
+    moveTaskToCompleted(...taskRemoved);
 }
 
-function updateMasterTaskList () {
-
+function removeTaskFromList(index) {
+    const removed = toDoManager.getMasterTaskList().splice(index, 1)
+    console.log("Updated masterTaskList:")
+    console.log(toDoManager.getMasterTaskList())
+    console.log("The following task has been removed:")
+    console.log(removed)
+    return removed
 }
 
 function moveTaskToCompleted(removed) {
     toDoManager.getCompletedTaskList().push(removed)
-    console.log(toDoManager.getCompletedTaskList)
-}
+    console.log("The following task has been moved to the completedTaskList:")
+    console.log(toDoManager.getCompletedTaskList())
+}      
+    
 
-function createTaskTitle(task) {
-    const taskTitle = document.createElement("h3");
-    taskTitle.textContent = `${task.title}`
-    return taskTitle
-}
-
-function createExpandCollapseBtn(taskDiv) {
-    const expandBtn = document.createElement("button");
-    expandBtn.textContent = "exp";
-    expandBtn.classList.add("exp-col-btn")
-    expandBtn.addEventListener("click", function(e) {      console.log("Expand/Collapse btn clicked");
-        console.log(taskDiv.dataset.index)
-        collapseTask(taskDiv);
-    });
-    return expandBtn;   
-}
-
-function collapseTask(taskDiv) {
-    taskDiv.classList.toggle("active");
-    const description = taskDiv.children.item(5);
-    const userChecklistDiv = taskDiv.children.item(6)
+function collapseTask(e) {
+    // considered adding save/cancell btns to collapsable items, but decided against it, as the user may still want to save task details without expanding the menu
+    const description = e.target.parentNode.children.item(5);
+    const userChecklistDiv = e.target.parentNode.children.item(6);
     if (description.style.display !== "none" && userChecklistDiv.style.display !== "none") {
         description.style.display = "none"
         userChecklistDiv.style.display = "none"
@@ -170,24 +167,10 @@ function collapseTask(taskDiv) {
     };
 };
 
-function createDeleteBtn (index, allTasks) {
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "del"
-    deleteBtn.classList.add("delete-btn");
-    deleteBtn.addEventListener("click", function (e) {
-        console.log("Delete btn clicked");
-        // console.log(taskDiv.dataset.index);
-        console.log(`User wishes to remove the following task: ${e.target.parentNode} at index: ${e.target.parentNode.dataset.index}`)
-        deleteTask(allTasks, e);
-        console.log(allTasks);
-        // function to re-render taskList
-    })
-    return deleteBtn
-}
-
-function deleteTask(allTasks, e) {
-    allTasks.splice(e.target.parentNode.dataset.index, 1);
-    return allTasks;
+function deleteTask() {
+    const index = this.parentNode.dataset.index;
+    console.log(`User has removed the following task: ${toDoManager.getMasterTaskList()[index].title} at index: ${index}`)
+    removeTaskFromList(index)
 }
 
 function createCategoryDropdown(task) {
@@ -205,23 +188,27 @@ function createCategoryDropdown(task) {
         }
         categoryDropdown.appendChild(option);
     }
-    categoryDropdown.addEventListener("change", (e) => {
-        task.category = e.target.value
-        console.log(e.target.value);
-        console.log(task.category)
-    })
     return categoryDropdown;
+}
+
+function changeCategory() {
+    // this = dropdown > parentNode = categoriesDiv > parentNode = TaskDiv > dataset > index
+    toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].category = this.value;
+    console.log(`Category has been updated to: ${this.value}`);
+    console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index])
 }
 
 function createDatePicker(task) {
     const datePicker = document.createElement("input")
     datePicker.setAttribute("type", "date");
     datePicker.defaultValue = task.dueDate;
-    datePicker.addEventListener("change", function(e) {
-        task.dueDate = e.target.value
-        console.log(task.dueDate)
-    })
     return datePicker;
+}
+
+function changeDueDate() {
+    toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].dueDate = this.value;
+    console.log(`dueDate has been updated to: ${this.value}`);
+    console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index])
 }
 
 function createPriorityDropdown (task) {
@@ -238,12 +225,13 @@ function createPriorityDropdown (task) {
         }
         priorityDropdown.appendChild(option)
     }
-    priorityDropdown.addEventListener("change", (e) => {
-        task.priority = e.target.value
-        console.log(e.target.value);
-        console.log(task.priority)
-    })
     return priorityDropdown;
+}
+
+function changePriority() {
+    toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].priority = this.value;
+    console.log(`Priority has been updated to: ${this.value}`);
+    console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index])
 }
 
 function createDescription (task) {
@@ -251,19 +239,28 @@ function createDescription (task) {
     description.maxLength = 3000;
     description.rows = 30;
     description.textContent = task.description;
+    // description.style.display = "none"
     return description;
 }
 
 function createUserChecklistDiv (task) {
     const userChecklistDiv = document.createElement("div");
     userChecklistDiv.classList.add("user-checklist-div");
+    // userChecklistDiv.style.display = "none"
+
+    // create legend
     const legend = document.createElement("legend");
-    legend.textContent = "Your checklist items";
-    const addBtn = createUserCheckListAddBtn()
-    
+    legend.textContent = "Your checklist items";    
     userChecklistDiv.appendChild(legend);
     
+    // create checklist items
     createUserChecklistItems(task, userChecklistDiv)
+
+    // create btn to add checklist item
+    const addBtn = document.createElement("button");
+    addBtn.textContent = "+"
+    addBtn.addEventListener("click", addChecklistItem)
+
     userChecklistDiv.append(addBtn);
     return userChecklistDiv;
 } 
@@ -272,46 +269,64 @@ function createUserChecklistDiv (task) {
 
 function createUserChecklistItems(task, userChecklistDiv) {
     const checklist = task.userChecklist;
+    console.log()
     checklist.forEach((item, index) => {
         const userItemDiv = document.createElement("ol");
+        userItemDiv.dataset.itemNum = index
+        // console.log(userItemDiv.dataset.itemNum)
+
+        // create checkbox
         const itemCheckbox = document.createElement("input");
         itemCheckbox.setAttribute("type", "checkbox");
         itemCheckbox.id = item;
+        itemCheckbox.addEventListener("change", strikethroughChecklistItem)
+
+        // create checkbox label
         const label = document.createElement("label");
         label.setAttribute("for", `${item}`)
         label.innerHTML = `${item}`;
-        const deleteBtn = createUserChecklistDeleteBtn(checklist, index);
+        // event listener, set display to strikethrough item
+
+        // create delete btn
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "-"
+        deleteBtn.addEventListener("click", deleteUserChecklistItem)
+
+        // append items
         userItemDiv.append(itemCheckbox, label, deleteBtn)
-        userChecklistDiv.appendChild(userItemDiv)
+        userChecklistDiv.appendChild(userItemDiv);
     })
 }
 
-function createUserChecklistDeleteBtn(checklist, index) {
-    const deleteBtn = document.createElement("button");
-    deleteBtn.textContent = "-"
-    deleteBtn.addEventListener("click", function(e) { deleteChecklistItem(checklist, index)
-        console.log(checklist)
-    })
-    return deleteBtn
+function deleteUserChecklistItem() {
+    const parentDivIndex = this.parentNode.parentNode.parentNode.dataset.index;
+    const checklistIndex = this.parentNode.dataset.itemNum;
+    toDoManager.getMasterTaskList()[parentDivIndex].userChecklist.splice(checklistIndex, 1)
+
+    console.log(`User deleted checklist item at index: ${checklistIndex}`)
+    console.log("New list of user items:")
+    console.log(toDoManager.getMasterTaskList()[parentDivIndex].userChecklist)
 }
 
-function createUserCheckListAddBtn() {
-    const checklistAddBtn = document.createElement("button");
-    checklistAddBtn.textContent = "+"
-    checklistAddBtn.addEventListener("click", e => console.log(`user wishes to add a checklist item to ${e.target.parentNode.parentNode.dataset.index}`))
-    // selects event target > checklistDiv > taskDiv > dataset.index
-    return checklistAddBtn
+function strikethroughChecklistItem() {
+    console.log(this.parentNode.children.item(1))
+    const itemLabel = this.parentNode.children.item(1);
+    // itemLabel.style.textDecoration = "line-through"
+    itemLabel.style.textDecoration !== "line-through" ? itemLabel.style.textDecoration = "line-through" : itemLabel.style.textDecoration = "none"
 }
 
-function deleteChecklistItem(checklist, index) {
-    checklist.splice(index, 1);
-    return checklist;
+function addChecklistItem() {
+    const parentDivIndex = this.parentNode.parentNode.dataset.index;
+    toDoManager.getMasterTaskList()[parentDivIndex].userChecklist.push("Checklist item added")
+
+    // Remove when finished    
+    console.log("User added a new checklist item:")
+    console.log(toDoManager.getMasterTaskList()[parentDivIndex].userChecklist)   
 }
 
-function refreshUserChecklistData() {
-    while (checklist.firstChild) {
-        checklist.removeChild(checklist.lastChild);
-    }
+function saveTaskInfo() {
+    console.log("User saves task info for the following task:")
+    console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].title)
 }
 
 
