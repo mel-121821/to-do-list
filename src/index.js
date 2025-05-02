@@ -157,7 +157,6 @@ function moveTaskToCompleted(removed) {
     console.log(toDoManager.getCompletedTaskList())
 }      
     
-
 function collapseTask(e) {
     // considered adding save/cancell btns to collapsable items, but decided against it, as the user may still want to save task details without expanding the menu
     const description = e.target.parentNode.children.item(5);
@@ -247,33 +246,40 @@ function createDescription (task) {
     return description;
 }
 
+// can't select createUserChecklistDiv according to proximity of other elements as it has not been appended to the DOM yet. May change to append to DOM before selecting due to proximity. Can put userChecklistDiv into renderTaskList and then use other fn()s to add elements to it.
+
 function createUserChecklistDiv (task) {
     const userChecklistDiv = document.createElement("div");
     userChecklistDiv.classList.add("user-checklist-div");
+    console.log()
     // userChecklistDiv.style.display = "none"
 
     // create legend
     const legend = document.createElement("legend");
     legend.textContent = "Your checklist items";    
-    userChecklistDiv.appendChild(legend);
     
-    // create checklist items
-    createUserChecklistItems(task, userChecklistDiv)
+    // create checklist items section
+    const checklistItemsDiv = document.createElement("div")
+    createUserChecklistItems(task, checklistItemsDiv)
 
     // create btn to add checklist item
     const addBtn = document.createElement("button");
     addBtn.textContent = "+"
     addBtn.addEventListener("click", addChecklistItem)
 
+    // append items to checklist div
+    userChecklistDiv.appendChild(legend);
+    userChecklistDiv.appendChild(checklistItemsDiv);
     userChecklistDiv.append(addBtn);
     return userChecklistDiv;
 } 
 
 // Needs decoupling
 
-function createUserChecklistItems(task, userChecklistDiv) {
+function createUserChecklistItems(task, checklistItemsDiv) {
+    // remove existing elements before adding updated list to page
+    checklistItemsDiv.innerHTML = ""
     const checklist = task.userChecklist;
-    console.log(this)
     checklist.forEach((item, index) => {
         const userItemDiv = document.createElement("ol");
         userItemDiv.dataset.itemNum = index
@@ -298,14 +304,16 @@ function createUserChecklistItems(task, userChecklistDiv) {
 
         // append items
         userItemDiv.append(itemCheckbox, label, deleteBtn)
-        userChecklistDiv.appendChild(userItemDiv);
+        checklistItemsDiv.appendChild(userItemDiv);
     })
 }
 
 function deleteUserChecklistItem() {
-    const parentDivIndex = this.parentNode.parentNode.parentNode.dataset.index;
+    const parentDivIndex = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
     const checklistIndex = this.parentNode.dataset.itemNum;
     toDoManager.getMasterTaskList()[parentDivIndex].userChecklist.splice(checklistIndex, 1)
+
+    createUserChecklistItems(toDoManager.getMasterTaskList()[parentDivIndex], this.parentNode.parentNode)
 
     console.log(`User deleted checklist item at index: ${checklistIndex}`)
     console.log("New list of user items:")
@@ -321,10 +329,15 @@ function strikethroughChecklistItem() {
 
 function addChecklistItem() {
     const parentDivIndex = this.parentNode.parentNode.dataset.index;
-    toDoManager.getMasterTaskList()[parentDivIndex].userChecklist.push("Checklist item added")
-    createUserChecklistItems();
+    const selectedTask = toDoManager.getMasterTaskList()[parentDivIndex]
+    const checklistItemsDiv = this.previousSibling
+    console.log(this.previousSibling)
+    console.log(checklistItemsDiv)
+    console.log(selectedTask)
+    selectedTask.userChecklist.push("Checklist item added")
+    createUserChecklistItems(selectedTask, checklistItemsDiv);
 
-    // Remove when finished    
+    // To be replaced with a fn() to get user input   
     console.log("User added a new checklist item:")
     console.log(toDoManager.getMasterTaskList()[parentDivIndex].userChecklist)   
 }
