@@ -122,3 +122,6 @@ https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Spre
 
 Removing the parent node of an event.target
 https://stackoverflow.com/questions/46665554/remove-parent-element-on-click-with-plain-javascript
+
+How to align one flex item to the right:
+https://www.geeksforgeeks.org/how-to-align-one-item-to-the-right-using-css-flexbox/
