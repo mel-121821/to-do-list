@@ -192,33 +192,13 @@ body {
     justify-content: center;
 }
 
-.exp-col-btn {
-    display: flex; 
-    align-self: center;
-    justify-content: center;
-}
-
 #content div div:nth-child(5) {
     /* project category div */
     grid-area: 2 / 2 / 3 / 7;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-}
-
-#content > div div:nth-child(1) {
-    /* project type */
-    background-color: greenyellow;  
-}
-
-#content > div div:nth-child(2) {
-    /* due date */
-    background-color: violet;
-}
-
-#content > div div:nth-child(3) {
-    /* priority */
-    background-color: greenyellow;
+    background: greenyellow;
 }
 
 #content > div textarea {
@@ -233,11 +213,17 @@ body {
     font-size: 0.9rem;
 }
 
+#content > div div:nth-child(2) {
+    /* user-added checklist section */
+    background-color: rgb(208, 141, 208);
+}
+
 #content > div div:nth-child(7) {
-    /* user-added checklist items div */
+    /* user-added checklist items outer div */
     grid-area: 4 / 2 / 5 / 7;
     display: flex;
     flex-direction: column;
+    background-color: rgb(201, 238, 239)
 }
 
 #content > div legend {
@@ -255,7 +241,7 @@ body {
 }
 
 #content > div div:nth-child(7) button {
-    /* user added checklist button */
+    /* user checklist add-button */
     align-self: flex-start;
 }
 
@@ -281,9 +267,12 @@ body {
 #content ol {
     display: flex;
     margin: 3px 0px;
+    background-color: rgb(255, 239, 206);
+    align-items: center;
+    width: 100%;
 }
 
-#content ol p {
+#content ol label {
     margin-left: 10px;
 }
 
@@ -292,6 +281,11 @@ body {
     height: auto;
 }
 
+#content ol > button {
+    margin-left: auto;
+    margin-right: 5px;
+    padding: 0px 5px;
+}
 
 /*__________Right Sidebar__________*/
 
