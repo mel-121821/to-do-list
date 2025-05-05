@@ -4,14 +4,14 @@
 const toDoManager = (function() {
 
     // constructor
-    function Task(title, category, dueDate, priority, description, userChecklist = []) {
+    function Task(title, project, dueDate, priority, description, userChecklist = []) {
         // the userChecklist = [] allows an empty array to be used as the default value
 
         // direct user input
         this.title = title;
         
         // selected from dropdown
-        this.category = category;
+        this.project = project;
         this.dueDate = dueDate;
         this.priority = priority;
 
@@ -28,7 +28,7 @@ const toDoManager = (function() {
     const masterTaskList = [
         {
             title: "Make grocery list",
-            category: "Food",
+            project: "Food",
             dueDate: "2025-04-09",
             priority: "low",
             description: "Need eggs, black forest ham, sliced cheese and english muffins",
@@ -38,7 +38,7 @@ const toDoManager = (function() {
         },
         {
             title: "Do Laundry",
-            category: "Laundry",
+            project: "Laundry",
             dueDate: "2025-04-18",
             priority: "high",
             description: "Laundromat opens at 6am",
@@ -48,7 +48,7 @@ const toDoManager = (function() {
         },
         {
             title: "Cat Chores",
-            category: "Pets",
+            project: "Pets",
             dueDate: "2025-04-16",
             priority: "normal",
             description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
@@ -58,7 +58,7 @@ const toDoManager = (function() {
         },
         {
             title: "Make dinner",
-            category: "Food",
+            project: "Food",
             dueDate: "2025-04-09",
             priority: "low",
             description: "Menu: Udon stir-fry",
@@ -90,8 +90,8 @@ const toDoManager = (function() {
 
 
     // fn()s to add tasks
-    function addTaskToMasterList (title, category, dueDate, priority, description, userChecklist = []) {
-        masterTaskList.push(new Task(title, category, dueDate, priority, description, userChecklist));
+    function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = []) {
+        masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist));
     };
 
     addTaskToMasterList("Say hello", "Pets", "2025-04-22", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
@@ -103,12 +103,14 @@ const toDoManager = (function() {
 
 
     // get data fn()s
-    // fn()s get original lists (not copies), which can be modified
+    // these fn()s get original lists (not copies), which can be modified
     const getMasterTaskList = () => masterTaskList;
-    const categoryArr = categories.map(function(category){
-        return category.name
+
+    // filter out duplicates
+    const projectArr = categories.map(function(project){
+        return project.name
     })
-    const getCategories = () => categoryArr
+    const getCategories = () => projectArr
     const getPriorities = () => priorities;
     const getCompletedTaskList = () => completedTaskList
 
