@@ -125,3 +125,12 @@ https://stackoverflow.com/questions/46665554/remove-parent-element-on-click-with
 
 How to align one flex item to the right:
 https://www.geeksforgeeks.org/how-to-align-one-item-to-the-right-using-css-flexbox/
+
+Array.find() method
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find
+
+JS get date methods:
+https://www.w3schools.com/js/js_date_methods.asp
+
+How to format a date in JS:
+https://stackoverflow.com/questions/3552461/how-do-i-format-a-date-in-javascript
