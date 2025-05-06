@@ -67,7 +67,7 @@ const toDoManager = (function() {
             ]
         },
     ]
-    const categories = [
+    const projects = [
         {
             icon: "all-icon",
             name: "All"
@@ -107,16 +107,16 @@ const toDoManager = (function() {
     const getMasterTaskList = () => masterTaskList;
 
     // filter out duplicates
-    const projectArr = categories.map(function(project){
+    const projectArr = projects.map(function(project){
         return project.name
     })
-    const getCategories = () => projectArr
+    const getProjects = () => projectArr
     const getPriorities = () => priorities;
     const getCompletedTaskList = () => completedTaskList
 
     return {
         getMasterTaskList,
-        getCategories,
+        getProjects,
         getPriorities,
         getCompletedTaskList
     }
