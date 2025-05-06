@@ -134,3 +134,12 @@ https://www.w3schools.com/js/js_date_methods.asp
 
 How to format a date in JS:
 https://stackoverflow.com/questions/3552461/how-do-i-format-a-date-in-javascript
+
+MDN Date object: See toISOString()
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date
+
+Get a date string in the format: yyyy-mm-dd from toISOString()
+https://stackoverflow.com/questions/25159330/how-to-convert-an-iso-date-to-the-date-format-yyyy-mm-dd
+
+Get future date from current date:
+https://stackoverflow.com/questions/18583715/javascript-adding-time-for-a-future-date
