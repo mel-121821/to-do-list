@@ -368,15 +368,14 @@ const domManipulator = (function() {
     const overdueBtn = document.querySelector(".overdue > button")
     overdueBtn.addEventListener("click", getOverdueTasks)
     
+    // Important notes about date formats: 
+    // months are indexed at zero! January == 00
+    // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate() instead
+
     function getFormattedDate() {
-        // Important notes about date formats: 
-        // months are indexed at zero! January == 00
-        // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate instead
         const todaysDate = new Date()
         const year = todaysDate.getFullYear();
-        
         let month = todaysDate.getMonth() + 1;
-        console.log(month)
         if (month < 10) {
             month = `0${month}`
         } else {
@@ -394,16 +393,18 @@ const domManipulator = (function() {
 
     // Event listener fn()s
     function getTodayTasks() {
+        // get masterTaskList
         const allTasks = toDoManager.getMasterTaskList();
-        const today = getFormattedDate()
-        
-
         // get current date
-        // filter list by due date
+        const today = getFormattedDate();
+         // filter list by due date
+        const filteredTaskList = allTasks.filter((task) => task.dueDate === `${today}`)
         // call renderTaskList with new filtered list as argument
+        renderTaskList(filteredTaskList);
         console.log("User clicks todayTasks")
         console.log(allTasks)
         console.log(today)
+        console.log(filteredTaskList)
     }
 
     function getThisWeekTasks() {
