@@ -31,7 +31,7 @@ const domManipulator = (function() {
 
     // get data
     const allTasks = toDoManager.getMasterTaskList();
-    const allCategories = toDoManager.getCategories(); 
+    const allProjects = toDoManager.getProjects(); 
     const allPriorities = toDoManager.getPriorities();
 
     // render
@@ -173,10 +173,10 @@ const domManipulator = (function() {
     }
 
     function createProjectDropdown(task) {
-        const allProjectCategories = toDoManager.getCategories();
+        const allProjects = toDoManager.getProjects();
         const projectDropdown = document.createElement("select");
         // projectDropdown.id = "project-dropdown";
-        for (const project of allProjectCategories) {
+        for (const project of allProjects) {
             const option = document.createElement("option")
             option.value = project;
             option.textContent = project;
@@ -191,7 +191,7 @@ const domManipulator = (function() {
     }
 
     function changeProject() {
-        // this = dropdown > parentNode = categoriesDiv > parentNode = TaskDiv > dataset > index
+        // this = dropdown > parentNode = ProjectsDiv > parentNode = TaskDiv > dataset > index
         toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].project = this.value;
         console.log(`Project has been updated to: ${this.value}`);
         console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index])
@@ -345,6 +345,87 @@ const domManipulator = (function() {
         // domManipulator.renderTaskList(toDoManager.getMasterTaskList())
     }
 
+
+    // Project elements and event listeners (left sidebar)
+    
+    // Today tasks
+    const todayTasksBtn = document.querySelector(".today > button");
+    todayTasksBtn.addEventListener("click", getTodayTasks)
+
+    // This week tasks
+    const thisWeekTasksBtn = document.querySelector(".this-week > button")
+    thisWeekTasksBtn.addEventListener("click", getThisWeekTasks)
+
+    // Completed tasks
+    const completeBtn = document.querySelector(".complete > button")
+    completeBtn.addEventListener("click", getCompletedTasks)
+
+    // Important tasks
+    const importantBtn = document.querySelector(".important > button")
+    importantBtn.addEventListener("click", getImportantTasks)
+
+    // Overdue tasks
+    const overdueBtn = document.querySelector(".overdue > button")
+    overdueBtn.addEventListener("click", getOverdueTasks)
+    
+    function getFormattedDate() {
+        // Important notes about date formats: 
+        // months are indexed at zero! January == 00
+        // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate instead
+        const todaysDate = new Date()
+        const year = todaysDate.getFullYear();
+        
+        let month = todaysDate.getMonth() + 1;
+        console.log(month)
+        if (month < 10) {
+            month = `0${month}`
+        } else {
+            // do nothing
+        }
+        let day = todaysDate.getDate();
+        if (todaysDate.getDate() < 10) {
+            day = `0${todaysDate.getDate()}`
+        } else {
+            // do nothing
+        }
+        const formattedDate = `${year}-${month}-${day}`
+        return formattedDate
+    }
+
+    // Event listener fn()s
+    function getTodayTasks() {
+        const allTasks = toDoManager.getMasterTaskList();
+        const today = getFormattedDate()
+        
+
+        // get current date
+        // filter list by due date
+        // call renderTaskList with new filtered list as argument
+        console.log("User clicks todayTasks")
+        console.log(allTasks)
+        console.log(today)
+    }
+
+    function getThisWeekTasks() {
+        console.log("User clicks this WeekTasks")
+    }
+
+    function getCompletedTasks() {
+        console.log("User clicks completedTasks")
+    }
+
+    function getImportantTasks() {
+        console.log("User clicks importantTasks")
+    }
+
+    function getOverdueTasks() {
+        console.log("User clicks overdueTasks")
+    }
+
+    function renderMyProjectsList() {
+
+    }
+
     // Initial render
     renderTaskList(allTasks);
 
@@ -359,58 +440,3 @@ const domManipulator = (function() {
 //__________Unused Code (Delete when finished)__________
 
 
-// console.log(masterTaskList);
-// console.log(categories)
-// const date = format(new Date(2014, 4, 4), "MM/dd/yyyy");
-// console.log(date)
-// console.log(getPriorities())
-
-// const expBtns = document.querySelectorAll(".expand");
-// console.log(expBtns);
-// console.log(typeof(expBtns))
-// for (const expBtn of expBtns) {
-//     expBtn.addEventListener("click", function(e) {
-//         getIndexOfTask(expBtns)
-//         console.log("expand button clicked")
-//     });
-// }
-
-// function getIndexOfTask(taskList, index) {
-//     console.log(index);
-// }
-
-//function renderTaskList(obj) {
-    //     const content = document.querySelector("#content");
-    //     for (const task of obj) {
-    //         // create elements
-    //         const taskDiv = document.createElement("div");
-    //         const taskCheckbox = document.createElement("input");
-    //         taskCheckbox.setAttribute("type", "checkbox");
-    //         const title = document.createElement("h3");
-    //         const expandBtn = document.createElement("button");
-    //         const deleteBtn = document.createElement("button");
-    //         const taskDetails = document.createElement("div")
-    //         const project = document.createElement("div");
-    //         const dueDate = document.createElement("div");
-    //         const priority = document.createElement("div");
-    //         const btnDiv = document.createElement("div");
-    //         const saveBtn = document.createElement("button");
-    //         const cancelBtn = document.createElement("button");
-    
-    //         // populate info
-    //         title.textContent = `${task.title}`;
-    //         expandBtn.textContent = "exp";
-    //         deleteBtn.textContent = "del";
-    //         project.textContent = `${task.project}`;
-    //         dueDate.textContent = `${task.dueDate}`;
-    //         priority.textContent = `${task.priority}`;
-    //         saveBtn.textContent = "Save"
-    //         cancelBtn.textContent = "Cancel"
-    
-    //         // append
-    //         taskDetails.append(project, dueDate, priority);
-    //         btnDiv.append(saveBtn, cancelBtn)
-    //         taskDiv.append(taskCheckbox, title, expandBtn, deleteBtn, taskDetails, btnDiv);
-    //         content.appendChild(taskDiv);
-    //     }
-    // }
