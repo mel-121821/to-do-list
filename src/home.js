@@ -29,7 +29,7 @@ const toDoManager = (function() {
         {
             title: "Make grocery list",
             project: "Food",
-            dueDate: "2025-04-09",
+            dueDate: "2025-05-06",
             priority: "low",
             description: "Need eggs, black forest ham, sliced cheese and english muffins",
             userChecklist: [
@@ -39,7 +39,7 @@ const toDoManager = (function() {
         {
             title: "Do Laundry",
             project: "Laundry",
-            dueDate: "2025-04-18",
+            dueDate: "2025-05-06",
             priority: "high",
             description: "Laundromat opens at 6am",
             userChecklist: [
@@ -49,7 +49,7 @@ const toDoManager = (function() {
         {
             title: "Cat Chores",
             project: "Pets",
-            dueDate: "2025-04-16",
+            dueDate: "2025-05-11",
             priority: "normal",
             description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
             userChecklist: [
@@ -94,7 +94,7 @@ const toDoManager = (function() {
         masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist));
     };
 
-    addTaskToMasterList("Say hello", "Pets", "2025-04-22", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
+    addTaskToMasterList("Say hello", "Pets", "2025-05-12", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
 
 
