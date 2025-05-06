@@ -350,76 +350,78 @@ const domManipulator = (function() {
     
     // Today tasks
     const todayTasksBtn = document.querySelector(".today > button");
-    todayTasksBtn.addEventListener("click", getTodayTasks)
+    todayTasksBtn.addEventListener("click", renderTodayTasks)
 
     // This week tasks
     const thisWeekTasksBtn = document.querySelector(".this-week > button")
-    thisWeekTasksBtn.addEventListener("click", getThisWeekTasks)
+    thisWeekTasksBtn.addEventListener("click", renderThisWeekTasks)
 
     // Completed tasks
     const completeBtn = document.querySelector(".complete > button")
-    completeBtn.addEventListener("click", getCompletedTasks)
+    completeBtn.addEventListener("click", renderCompletedTasks)
 
     // Important tasks
     const importantBtn = document.querySelector(".important > button")
-    importantBtn.addEventListener("click", getImportantTasks)
+    importantBtn.addEventListener("click", renderImportantTasks)
 
     // Overdue tasks
     const overdueBtn = document.querySelector(".overdue > button")
-    overdueBtn.addEventListener("click", getOverdueTasks)
+    overdueBtn.addEventListener("click", renderOverdueTasks)
     
     // Important notes about date formats: 
     // months are indexed at zero! January == 00
     // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate() instead
 
+    function getCurrentDate() {
+        console.log(new Date().toISOString)
+    }
+
     function getFormattedDate() {
-        const todaysDate = new Date()
-        const year = todaysDate.getFullYear();
-        let month = todaysDate.getMonth() + 1;
-        if (month < 10) {
-            month = `0${month}`
-        } else {
-            // do nothing
-        }
-        let day = todaysDate.getDate();
-        if (todaysDate.getDate() < 10) {
-            day = `0${todaysDate.getDate()}`
-        } else {
-            // do nothing
-        }
-        const formattedDate = `${year}-${month}-${day}`
+        const formattedDate = new Date().toISOString().substring(0, 10);
         return formattedDate
     }
 
     // Event listener fn()s
-    function getTodayTasks() {
+    function renderTodayTasks() {
         // get masterTaskList
         const allTasks = toDoManager.getMasterTaskList();
         // get current date
         const today = getFormattedDate();
          // filter list by due date
-        const filteredTaskList = allTasks.filter((task) => task.dueDate === `${today}`)
+        const filteredToToday = allTasks.filter((task) => task.dueDate === `${today}`)
         // call renderTaskList with new filtered list as argument
-        renderTaskList(filteredTaskList);
+        renderTaskList(filteredToToday);
         console.log("User clicks todayTasks")
-        console.log(allTasks)
         console.log(today)
-        console.log(filteredTaskList)
+        console.log(filteredToToday)
     }
 
-    function getThisWeekTasks() {
+    function getDateInOneWeek() {
+        const today = new Date();
+        const nextWeek = new Date(today.setDate(today.getDate() + 7)).toISOString().substring(0, 10);
+        return nextWeek
+    }
+
+    function renderThisWeekTasks() {
+        const allTasks = toDoManager.getMasterTaskList();
+        const today = getFormattedDate();
+        const oneWeekFromToday = getDateInOneWeek()
+        const filteredToWeek = allTasks.filter((task) => task.dueDate >= `${today}` && task.dueDate <= `${oneWeekFromToday}`) 
+        renderTaskList(filteredToWeek);
         console.log("User clicks this WeekTasks")
+        console.log(`Date range: ${today} to ${oneWeekFromToday}`);
+        console.log(filteredToWeek)
     }
 
-    function getCompletedTasks() {
+    function renderCompletedTasks() {
         console.log("User clicks completedTasks")
     }
 
-    function getImportantTasks() {
+    function renderImportantTasks() {
         console.log("User clicks importantTasks")
     }
 
-    function getOverdueTasks() {
+    function renderOverdueTasks() {
         console.log("User clicks overdueTasks")
     }
 
