@@ -42,8 +42,16 @@ const domManipulator = (function() {
 
             // create div for each task
             const taskDiv = document.createElement("div");
-            taskDiv.dataset.index = index;
-            taskDiv.dataset.project = task.project
+            if (!task.index){
+                    task.index = index
+            } else if (task.index) {
+                // do nothing
+            }
+            taskDiv.dataset.index = task.index;
+            console.log(task.index)
+            console.log(taskDiv.dataset.index)
+            // taskDiv.dataset.project = task.project;
+            taskDiv.dataset.title = task.title;
 
             // 1st row
             // task checkbox
@@ -116,25 +124,30 @@ const domManipulator = (function() {
             taskDetails.appendChild(priorityDropdown);
             taskDiv.appendChild(taskDetails);
 
-            // append description
+            // append description and checklist
             taskDiv.appendChild(taskDescription);
-
-            // append user checklist
             taskDiv.appendChild(checklistDiv);
 
             // append btns
             btnDiv.append(saveBtn, cancelBtn)
-            taskDiv.append( btnDiv);
+            taskDiv.append(btnDiv);
             content.appendChild(taskDiv);
         })  
     }
 
+
+
+    // move to toDoManager
+    // use .find()?? to search for matching element in masterTaskList, will need to add logic to prevent user from adding an exact copy of a task
     function completeTask() {
+        // need to change how element is selected due to having different filtered versions
         const index = this.parentNode.dataset.index;
+        const taskTitle = this.parentNode.dataset.title;
         const taskRemoved = removeTaskFromList(index)
         // need spread syntax here, otherwise taskRemoved will be placed into the completed list as an array of one
         moveTaskToCompleted(...taskRemoved);
         console.log(toDoManager.getMasterTaskList())
+        console.log(taskTitle)
     }
 
     function removeTaskFromList(index) {
@@ -372,10 +385,6 @@ const domManipulator = (function() {
     // months are indexed at zero! January == 00
     // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate() instead
 
-    function getCurrentDate() {
-        console.log(new Date().toISOString)
-    }
-
     function getFormattedDate() {
         const formattedDate = new Date().toISOString().substring(0, 10);
         return formattedDate
@@ -388,13 +397,22 @@ const domManipulator = (function() {
         // get current date
         const today = getFormattedDate();
          // filter list by due date
-        const filteredToToday = allTasks.filter((task) => task.dueDate === `${today}`)
+        const filteredToToday = allTasks.filter(function(task, index){ 
+            // preserve original index on masterTaskList
+            task.index = index;
+            return task.dueDate === `${today}`
+        })
+
         // call renderTaskList with new filtered list as argument
         renderTaskList(filteredToToday);
         console.log("User clicks todayTasks")
-        console.log(today)
+        console.log(`Date: ${today}`)
+        console.log("Current listed filtered to today:")
         console.log(filteredToToday)
+        console.log(filteredToToday[0])
+        console.log(`Original index of the task: "${filteredToToday[0].title}" in masterTaskList is ${filteredToToday[0].index}`)
     }
+
 
     function getDateInOneWeek() {
         const today = new Date();
