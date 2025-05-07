@@ -29,7 +29,7 @@ const toDoManager = (function() {
         {
             title: "Make grocery list",
             project: "Food",
-            dueDate: "2025-05-06",
+            dueDate: new Date().toISOString().substring(0, 10),
             priority: "low",
             description: "Need eggs, black forest ham, sliced cheese and english muffins",
             userChecklist: [
@@ -39,7 +39,7 @@ const toDoManager = (function() {
         {
             title: "Do Laundry",
             project: "Laundry",
-            dueDate: "2025-05-06",
+            dueDate: new Date().toISOString().substring(0, 10),
             priority: "high",
             description: "Laundromat opens at 6am",
             userChecklist: [
@@ -59,7 +59,7 @@ const toDoManager = (function() {
         {
             title: "Make dinner",
             project: "Food",
-            dueDate: "2025-04-09",
+            dueDate: new Date().toISOString().substring(0, 10),
             priority: "low",
             description: "Menu: Udon stir-fry",
             userChecklist: [
