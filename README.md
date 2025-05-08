@@ -143,3 +143,8 @@ https://stackoverflow.com/questions/25159330/how-to-convert-an-iso-date-to-the-d
 
 Get future date from current date:
 https://stackoverflow.com/questions/18583715/javascript-adding-time-for-a-future-date
+
+How to filter an array without losing the index value:
+https://stackoverflow.com/questions/49482946/how-can-i-filter-an-array-without-losing-the-index
+
+https://stackoverflow.com/questions/7536993/how-can-i-filter-a-javascript-array-and-maintain-its-indices/72139728
