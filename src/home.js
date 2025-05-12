@@ -1,5 +1,5 @@
 //__________home.js__________
-//__________Logic__________
+//__________To-do Logic__________
 
 const toDoManager = (function() {
 
@@ -22,7 +22,6 @@ const toDoManager = (function() {
         // add fn to add checklist item
         // add fn to remove checklist item
     }
-
 
     // data lists
     const masterTaskList = [
@@ -67,24 +66,7 @@ const toDoManager = (function() {
             ]
         },
     ]
-    const projects = [
-        {
-            icon: "all-icon",
-            name: "All"
-        },
-        {
-            icon: "icon",
-            name: "Food"
-        },
-        {
-            icon: "icon",
-            name: "Laundry"
-        },
-        {
-            icon: "icon",
-            name: "Pets"
-        }
-    ]
+    
     const priorities = ["low", "normal", "high"]
     const completedTaskList = [];
 
@@ -96,27 +78,119 @@ const toDoManager = (function() {
 
     addTaskToMasterList("Say hello", "Pets", "2025-05-12", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
+    // use .find()?? to search for matching element in masterTaskList, will need to add logic to prevent user from adding an exact copy of a task
+    function completeTask() {
+        // need to change how element is selected due to having different filtered versions
+        const index = this.parentNode.dataset.index;
+        const taskRemoved = removeTaskFromList(index)
+        // need spread syntax here, otherwise taskRemoved will be placed into the completed list as an array of one
+        moveTaskToCompleted(...taskRemoved);
+        console.log(getMasterTaskList())
+    }
 
+    function removeTaskFromList(index) {
+        const removed = getMasterTaskList().splice(index, 1)
+        console.log("Updated masterTaskList:")
+        console.log(toDoManager.getMasterTaskList())
+        console.log("The following task has been removed:")
+        console.log(...removed)
+        // need to change logic to a pubsub method
+        // domManipulator.renderTaskList(getMasterTaskList())
+        return removed
+    }
 
+    function moveTaskToCompleted(removed) {
+        toDoManager.getCompletedTaskList().push(removed)
+        console.log("The following task has been moved to the completedTaskList:")
+        console.log(toDoManager.getCompletedTaskList())
+    } 
 
+    function deleteTask() {
+        const index = this.parentNode.dataset.index;
+        console.log(`User has removed the following task: ${getMasterTaskList()[index].title} at index: ${index}`)
+        removeTaskFromList(index)
+    }
 
+    // create an to updateTask fn() and call changeProject under it. Add updateTask() to the event listener on the save btn
 
+    function updateTask() {
+        // this = dropdown > parentNode = ProjectsDiv > parentNode = TaskDiv > dataset > index
+        const task = getMasterTaskList()[this.parentNode.parentNode.dataset.index]
+        const element = this.parentNode.parentNode
+        changeProject(task, element);
+        changeDueDate(task, element);
+        changePriority(task, element)
+        console.log("User saves task info for the following task:")
+        console.log(task);
+        // pub/sub re-render
+    }
+    
+
+    function changeProject(task, element) {
+        const newProject = element.children.item(4).children.item(0).value
+        task.project = newProject;
+    }
+
+    function changeDueDate(task, element) {
+        const newDueDate = element.children.item(4).children.item(1).value
+        task.dueDate = newDueDate;
+    }
+
+    function changePriority(task, element) {
+        const newPriority = element.children.item(4).children.item(2).value
+        task.priority = newPriority;
+    }
+
+    function completeChecklistItem() {
+        const itemLabel = this.parentNode.children.item(1);
+        // itemLabel.style.textDecoration = "line-through"
+        itemLabel.style.textDecoration !== "line-through" ? itemLabel.style.textDecoration = "line-through" : itemLabel.style.textDecoration = "none"
+    }
+
+    function deleteUserChecklistItem() {
+        const parentDivIndex = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
+        const checklistIndex = this.parentNode.dataset.itemNum;
+        toDoManager.getMasterTaskList()[parentDivIndex].userChecklist.splice(checklistIndex, 1)
+
+        // pubsub - on change, rerender checklistItems
+        // createChecklistItems(getMasterTaskList()[parentDivIndex], this.parentNode.parentNode)
+
+        console.log(`User deleted checklist item at index: ${checklistIndex}`)
+        console.log("New list of user items:")
+        console.log(getMasterTaskList()[parentDivIndex].userChecklist)
+    }
+
+    function addChecklistItem() {
+        const parentDivIndex = this.parentNode.parentNode.dataset.index;
+        const selectedTask = getMasterTaskList()[parentDivIndex]
+        const checklistItemsDiv = this.previousSibling
+        console.log(checklistItemsDiv)
+        console.log(selectedTask)
+        selectedTask.userChecklist.push("Checklist item added")
+
+        //pubsub - on change, re-render checklist items
+        // createChecklistItems(selectedTask, checklistItemsDiv);
+
+        // To be replaced with a fn() to get user input   
+        console.log("User added a new checklist item:")
+        console.log(getMasterTaskList()[parentDivIndex].userChecklist)   
+    }
 
     // get data fn()s
     // these fn()s get original lists (not copies), which can be modified
     const getMasterTaskList = () => masterTaskList;
-
-    // filter out duplicates
-    const projectArr = projects.map(function(project){
-        return project.name
-    })
-    const getProjects = () => projectArr
     const getPriorities = () => priorities;
     const getCompletedTaskList = () => completedTaskList
 
     return {
+        completeTask,
+        deleteTask,
+        updateTask,
+        completeChecklistItem,
+        deleteUserChecklistItem,
+        addChecklistItem,
+
         getMasterTaskList,
-        getProjects,
         getPriorities,
         getCompletedTaskList
     }
