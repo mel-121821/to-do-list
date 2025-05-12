@@ -20,6 +20,7 @@ import { format } from "date-fns"
 
 // logic functions
 import { toDoManager } from "./home.js";
+import { projectManager } from "./projects.js";
 
 
 // display obj IIFE
@@ -31,7 +32,7 @@ const domManipulator = (function() {
 
     // get data
     const allTasks = toDoManager.getMasterTaskList();
-    const allProjects = toDoManager.getProjects(); 
+    const allProjects = projectManager.getProjects(); 
     const allPriorities = toDoManager.getPriorities();
 
     // render
@@ -42,6 +43,8 @@ const domManipulator = (function() {
 
             // create div for each task
             const taskDiv = document.createElement("div");
+
+            // check if index of masterTaskList already exists, if not, assign it
             if (!task.index){
                     task.index = index
             } else if (task.index) {
@@ -51,13 +54,11 @@ const domManipulator = (function() {
             console.log(task.index)
             console.log(taskDiv.dataset.index)
             // taskDiv.dataset.project = task.project;
-            taskDiv.dataset.title = task.title;
 
             // 1st row
-            // task checkbox
             const taskCheckbox = document.createElement("input");
             taskCheckbox.setAttribute("type", "checkbox");
-            taskCheckbox.addEventListener("click", completeTask)
+            taskCheckbox.addEventListener("click", toDoManager.completeTask)
             // no brackets after completeTask, otherwise the function will be called immediately   
 
             // task title
@@ -75,24 +76,30 @@ const domManipulator = (function() {
             const deleteBtn = document.createElement("button");
             deleteBtn.textContent = "del"
             deleteBtn.classList.add("delete-btn");
-            deleteBtn.addEventListener("click", deleteTask)
+            deleteBtn.addEventListener("click", toDoManager.deleteTask)
             
             // 2nd row - details section in own div 
+            // keeping these fn()s seperate from render fn() as they are more complex
             const taskDetails = document.createElement("div")
 
-            // keeping these fn()s seperate from render fn() as they are more complex
-            // will eventually need to change event listeners to submit rather than change
             // project dropdown
+            const projectDiv = document.createElement("div");
+            const projectLabel = document.createElement("label");
+            projectLabel.innerHTML = "Project:";
+            taskDetails.appendChild(projectLabel);
             const projectDropdown = createProjectDropdown(task)
-            projectDropdown.addEventListener("change", changeProject) 
-
+            
             // date picker
+            const dateDiv = document.createElement("div")
+            const dateLabel = document.createElement("label")
+            dateLabel.innerHTML = "Due date:"
             const datePicker = createDatePicker(task);
-            datePicker.addEventListener("change", changeDueDate)
 
             // priority dropdown
+            const priorityDiv = document.createElement("div");
+            const priorityLabel = document.createElement("label");
+            priorityLabel.innerHTML = "Priority:"
             const priorityDropdown = createPriorityDropdown(task);
-            priorityDropdown.addEventListener("change", changePriority)
 
             // 3rd row - description
             const taskDescription = createDescription(task);
@@ -106,7 +113,7 @@ const domManipulator = (function() {
             // save btn
             const saveBtn = document.createElement("button");
             saveBtn.textContent = "Save"
-            saveBtn.addEventListener("click", saveTaskInfo)
+            saveBtn.addEventListener("click", toDoManager.updateTask)
 
             // cancel btn
             const cancelBtn = document.createElement("button");
@@ -119,9 +126,13 @@ const domManipulator = (function() {
             taskDiv.appendChild(deleteBtn);
 
             // append details row in own div
-            taskDetails.appendChild(projectDropdown);
-            taskDetails.appendChild(datePicker);
-            taskDetails.appendChild(priorityDropdown);
+            projectDiv.append(projectLabel, projectDropdown)
+            dateDiv.append(dateLabel, datePicker)
+            priorityDiv.append(priorityLabel, priorityDropdown)
+
+            taskDetails.appendChild(projectDiv);
+            taskDetails.appendChild(dateDiv);
+            taskDetails.appendChild(priorityDiv);
             taskDiv.appendChild(taskDetails);
 
             // append description and checklist
@@ -133,41 +144,10 @@ const domManipulator = (function() {
             taskDiv.append(btnDiv);
             content.appendChild(taskDiv);
         })  
-    }
-
-
-
-    // move to toDoManager
-    // use .find()?? to search for matching element in masterTaskList, will need to add logic to prevent user from adding an exact copy of a task
-    function completeTask() {
-        // need to change how element is selected due to having different filtered versions
-        const index = this.parentNode.dataset.index;
-        const taskTitle = this.parentNode.dataset.title;
-        const taskRemoved = removeTaskFromList(index)
-        // need spread syntax here, otherwise taskRemoved will be placed into the completed list as an array of one
-        moveTaskToCompleted(...taskRemoved);
-        console.log(toDoManager.getMasterTaskList())
-        console.log(taskTitle)
-    }
-
-    function removeTaskFromList(index) {
-        const removed = toDoManager.getMasterTaskList().splice(index, 1)
-        console.log("Updated masterTaskList:")
-        console.log(toDoManager.getMasterTaskList())
-        console.log("The following task has been removed:")
-        console.log(removed)
-        domManipulator.renderTaskList(toDoManager.getMasterTaskList())
-        return removed
-    }
-
-    function moveTaskToCompleted(removed) {
-        toDoManager.getCompletedTaskList().push(removed)
-        console.log("The following task has been moved to the completedTaskList:")
-        console.log(toDoManager.getCompletedTaskList())
-    }      
+    }     
         
     function collapseTask(e) {
-        // considered adding save/cancell btns to collapsable items, but decided against it, as the user may still want to save task details without expanding the menu
+        // considered adding save/cancel btns to collapsable items, but decided against it, as the user may still want to save task details without expanding the menu
         const description = e.target.parentNode.children.item(5);
         const checklistDiv = e.target.parentNode.children.item(6);
         if (description.style.display !== "none" && checklistDiv.style.display !== "none") {
@@ -179,14 +159,8 @@ const domManipulator = (function() {
         };
     };
 
-    function deleteTask() {
-        const index = this.parentNode.dataset.index;
-        console.log(`User has removed the following task: ${toDoManager.getMasterTaskList()[index].title} at index: ${index}`)
-        removeTaskFromList(index)
-    }
-
     function createProjectDropdown(task) {
-        const allProjects = toDoManager.getProjects();
+        const allProjects = projectManager.getProjects();
         const projectDropdown = document.createElement("select");
         // projectDropdown.id = "project-dropdown";
         for (const project of allProjects) {
@@ -200,14 +174,8 @@ const domManipulator = (function() {
             }
             projectDropdown.appendChild(option);
         }
+        
         return projectDropdown;
-    }
-
-    function changeProject() {
-        // this = dropdown > parentNode = ProjectsDiv > parentNode = TaskDiv > dataset > index
-        toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].project = this.value;
-        console.log(`Project has been updated to: ${this.value}`);
-        console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index])
     }
 
     function createDatePicker(task) {
@@ -215,12 +183,6 @@ const domManipulator = (function() {
         datePicker.setAttribute("type", "date");
         datePicker.defaultValue = task.dueDate;
         return datePicker;
-    }
-
-    function changeDueDate() {
-        toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].dueDate = this.value;
-        console.log(`dueDate has been updated to: ${this.value}`);
-        console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index])
     }
 
     function createPriorityDropdown (task) {
@@ -238,12 +200,6 @@ const domManipulator = (function() {
             priorityDropdown.appendChild(option)
         }
         return priorityDropdown;
-    }
-
-    function changePriority() {
-        toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].priority = this.value;
-        console.log(`Priority has been updated to: ${this.value}`);
-        console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index])
     }
 
     function createDescription (task) {
@@ -274,7 +230,7 @@ const domManipulator = (function() {
         // create btn to add checklist item
         const addBtn = document.createElement("button");
         addBtn.textContent = "+"
-        addBtn.addEventListener("click", addChecklistItem)
+        addBtn.addEventListener("click", toDoManager.addChecklistItem)
 
         // append items to checklist div
         checklistDiv.appendChild(legend);
@@ -298,7 +254,7 @@ const domManipulator = (function() {
             const itemCheckbox = document.createElement("input");
             itemCheckbox.setAttribute("type", "checkbox");
             itemCheckbox.id = item;
-            itemCheckbox.addEventListener("change", strikethroughChecklistItem)
+            itemCheckbox.addEventListener("change", toDoManager.completeChecklistItem)
 
             // create checkbox label
             const label = document.createElement("label");
@@ -309,7 +265,7 @@ const domManipulator = (function() {
             // create delete btn
             const deleteBtn = document.createElement("button");
             deleteBtn.textContent = "-"
-            deleteBtn.addEventListener("click", deleteUserChecklistItem)
+            deleteBtn.addEventListener("click", toDoManager.deleteUserChecklistItem)
 
             // append items
             userItemDiv.append(itemCheckbox, label, deleteBtn)
@@ -317,46 +273,6 @@ const domManipulator = (function() {
         })
     }
 
-    function deleteUserChecklistItem() {
-        const parentDivIndex = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
-        const checklistIndex = this.parentNode.dataset.itemNum;
-        toDoManager.getMasterTaskList()[parentDivIndex].userChecklist.splice(checklistIndex, 1)
-
-        createChecklistItems(toDoManager.getMasterTaskList()[parentDivIndex], this.parentNode.parentNode)
-
-        console.log(`User deleted checklist item at index: ${checklistIndex}`)
-        console.log("New list of user items:")
-        console.log(toDoManager.getMasterTaskList()[parentDivIndex].userChecklist)
-    }
-
-    function strikethroughChecklistItem() {
-        console.log(this.parentNode.children.item(1))
-        const itemLabel = this.parentNode.children.item(1);
-        // itemLabel.style.textDecoration = "line-through"
-        itemLabel.style.textDecoration !== "line-through" ? itemLabel.style.textDecoration = "line-through" : itemLabel.style.textDecoration = "none"
-    }
-
-    function addChecklistItem() {
-        const parentDivIndex = this.parentNode.parentNode.dataset.index;
-        const selectedTask = toDoManager.getMasterTaskList()[parentDivIndex]
-        const checklistItemsDiv = this.previousSibling
-        console.log(this.previousSibling)
-        console.log(checklistItemsDiv)
-        console.log(selectedTask)
-        selectedTask.userChecklist.push("Checklist item added")
-        createChecklistItems(selectedTask, checklistItemsDiv);
-
-        // To be replaced with a fn() to get user input   
-        console.log("User added a new checklist item:")
-        console.log(toDoManager.getMasterTaskList()[parentDivIndex].userChecklist)   
-    }
-
-    function saveTaskInfo() {
-        console.log("User saves task info for the following task:")
-        console.log(toDoManager.getMasterTaskList()[this.parentNode.parentNode.dataset.index].title)
-        // re-render when clicked
-        // domManipulator.renderTaskList(toDoManager.getMasterTaskList())
-    }
 
 
     // Project elements and event listeners (left sidebar)
@@ -392,11 +308,8 @@ const domManipulator = (function() {
 
     // Event listener fn()s
     function renderTodayTasks() {
-        // get masterTaskList
         const allTasks = toDoManager.getMasterTaskList();
-        // get current date
         const today = getFormattedDate();
-         // filter list by due date
         const filteredToToday = allTasks.filter(function(task, index){ 
             // preserve original index on masterTaskList
             task.index = index;
@@ -409,7 +322,6 @@ const domManipulator = (function() {
         console.log(`Date: ${today}`)
         console.log("Current listed filtered to today:")
         console.log(filteredToToday)
-        console.log(filteredToToday[0])
         console.log(`Original index of the task: "${filteredToToday[0].title}" in masterTaskList is ${filteredToToday[0].index}`)
     }
 
