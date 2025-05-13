@@ -163,6 +163,7 @@ body {
 }
 
 #content > div {
+    /* task divs */
     width: 80%;
     height: fit-content;
     display: grid;
@@ -176,6 +177,9 @@ body {
     border-radius: 5px;
 }
 
+
+/*__________Tasks - Top Row (Title)__________*/
+
 #content div h3 {
     grid-area: 1 / 2 / 2 / 7;
     background-color:aqua;
@@ -184,21 +188,29 @@ body {
     padding-left: 20px;
 }
 
-#content div button:nth-child(3),
-#content div button:nth-child(4) {
-    /* expand btn */
+.exp-col-btn,
+.delete-btn {
+    /* expand and delete btns */
     display: flex; 
     align-self: center;
     justify-content: center;
 }
 
+
+/*__________Tasks - Details and Description__________*/
+
 #content div div:nth-child(5) {
-    /* project category div */
+    /* task details div */
     grid-area: 2 / 2 / 3 / 7;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    background: greenyellow;
+    background: greenyellow
+}
+
+#content > div div:nth-child(2) {
+    /* Due date div */
+    background-color: rgb(208, 141, 208);
 }
 
 #content > div textarea {
@@ -213,17 +225,15 @@ body {
     font-size: 0.9rem;
 }
 
-#content > div div:nth-child(2) {
-    /* user-added checklist section */
-    background-color: rgb(208, 141, 208);
-}
+
+/*__________Tasks - Checklist__________*/
 
 #content > div div:nth-child(7) {
-    /* user-added checklist items outer div */
+    /* Outer div */
     grid-area: 4 / 2 / 5 / 7;
     display: flex;
     flex-direction: column;
-    background-color: rgb(201, 238, 239)
+    background-color: rgb(201, 238, 239);
 }
 
 #content > div legend {
@@ -236,14 +246,44 @@ body {
 }
 
 #content > div div:nth-child(7) label {
+     /* Outer div > label */
     display: flex;
     font-size: 0.8rem;
 }
 
+#content ol {
+    /* list items */
+    display: flex;
+    margin: 2px 0px;
+    padding: 3px 3px;
+    background-color: rgb(255, 239, 206);
+    align-items: center;
+    width: 100%;
+    height: 25px;
+}
+
+#content ol label {
+    margin-left: 10px;
+}
+
+#content ol input[type="checkbox"] {
+    width: 25px;
+    height: 18px;
+}
+
+#content ol > button {
+    margin-left: auto;
+    margin-right: 5px;
+    padding: 0px 5px;
+}
+
 #content > div div:nth-child(7) button {
-    /* user checklist add-button */
+    /* Outer div > add-button */
     align-self: flex-start;
 }
+
+
+/*__________Tasks - Save/Cancel__________*/
 
 #content > div div:nth-child(8) {
     /* save & cancel div */
@@ -252,40 +292,13 @@ body {
     justify-content: space-evenly;
 }
 
-#content div:nth-child(6) button {
-    /* save & cancel btns */
-    padding: 3px 4px;
-    align-self: flex-end;
-}
-
 #content > div div:nth-child(8) button {
     /* save & cancel btns  */
     padding: 3px 4px;
     align-self: flex-end;
 }
 
-#content ol {
-    display: flex;
-    margin: 3px 0px;
-    background-color: rgb(255, 239, 206);
-    align-items: center;
-    width: 100%;
-}
 
-#content ol label {
-    margin-left: 10px;
-}
-
-#content ol input[type="checkbox"] {
-    width: 20px;
-    height: auto;
-}
-
-#content ol > button {
-    margin-left: auto;
-    margin-right: 5px;
-    padding: 0px 5px;
-}
 
 /*__________Right Sidebar__________*/
 
