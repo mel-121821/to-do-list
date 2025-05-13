@@ -148,3 +148,6 @@ How to filter an array without losing the index value:
 https://stackoverflow.com/questions/49482946/how-can-i-filter-an-array-without-losing-the-index
 
 https://stackoverflow.com/questions/7536993/how-can-i-filter-a-javascript-array-and-maintain-its-indices/72139728
+
+PubSub Pattern:
+https://gist.github.com/learncodeacademy/777349747d8382bfb722
