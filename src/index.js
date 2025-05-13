@@ -21,6 +21,7 @@ import { format } from "date-fns"
 // logic functions
 import { toDoManager } from "./home.js";
 import { projectManager } from "./projects.js";
+import { pubSub } from "./home.js";
 
 
 // display obj IIFE
@@ -45,14 +46,18 @@ const domManipulator = (function() {
             const taskDiv = document.createElement("div");
 
             // check if index of masterTaskList already exists, if not, assign it
-            if (!task.index){
-                    task.index = index
-            } else if (task.index) {
-                // do nothing
-            }
-            taskDiv.dataset.index = task.index;
-            console.log(task.index)
-            console.log(taskDiv.dataset.index)
+
+            // needed to remove this as it causes the index to be preserved when a task is complete, which throws off indexes of remaining elements
+
+            // if (!task.index){
+            //         task.index = index
+            // } else if (task.index) {
+            //     // do nothing
+            // }
+            taskDiv.dataset.index = index;
+            // console.log(`When renderTaskList is called , the index of ${task.title} is ${index}`)
+            // console.log(task.index)
+            // console.log(taskDiv.dataset.index)
             // taskDiv.dataset.project = task.project;
 
             // 1st row
@@ -144,7 +149,7 @@ const domManipulator = (function() {
             taskDiv.append(btnDiv);
             content.appendChild(taskDiv);
         })  
-    }     
+    }  
         
     function collapseTask(e) {
         // considered adding save/cancel btns to collapsable items, but decided against it, as the user may still want to save task details without expanding the menu
@@ -211,12 +216,9 @@ const domManipulator = (function() {
         return description;
     }
 
-    // can't select createChecklistDiv according to proximity of other elements as it has not been appended to the DOM yet. May change to append to DOM before selecting due to proximity. Can put checklistDiv into renderTaskList and then use other fn()s to add elements to it.
-
     function createChecklistDiv (task) {
         const checklistDiv = document.createElement("div");
         checklistDiv.classList.add("user-checklist-div");
-        console.log()
         // checklistDiv.style.display = "none"
 
         // create legend
@@ -225,7 +227,9 @@ const domManipulator = (function() {
         
         // create checklist items section
         const checklistItemsDiv = document.createElement("div")
-        createChecklistItems(task, checklistItemsDiv)
+
+        // need to have everything appended to the DOM before calling this, otherwise you can't access the div as it doesn't exist yet
+        // renderChecklistItems(task, checklistItemsDiv)
 
         // create btn to add checklist item
         const addBtn = document.createElement("button");
@@ -241,42 +245,52 @@ const domManipulator = (function() {
 
     // Needs decoupling
 
-    function createChecklistItems(task, checklistItemsDiv) {
+    function renderChecklistItems(allTasks) {
         // remove existing elements before adding updated list to page
-        checklistItemsDiv.innerHTML = ""
-        const checklist = task.userChecklist;
-        checklist.forEach((item, index) => {
-            const userItemDiv = document.createElement("ol");
-            userItemDiv.dataset.itemNum = index
-            // console.log(userItemDiv.dataset.itemNum)
+        console.log(allTasks)
+        allTasks.forEach((task, index) => {
+            // console.log(`When renderChecklistItems is called , the index of ${task.title} is ${index}`)
+            // console.log(index)
+            const checklistItemsDiv = content.children.item(index).children.item(6).children.item(1)
+            checklistItemsDiv.innerHTML = ""
+            const checklist = task.userChecklist;
+            checklist.forEach((item, index) => {
+                const userItemDiv = document.createElement("ol");
+                userItemDiv.dataset.itemNum = index
+                // console.log(userItemDiv.dataset.itemNum)
 
-            // create checkbox
-            const itemCheckbox = document.createElement("input");
-            itemCheckbox.setAttribute("type", "checkbox");
-            itemCheckbox.id = item;
-            itemCheckbox.addEventListener("change", toDoManager.completeChecklistItem)
+                // create checkbox
+                const itemCheckbox = document.createElement("input");
+                itemCheckbox.setAttribute("type", "checkbox");
+                itemCheckbox.id = item;
+                itemCheckbox.addEventListener("change", toDoManager.completeChecklistItem)
 
-            // create checkbox label
-            const label = document.createElement("label");
-            label.setAttribute("for", `${item}`)
-            label.innerHTML = `${item}`;
-            // event listener, set display to strikethrough item
+                // create checkbox label
+                const label = document.createElement("label");
+                label.setAttribute("for", `${item}`)
+                label.innerHTML = `${item}`;
+                
+                // create delete btn
+                const deleteBtn = document.createElement("button");
+                deleteBtn.textContent = "-"
+                deleteBtn.addEventListener("click", toDoManager.deleteUserChecklistItem)
 
-            // create delete btn
-            const deleteBtn = document.createElement("button");
-            deleteBtn.textContent = "-"
-            deleteBtn.addEventListener("click", toDoManager.deleteUserChecklistItem)
-
-            // append items
-            userItemDiv.append(itemCheckbox, label, deleteBtn)
-            checklistItemsDiv.appendChild(userItemDiv);
+                // append items
+                userItemDiv.append(itemCheckbox, label, deleteBtn)
+                checklistItemsDiv.appendChild(userItemDiv);
+            })
         })
     }
 
+    function renderFullTasks(allTasks) {
+        renderTaskList(allTasks)
+        renderChecklistItems(allTasks)
+    }
 
 
     // Project elements and event listeners (left sidebar)
     
+    // wrap this
     // Today tasks
     const todayTasksBtn = document.querySelector(".today > button");
     todayTasksBtn.addEventListener("click", renderTodayTasks)
@@ -359,8 +373,16 @@ const domManipulator = (function() {
 
     }
 
+    // pubSubs
+    pubSub.on("taskRemoved", renderFullTasks)
+    pubSub.on("taskUpdated", renderFullTasks)
+    pubSub.on("checklistItemRemoved", renderChecklistItems)
+    pubSub.on("checklistItemAdded", renderChecklistItems)
+
     // Initial render
-    renderTaskList(allTasks);
+    // renderTaskList(allTasks);
+    // renderChecklistItems(allTasks)
+    renderFullTasks(allTasks)
 
     return{ renderTaskList }
 })();
