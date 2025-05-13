@@ -66,7 +66,6 @@ const toDoManager = (function() {
             ]
         },
     ]
-    
     const priorities = ["low", "normal", "high"]
     const completedTaskList = [];
 
@@ -94,6 +93,9 @@ const toDoManager = (function() {
         console.log(toDoManager.getMasterTaskList())
         console.log("The following task has been removed:")
         console.log(...removed)
+        console.log(pubSub)
+
+        pubSub.emit("taskRemoved", getMasterTaskList())
         // need to change logic to a pubsub method
         // domManipulator.renderTaskList(getMasterTaskList())
         return removed
@@ -117,27 +119,29 @@ const toDoManager = (function() {
         // this = dropdown > parentNode = ProjectsDiv > parentNode = TaskDiv > dataset > index
         const task = getMasterTaskList()[this.parentNode.parentNode.dataset.index]
         const element = this.parentNode.parentNode
+        console.log(element)
         changeProject(task, element);
         changeDueDate(task, element);
         changePriority(task, element)
         console.log("User saves task info for the following task:")
         console.log(task);
         // pub/sub re-render
+        pubSub.emit("taskUpdated", getMasterTaskList())
     }
-    
 
     function changeProject(task, element) {
-        const newProject = element.children.item(4).children.item(0).value
+        const newProject = element.children.item(4).children.item(0).lastChild.value
+        console.log(element.children.item(4).children.item(0).lastChild.value)
         task.project = newProject;
     }
 
     function changeDueDate(task, element) {
-        const newDueDate = element.children.item(4).children.item(1).value
+        const newDueDate = element.children.item(4).children.item(1).lastChild.value
         task.dueDate = newDueDate;
     }
 
     function changePriority(task, element) {
-        const newPriority = element.children.item(4).children.item(2).value
+        const newPriority = element.children.item(4).children.item(2).lastChild.value
         task.priority = newPriority;
     }
 
@@ -148,32 +152,35 @@ const toDoManager = (function() {
     }
 
     function deleteUserChecklistItem() {
-        const parentDivIndex = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
-        const checklistIndex = this.parentNode.dataset.itemNum;
-        toDoManager.getMasterTaskList()[parentDivIndex].userChecklist.splice(checklistIndex, 1)
+        const indexOfTaskDiv = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
+        const indexOfChecklistItem = this.parentNode.dataset.itemNum;
+        console.log(this.parentNode.parentNode.parentNode.dataset.index)
+        console.log(indexOfTaskDiv)
+        console.log(indexOfChecklistItem)
+        toDoManager.getMasterTaskList()[indexOfTaskDiv].userChecklist.splice(indexOfChecklistItem, 1)
 
         // pubsub - on change, rerender checklistItems
-        // createChecklistItems(getMasterTaskList()[parentDivIndex], this.parentNode.parentNode)
+        pubSub.emit("checklistItemRemoved", getMasterTaskList())
 
-        console.log(`User deleted checklist item at index: ${checklistIndex}`)
+        console.log(`User deleted checklist item at index: ${indexOfChecklistItem}`)
         console.log("New list of user items:")
-        console.log(getMasterTaskList()[parentDivIndex].userChecklist)
+        console.log(getMasterTaskList()[indexOfTaskDiv].userChecklist)
     }
 
     function addChecklistItem() {
-        const parentDivIndex = this.parentNode.parentNode.dataset.index;
-        const selectedTask = getMasterTaskList()[parentDivIndex]
+        const indexOfTaskDiv = this.parentNode.parentNode.dataset.index;
+        const selectedTask = getMasterTaskList()[indexOfTaskDiv]
         const checklistItemsDiv = this.previousSibling
         console.log(checklistItemsDiv)
         console.log(selectedTask)
         selectedTask.userChecklist.push("Checklist item added")
 
         //pubsub - on change, re-render checklist items
-        // createChecklistItems(selectedTask, checklistItemsDiv);
+        pubSub.emit("checklistItemAdded", getMasterTaskList())
 
         // To be replaced with a fn() to get user input   
         console.log("User added a new checklist item:")
-        console.log(getMasterTaskList()[parentDivIndex].userChecklist)   
+        console.log(getMasterTaskList()[indexOfTaskDiv].userChecklist)   
     }
 
     // get data fn()s
@@ -185,6 +192,7 @@ const toDoManager = (function() {
     return {
         completeTask,
         deleteTask,
+        removeTaskFromList,
         updateTask,
         completeChecklistItem,
         deleteUserChecklistItem,
@@ -196,5 +204,35 @@ const toDoManager = (function() {
     }
 })()
 
+const pubSub = (function(){
+    const events = {
+        events: {},
+        on: function (eventName, fn) {
+            this.events[eventName] = this.events[eventName] || [];
+            this.events[eventName].push(fn);
+            // console.log(events)
+        },
+        off: function(eventName, fn) {
+            if (this.events[eventName]) {
+                for (let i = 0; i < events[eventName].length; i++) {
+                    if (this.events[eventName][i] === fn) {
+                        this.events[eventName].splice(i, 1);
+                        break
+                    }
+                }
+            }
+        },
+        emit: function (eventName, data) {
+            if (this.events[eventName]) {
+                this.events[eventName].forEach(function(fn) {
+                    fn(data);
+                });
+            }
+        }
+    }
+    return events
+})()
+
 // exports
 export{toDoManager}
+export{pubSub}
