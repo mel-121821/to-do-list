@@ -151,3 +151,12 @@ https://stackoverflow.com/questions/7536993/how-can-i-filter-a-javascript-array-
 
 PubSub Pattern:
 https://gist.github.com/learncodeacademy/777349747d8382bfb722
+
+.some() method
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some
+
+Toggle a class:
+https://www.w3schools.com/howto/howto_js_toggle_class.asp
+
+Selecting multiple unrelated elements with querySelectorAll:
+https://stackoverflow.com/questions/34001917/queryselectorall-with-multiple-conditions-in-javascript
