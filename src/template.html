@@ -21,7 +21,7 @@
         </div>
     </div>
    <div class="left-sidebar">
-       <nav>
+       <nav class="menu static-menu">
            <div class="today">
                <button>Today</button>
            </div>
@@ -38,24 +38,24 @@
                <button>Overdue</button>
            </div>
         </nav>
-        <nav>
+        <nav class="dynamic-menu">
            <div class="my-projects">
                 <h2>My Projects</h2>
                <button class="add-project">+</button>
            </div>
            <div class="user-created-projects">
                <ol>
-                    <div>
-                        <!-- will be JS generated -->    
-                        <button>Placeholder 1</button>
+                    <div>  
+                        <button class="menu">All Projects</button>
                         <button>Del</button>
                     </div>
                     <div>
-                        <button>Placeholder 2</button>
+                         <!-- will be JS generated -->  
+                        <button class="menu">Placeholder 1</button>
                         <button>Del</button>
                     </div>
                     <div>
-                        <button>Placeholder 3</button>
+                        <button class="menu">Placeholder 2</button>
                         <button>Del</button>
                     </div>
                </ol>
