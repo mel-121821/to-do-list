@@ -160,3 +160,9 @@ https://www.w3schools.com/howto/howto_js_toggle_class.asp
 
 Selecting multiple unrelated elements with querySelectorAll:
 https://stackoverflow.com/questions/34001917/queryselectorall-with-multiple-conditions-in-javascript
+
+Changing button states (to only have one selected in a group at a time):
+https://stackoverflow.com/questions/27271440/javascript-for-changing-button-states
+
+ClassList.contains():
+https://stackoverflow.com/questions/5898656/check-if-an-element-contains-a-class-in-javascript
