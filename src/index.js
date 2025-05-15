@@ -285,31 +285,114 @@ const domManipulator = (function() {
     function renderFullTasks(allTasks) {
         renderTaskList(allTasks)
         renderChecklistItems(allTasks)
+        pubSub.emit("tasksRendered", console.log("tasks rendered"))
     }
 
+    // Instead of assigning the class, simply remove it, then add logic to each individual btn to remove active class before re-assigning it to itself and turning on the listener for the pubsub all btns
 
     // Project elements and event listeners (left sidebar)
     
+    function inactivateProjects() {
+        removeAllActiveClasses()
+        removeAllDisplayOffClasses()
+        setSubsToOff()
+    }
+
+    function removeAllActiveClasses() {
+        console.log("removing classes")
+        // console.log(e.target)
+        const allNavBtns = document.querySelectorAll(".menu button, button.menu")
+        console.log(allNavBtns)
+        // e.preventDefault()
+        for (const button of allNavBtns) {
+            console.log(button)
+            if (button.classList.contains("active") === true) {
+                button.classList.remove("active")
+                console.log(button)
+            }
+        }
+    }
+
+    function removeAllDisplayOffClasses() {
+        const taskDivs = content.children
+        for (const div of taskDivs) {
+            if (div.classList.contains("display-off")) {
+                div.classList.remove("display-off")
+            }
+        }
+    }
+
+    function setSubsToOff() {
+        if (pubSub.events.taskRendered) {
+            pubSub.events.tasksRendered = []
+            console.log(pubSub.events.tasksRendered[0])
+        } else {
+            // do nothing
+            console.log("tasks rendered does not exist")
+            console.log(pubSub.events)
+        }
+        // pubSub.off("tasksRendered", displayTodayTasks)
+        console.log("Pubsub turned off")
+    }
+
+ 
+
     // wrap this
-    // Today tasks
+    // query selectors
     const todayTasksBtn = document.querySelector(".today > button");
-    todayTasksBtn.addEventListener("click", renderTodayTasks)
-
-    // This week tasks
     const thisWeekTasksBtn = document.querySelector(".this-week > button")
-    thisWeekTasksBtn.addEventListener("click", renderThisWeekTasks)
-
-    // Completed tasks
     const completeBtn = document.querySelector(".complete > button")
+    const importantBtn = document.querySelector(".important > button")
+    const overdueBtn = document.querySelector(".overdue > button")
+    const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
+
+    // Event Listeners
+    todayTasksBtn.addEventListener("click", function() {
+        inactivateProjects()
+        this.classList.add("active")
+        displayTodayTasks()
+        pubSub.on("tasksRendered", displayTodayTasks)
+        console.log(pubSub.events)
+        console.log("pubsub turned on")
+    })
+
+    thisWeekTasksBtn.addEventListener("click", function() {
+        inactivateProjects()
+        this.classList.add("active")
+        displayThisWeekTasks()
+        pubSub.on("taskRendered", displayThisWeekTasks)
+    })
+
+   
     completeBtn.addEventListener("click", renderCompletedTasks)
 
-    // Important tasks
-    const importantBtn = document.querySelector(".important > button")
+    
     importantBtn.addEventListener("click", renderImportantTasks)
 
-    // Overdue tasks
-    const overdueBtn = document.querySelector(".overdue > button")
+    
     overdueBtn.addEventListener("click", renderOverdueTasks)
+
+    
+    allProjectsBtn.addEventListener("click", function() {
+        removeAllActiveClasses()
+        setSubsToOff()
+        setAllProjectsAsActive()
+    })
+
+    function setAllProjectsAsActive() {
+        const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
+        console.log(allProjectsBtn)
+        allProjectsBtn.classList.add("active")
+        const allTaskDivs = content.children
+        for (const div of allTaskDivs) {
+            // console.log(div.dataset.index)
+            if (div.classList.contains("display-off") === true) {
+                div.classList.remove("display-off")
+            } else {
+                // do nothing    
+            }
+        }
+    }
     
     // Important notes about date formats: 
     // months are indexed at zero! January == 00
@@ -320,23 +403,24 @@ const domManipulator = (function() {
         return formattedDate
     }
 
-    // Event listener fn()s
-    function renderTodayTasks() {
-        const allTasks = toDoManager.getMasterTaskList();
-        const today = getFormattedDate();
-        const filteredToToday = allTasks.filter(function(task, index){ 
-            // preserve original index on masterTaskList
-            task.index = index;
-            return task.dueDate === `${today}`
-        })
+    // need to change this to watch full nav bar (including dynamic ones) and make it so that only one can be active at a time. If none are selected, make "All projects" the default
 
-        // call renderTaskList with new filtered list as argument
-        renderTaskList(filteredToToday);
+
+    // Event listener fn()s
+    function displayTodayTasks() {
+        const allTaskDivs = content.children
+        const today = getFormattedDate();
+        for (const div of allTaskDivs) {
+            // console.log(div.dataset.index)
+            const dueDate = content.childNodes[div.dataset.index].childNodes[4].childNodes[1].childNodes[1].value
+            if (dueDate === today) {
+                // do nothing
+            } else {
+                div.classList.add("display-off")
+            }
+        }
         console.log("User clicks todayTasks")
         console.log(`Date: ${today}`)
-        console.log("Current listed filtered to today:")
-        console.log(filteredToToday)
-        console.log(`Original index of the task: "${filteredToToday[0].title}" in masterTaskList is ${filteredToToday[0].index}`)
     }
 
 
@@ -346,15 +430,24 @@ const domManipulator = (function() {
         return nextWeek
     }
 
-    function renderThisWeekTasks() {
-        const allTasks = toDoManager.getMasterTaskList();
+    function displayThisWeekTasks() {
+        const allTaskDivs = content.children
         const today = getFormattedDate();
         const oneWeekFromToday = getDateInOneWeek()
-        const filteredToWeek = allTasks.filter((task) => task.dueDate >= `${today}` && task.dueDate <= `${oneWeekFromToday}`) 
-        renderTaskList(filteredToWeek);
+        for (const div of allTaskDivs) {
+            const dueDate = content.childNodes[div.dataset.index].childNodes[4].childNodes[1].childNodes[1].value
+            if (dueDate >= today && dueDate <= oneWeekFromToday) {
+                // do nothing
+            } else {
+                div.classList.add("display-off")
+            }
+        }
+
+        // const filteredToWeek = allTasks.filter((task) => task.dueDate >= `${today}` && task.dueDate <= `${oneWeekFromToday}`) 
+        // renderTaskList(filteredToWeek);
         console.log("User clicks this WeekTasks")
         console.log(`Date range: ${today} to ${oneWeekFromToday}`);
-        console.log(filteredToWeek)
+        // console.log(filteredToWeek)
     }
 
     function renderCompletedTasks() {
@@ -376,6 +469,7 @@ const domManipulator = (function() {
     // pubSubs
     pubSub.on("taskRemoved", renderFullTasks)
     pubSub.on("taskUpdated", renderFullTasks)
+    // pubSub.on("tasksRendered", assignActiveProjectDisplayed)
     pubSub.on("checklistItemRemoved", renderChecklistItems)
     pubSub.on("checklistItemAdded", renderChecklistItems)
 
@@ -383,6 +477,7 @@ const domManipulator = (function() {
     // renderTaskList(allTasks);
     // renderChecklistItems(allTasks)
     renderFullTasks(allTasks)
+    setAllProjectsAsActive()
 
     return{ renderTaskList }
 })();
@@ -395,3 +490,61 @@ const domManipulator = (function() {
 //__________Unused Code (Delete when finished)__________
 
 
+function getActiveProject() {
+    const allNavBtns = document.querySelectorAll(".menu button, button.menu");
+    for (const button of allNavBtns) {
+        if (button.classList.contains("active")) {
+            return button
+        }
+        return button
+    }
+}
+
+function manageDisplay() {
+    // if todayTasksList is selected, add pubSub
+    const todayBtn = document.querySelector(".today > button");
+    console.log(todayBtn)
+    console.log(todayBtn.classList[0])
+    if (todayBtn.classList[0] === "active") {
+        displayTodayTasks()
+        console.log("Today pubSub is on")
+    }
+    
+}
+
+// function removeAllActiveClasses() {
+//     console.log("removing classes")
+//     // console.log(e.target)
+//     const allNavBtns = document.querySelectorAll(".menu button, button.menu")
+//     console.log(allNavBtns)
+//     // e.preventDefault()
+//     for (const button of allNavBtns) {
+//         console.log(button)
+//         if (button.classList.contains("active") === true) {
+//             button.classList.remove("active")
+//             console.log(button)
+//         }
+//     }
+    
+//     // for (let i = 0; i < length; i += 1) {
+//     //     const button = allNavBtns[i]
+//     //     if (button.classList.contains("active") === true) {
+//     //         button.classList.remove("active")
+//     //     }
+//     // }
+//     // e.target.classList.add("active");
+//     // console.log(e.target)
+//     // console.log(e.target.classList)
+// }
+
+function assignActiveProjectDisplayed() {
+    // when using a query selectpr, you can ask it to select multiple categories of items, separated by commas
+    // the below example selects buttons under .menu parent class, and buttons with the menu class
+    const allNavBtns = document.querySelectorAll(".menu button, button.menu")
+    console.log(allNavBtns)
+    const length = allNavBtns.length;
+    console.log(length)
+    for (const button of allNavBtns) {
+        button.addEventListener("click", removeAllActiveClasses)
+    }
+}
