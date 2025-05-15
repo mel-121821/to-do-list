@@ -48,7 +48,7 @@ const toDoManager = (function() {
         {
             title: "Cat Chores",
             project: "Pets",
-            dueDate: "2025-05-11",
+            dueDate: "2025-05-17",
             priority: "normal",
             description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
             userChecklist: [
@@ -75,7 +75,7 @@ const toDoManager = (function() {
         masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist));
     };
 
-    addTaskToMasterList("Say hello", "Pets", "2025-05-12", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
+    addTaskToMasterList("Say hello", "Pets", "2025-05-28", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
     // use .find()?? to search for matching element in masterTaskList, will need to add logic to prevent user from adding an exact copy of a task
     function completeTask() {
@@ -210,18 +210,18 @@ const pubSub = (function(){
         on: function (eventName, fn) {
             this.events[eventName] = this.events[eventName] || [];
             this.events[eventName].push(fn);
-            // console.log(events)
+            console.log(this)
         },
         off: function(eventName, fn) {
             if (this.events[eventName]) {
-                for (let i = 0; i < events[eventName].length; i++) {
-                    if (this.events[eventName][i] === fn) {
-                        this.events[eventName].splice(i, 1);
-                        break
-                    }
+              for (let i = 0; i < this.events[eventName].length; i++) {
+                if (this.events[eventName][i] === fn) {
+                  this.events[eventName].splice(i, 1);
+                  break;
                 }
+              };
             }
-        },
+          },
         emit: function (eventName, data) {
             if (this.events[eventName]) {
                 this.events[eventName].forEach(function(fn) {
