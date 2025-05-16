@@ -4,9 +4,9 @@
 const toDoManager = (function() {
 
     // constructor
-    function Task(title, project, dueDate, priority, description, userChecklist = []) {
+    function Task(title, project, dueDate, priority, description, userChecklist = [], isComplete = false) {
         // the userChecklist = [] allows an empty array to be used as the default value
-
+                
         // direct user input
         this.title = title;
         
@@ -18,6 +18,8 @@ const toDoManager = (function() {
         // direct user input
         this.description = description;
         this.userChecklist = userChecklist;
+
+        this.isComplete = isComplete
 
         // add fn to add checklist item
         // add fn to remove checklist item
@@ -33,7 +35,8 @@ const toDoManager = (function() {
             description: "Need eggs, black forest ham, sliced cheese and english muffins",
             userChecklist: [
                 "Eggs", "BFH, 400g shaved", "Havarti with jalepeno", "Eng muffin (white)", "Also need garlic mayo"
-            ]
+            ],
+            isComplete: false,
         },
         {
             title: "Do Laundry",
@@ -43,7 +46,8 @@ const toDoManager = (function() {
             description: "Laundromat opens at 6am",
             userChecklist: [
                 "Go to the bank to get change"
-            ]
+            ],
+            isComplete: false,
         },
         {
             title: "Cat Chores",
@@ -53,7 +57,8 @@ const toDoManager = (function() {
             description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
             userChecklist: [
                 "Wash water bowls", "Rotate auto feeder, wash and refill", "Clean litter boxes", "Put cat beds in laundry basket"
-            ]
+            ],
+            isComplete: false,
         },
         {
             title: "Make dinner",
@@ -63,54 +68,37 @@ const toDoManager = (function() {
             description: "Menu: Udon stir-fry",
             userChecklist: [
                 "Defrost beef strips", "Marinate strips with 1/2 sauce for a few hours", "Blanche udon and broccoli", "Prep onion and garlic", "Saute onion garlic and beef", "Add broccoli and udon", "Add remaining sauce", "Serve"
-            ]
+            ],
+            isComplete: false,
         },
     ]
     const priorities = ["low", "normal", "high"]
-    const completedTaskList = [];
-
 
     // fn()s to add tasks
-    function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = []) {
-        masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist));
+    function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = [], isComplete=false) {
+        masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist, isComplete));
     };
 
     addTaskToMasterList("Say hello", "Pets", "2025-05-28", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
-    // use .find()?? to search for matching element in masterTaskList, will need to add logic to prevent user from adding an exact copy of a task
+    
     function completeTask() {
-        // need to change how element is selected due to having different filtered versions
         const index = this.parentNode.dataset.index;
-        const taskRemoved = removeTaskFromList(index)
-        // need spread syntax here, otherwise taskRemoved will be placed into the completed list as an array of one
-        moveTaskToCompleted(...taskRemoved);
-        console.log(getMasterTaskList())
+        getMasterTaskList()[index].isComplete = true
+        pubSub.emit("taskCompleted", getMasterTaskList())
+        console.log(`The following task has been completed ${getMasterTaskList()[index]}`)
     }
 
-    function removeTaskFromList(index) {
+    function deleteTask() {
+        const index = this.parentNode.dataset.index;
         const removed = getMasterTaskList().splice(index, 1)
         console.log("Updated masterTaskList:")
         console.log(toDoManager.getMasterTaskList())
         console.log("The following task has been removed:")
-        console.log(...removed)
+        console.log(removed)
         console.log(pubSub)
 
         pubSub.emit("taskRemoved", getMasterTaskList())
-        // need to change logic to a pubsub method
-        // domManipulator.renderTaskList(getMasterTaskList())
-        return removed
-    }
-
-    function moveTaskToCompleted(removed) {
-        toDoManager.getCompletedTaskList().push(removed)
-        console.log("The following task has been moved to the completedTaskList:")
-        console.log(toDoManager.getCompletedTaskList())
-    } 
-
-    function deleteTask() {
-        const index = this.parentNode.dataset.index;
-        console.log(`User has removed the following task: ${getMasterTaskList()[index].title} at index: ${index}`)
-        removeTaskFromList(index)
     }
 
     // create an to updateTask fn() and call changeProject under it. Add updateTask() to the event listener on the save btn
@@ -154,17 +142,13 @@ const toDoManager = (function() {
     function deleteUserChecklistItem() {
         const indexOfTaskDiv = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
         const indexOfChecklistItem = this.parentNode.dataset.itemNum;
-        console.log(this.parentNode.parentNode.parentNode.dataset.index)
-        console.log(indexOfTaskDiv)
-        console.log(indexOfChecklistItem)
         toDoManager.getMasterTaskList()[indexOfTaskDiv].userChecklist.splice(indexOfChecklistItem, 1)
 
-        // pubsub - on change, rerender checklistItems
-        pubSub.emit("checklistItemRemoved", getMasterTaskList())
-
-        console.log(`User deleted checklist item at index: ${indexOfChecklistItem}`)
+        console.log(`User deleted checklist item on task ${indexOfTaskDiv} at index: ${indexOfChecklistItem}`)
         console.log("New list of user items:")
         console.log(getMasterTaskList()[indexOfTaskDiv].userChecklist)
+        
+        pubSub.emit("checklistItemRemoved", getMasterTaskList())
     }
 
     function addChecklistItem() {
@@ -187,12 +171,10 @@ const toDoManager = (function() {
     // these fn()s get original lists (not copies), which can be modified
     const getMasterTaskList = () => masterTaskList;
     const getPriorities = () => priorities;
-    const getCompletedTaskList = () => completedTaskList
 
     return {
         completeTask,
         deleteTask,
-        removeTaskFromList,
         updateTask,
         completeChecklistItem,
         deleteUserChecklistItem,
@@ -200,7 +182,6 @@ const toDoManager = (function() {
 
         getMasterTaskList,
         getPriorities,
-        getCompletedTaskList
     }
 })()
 
@@ -210,7 +191,7 @@ const pubSub = (function(){
         on: function (eventName, fn) {
             this.events[eventName] = this.events[eventName] || [];
             this.events[eventName].push(fn);
-            console.log(this)
+            // console.log(this)
         },
         off: function(eventName, fn) {
             if (this.events[eventName]) {
@@ -236,3 +217,22 @@ const pubSub = (function(){
 // exports
 export{toDoManager}
 export{pubSub}
+
+
+
+
+
+
+// Unused code - delete later
+
+// function moveTaskToCompleted(removed) {
+//     toDoManager.getCompletedTaskList().push(removed)
+//     console.log("The following task has been moved to the completedTaskList:")
+//     console.log(toDoManager.getCompletedTaskList())
+// } 
+
+// function deleteTask() {
+//     const index = this.parentNode.dataset.index;
+//     console.log(`User has removed the following task: ${getMasterTaskList()[index].title} at index: ${index}`)
+//     removeTaskFromList(index)
+// }
