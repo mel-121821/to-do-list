@@ -8,8 +8,8 @@
 // event listeners
 
 // home.js should include logic in the following categories:
-// DOM manipulation
-// To-do data managment
+// constructor
+// task managment
 
 // Have all elements render on page whether they are displayed or not
 
@@ -30,6 +30,12 @@ const domManipulator = (function() {
     // cacheDOM
     const addTaskBtn = document.querySelector(".title > button")
     const content = document.querySelector("#content")
+    const todayTasksBtn = document.querySelector(".today > button");
+    const thisWeekTasksBtn = document.querySelector(".this-week > button")
+    const completeBtn = document.querySelector(".complete > button")
+    const importantBtn = document.querySelector(".important > button")
+    const overdueBtn = document.querySelector(".overdue > button")
+    const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
 
     // get data
     const allTasks = toDoManager.getMasterTaskList();
@@ -45,26 +51,14 @@ const domManipulator = (function() {
             // create div for each task
             const taskDiv = document.createElement("div");
 
-            // check if index of masterTaskList already exists, if not, assign it
-
-            // needed to remove this as it causes the index to be preserved when a task is complete, which throws off indexes of remaining elements
-
-            // if (!task.index){
-            //         task.index = index
-            // } else if (task.index) {
-            //     // do nothing
-            // }
             taskDiv.dataset.index = index;
-            // console.log(`When renderTaskList is called , the index of ${task.title} is ${index}`)
-            // console.log(task.index)
-            // console.log(taskDiv.dataset.index)
-            // taskDiv.dataset.project = task.project;
 
             // 1st row
             const taskCheckbox = document.createElement("input");
             taskCheckbox.setAttribute("type", "checkbox");
+            taskCheckbox.checked = task.isComplete;
             taskCheckbox.addEventListener("click", toDoManager.completeTask)
-            // no brackets after completeTask, otherwise the function will be called immediately   
+            // no brackets after isCompleteTask, otherwise the function will be called immediately   
 
             // task title
             const taskTitle = document.createElement("h3");
@@ -81,7 +75,7 @@ const domManipulator = (function() {
             const deleteBtn = document.createElement("button");
             deleteBtn.textContent = "del"
             deleteBtn.classList.add("delete-btn");
-            deleteBtn.addEventListener("click", toDoManager.deleteTask)
+            deleteBtn.addEventListener("click", toDoManager.deleteTaskFromList)
             
             // 2nd row - details section in own div 
             // keeping these fn()s seperate from render fn() as they are more complex
@@ -243,14 +237,13 @@ const domManipulator = (function() {
         return checklistDiv;
     } 
 
-    // Needs decoupling
-
     function renderChecklistItems(allTasks) {
         // remove existing elements before adding updated list to page
         console.log(allTasks)
         allTasks.forEach((task, index) => {
             // console.log(`When renderChecklistItems is called , the index of ${task.title} is ${index}`)
             // console.log(index)
+            console.log(task.isComplete)
             const checklistItemsDiv = content.children.item(index).children.item(6).children.item(1)
             checklistItemsDiv.innerHTML = ""
             const checklist = task.userChecklist;
@@ -292,7 +285,7 @@ const domManipulator = (function() {
 
     // Project elements and event listeners (left sidebar)
     
-    function inactivateProjects() {
+    function refreshProjectDisplay() {
         removeAllActiveClasses()
         removeAllDisplayOffClasses()
         setSubsToOff()
@@ -302,13 +295,9 @@ const domManipulator = (function() {
         console.log("removing classes")
         // console.log(e.target)
         const allNavBtns = document.querySelectorAll(".menu button, button.menu")
-        console.log(allNavBtns)
-        // e.preventDefault()
         for (const button of allNavBtns) {
-            console.log(button)
             if (button.classList.contains("active") === true) {
                 button.classList.remove("active")
-                console.log(button)
             }
         }
     }
@@ -323,49 +312,44 @@ const domManipulator = (function() {
     }
 
     function setSubsToOff() {
-        if (pubSub.events.taskRendered) {
+        // console.log((pubSub.events.task))
+        if (pubSub.events.tasksRendered) {
             pubSub.events.tasksRendered = []
             console.log(pubSub.events.tasksRendered[0])
+            console.log("All pubsubs turned off")
         } else {
             // do nothing
             console.log("tasks rendered does not exist")
             console.log(pubSub.events)
         }
         // pubSub.off("tasksRendered", displayTodayTasks)
-        console.log("Pubsub turned off")
     }
 
- 
-
-    // wrap this
-    // query selectors
-    const todayTasksBtn = document.querySelector(".today > button");
-    const thisWeekTasksBtn = document.querySelector(".this-week > button")
-    const completeBtn = document.querySelector(".complete > button")
-    const importantBtn = document.querySelector(".important > button")
-    const overdueBtn = document.querySelector(".overdue > button")
-    const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
-
-    // Event Listeners
+    // event listener fn()s
     todayTasksBtn.addEventListener("click", function() {
-        inactivateProjects()
+        refreshProjectDisplay()
         this.classList.add("active")
         displayTodayTasks()
         pubSub.on("tasksRendered", displayTodayTasks)
         console.log(pubSub.events)
-        console.log("pubsub turned on")
+        console.log("today pubsub turned on")
     })
 
     thisWeekTasksBtn.addEventListener("click", function() {
-        inactivateProjects()
+        refreshProjectDisplay()
         this.classList.add("active")
         displayThisWeekTasks()
-        pubSub.on("taskRendered", displayThisWeekTasks)
+        pubSub.on("tasksRendered", displayThisWeekTasks)
+        console.log("this week pubsub turned on")
     })
-
    
-    completeBtn.addEventListener("click", renderCompletedTasks)
-
+    completeBtn.addEventListener("click", function () {
+        refreshProjectDisplay()
+        this.classList.add("active")
+        displayCompletedTasks()
+        pubSub.on("tasksRendered", displayCompletedTasks)
+        console.log("complete pubsub turned on")
+    })
     
     importantBtn.addEventListener("click", renderImportantTasks)
 
@@ -374,26 +358,37 @@ const domManipulator = (function() {
 
     
     allProjectsBtn.addEventListener("click", function() {
-        removeAllActiveClasses()
-        setSubsToOff()
-        setAllProjectsAsActive()
+        refreshProjectDisplay()
+        this.classList.add("active")
+        displayAllProjects()
+        pubSub.on("tasksRendered", displayAllProjects)
+        console.log("all projects pubsub turned on")
     })
 
-    function setAllProjectsAsActive() {
-        const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
-        console.log(allProjectsBtn)
-        allProjectsBtn.classList.add("active")
+    function displayAllProjects() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
-            // console.log(div.dataset.index)
-            if (div.classList.contains("display-off") === true) {
-                div.classList.remove("display-off")
+            if (div.childNodes[0].checked === true) {
+                div.classList.add("display-off") 
             } else {
-                // do nothing    
-            }
+                if (div.classList.contains("display-off") === true) {
+                    div.classList.remove("display-off")
+                } else {
+                    // do nothing
+                }
+            }   
         }
     }
     
+    function setFirstRenderDefault(){
+        const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
+        allProjectsBtn.classList.add("active")
+        displayAllProjects()
+        pubSub.on("tasksRendered", displayAllProjects)
+        console.log("all projects pubsub turned on")
+    
+    }
+
     // Important notes about date formats: 
     // months are indexed at zero! January == 00
     // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate() instead
@@ -411,9 +406,8 @@ const domManipulator = (function() {
         const allTaskDivs = content.children
         const today = getFormattedDate();
         for (const div of allTaskDivs) {
-            // console.log(div.dataset.index)
             const dueDate = content.childNodes[div.dataset.index].childNodes[4].childNodes[1].childNodes[1].value
-            if (dueDate === today) {
+            if (dueDate === today && div.childNodes[0].checked === false) {
                 // do nothing
             } else {
                 div.classList.add("display-off")
@@ -424,7 +418,7 @@ const domManipulator = (function() {
     }
 
 
-    function getDateInOneWeek() {
+    function getDateInSevenDays() {
         const today = new Date();
         const nextWeek = new Date(today.setDate(today.getDate() + 7)).toISOString().substring(0, 10);
         return nextWeek
@@ -433,24 +427,28 @@ const domManipulator = (function() {
     function displayThisWeekTasks() {
         const allTaskDivs = content.children
         const today = getFormattedDate();
-        const oneWeekFromToday = getDateInOneWeek()
+        const nextWeek = getDateInSevenDays()
         for (const div of allTaskDivs) {
-            const dueDate = content.childNodes[div.dataset.index].childNodes[4].childNodes[1].childNodes[1].value
-            if (dueDate >= today && dueDate <= oneWeekFromToday) {
+            const dueDate = div.childNodes[4].childNodes[1].childNodes[1].value
+            if ((dueDate >= today && dueDate <= nextWeek) && div.childNodes[0].checked === false) {
                 // do nothing
             } else {
                 div.classList.add("display-off")
             }
         }
-
-        // const filteredToWeek = allTasks.filter((task) => task.dueDate >= `${today}` && task.dueDate <= `${oneWeekFromToday}`) 
-        // renderTaskList(filteredToWeek);
         console.log("User clicks this WeekTasks")
-        console.log(`Date range: ${today} to ${oneWeekFromToday}`);
-        // console.log(filteredToWeek)
+        console.log(`Date range: ${today} to ${nextWeek}`);
     }
 
-    function renderCompletedTasks() {
+    function displayCompletedTasks() {
+        const allTaskDivs = content.children
+        for (const div of allTaskDivs) {
+            if (div.childNodes[0].checked === true){
+                // do nothing
+            } else {
+                div.classList.add("display-off")
+            }
+        }
         console.log("User clicks completedTasks")
     }
 
@@ -469,7 +467,7 @@ const domManipulator = (function() {
     // pubSubs
     pubSub.on("taskRemoved", renderFullTasks)
     pubSub.on("taskUpdated", renderFullTasks)
-    // pubSub.on("tasksRendered", assignActiveProjectDisplayed)
+    pubSub.on("taskCompleted", renderFullTasks)
     pubSub.on("checklistItemRemoved", renderChecklistItems)
     pubSub.on("checklistItemAdded", renderChecklistItems)
 
@@ -477,7 +475,7 @@ const domManipulator = (function() {
     // renderTaskList(allTasks);
     // renderChecklistItems(allTasks)
     renderFullTasks(allTasks)
-    setAllProjectsAsActive()
+    setFirstRenderDefault()
 
     return{ renderTaskList }
 })();
