@@ -28,7 +28,11 @@ import { pubSub } from "./home.js";
 const domManipulator = (function() {
 
     // cacheDOM
+
+    // using this temporarily for testing
     const addTaskBtn = document.querySelector(".title > button")
+    addTaskBtn.addEventListener("click", toDoManager.removeCompletedTasks)
+
     const content = document.querySelector("#content")
     const todayTasksBtn = document.querySelector(".today > button");
     const thisWeekTasksBtn = document.querySelector(".this-week > button")
@@ -57,7 +61,7 @@ const domManipulator = (function() {
             const taskCheckbox = document.createElement("input");
             taskCheckbox.setAttribute("type", "checkbox");
             taskCheckbox.checked = task.isComplete;
-            taskCheckbox.addEventListener("click", toDoManager.completeTask)
+            taskCheckbox.addEventListener("click", toDoManager.toggleCompleteTask)
             // no brackets after isCompleteTask, otherwise the function will be called immediately   
 
             // task title
@@ -75,7 +79,7 @@ const domManipulator = (function() {
             const deleteBtn = document.createElement("button");
             deleteBtn.textContent = "del"
             deleteBtn.classList.add("delete-btn");
-            deleteBtn.addEventListener("click", toDoManager.deleteTaskFromList)
+            deleteBtn.addEventListener("click", toDoManager.deleteTask)
             
             // 2nd row - details section in own div 
             // keeping these fn()s seperate from render fn() as they are more complex
@@ -243,7 +247,7 @@ const domManipulator = (function() {
         allTasks.forEach((task, index) => {
             // console.log(`When renderChecklistItems is called , the index of ${task.title} is ${index}`)
             // console.log(index)
-            console.log(task.isComplete)
+            // console.log(task.isComplete)
             const checklistItemsDiv = content.children.item(index).children.item(6).children.item(1)
             checklistItemsDiv.innerHTML = ""
             const checklist = task.userChecklist;
@@ -315,11 +319,10 @@ const domManipulator = (function() {
         // console.log((pubSub.events.task))
         if (pubSub.events.tasksRendered) {
             pubSub.events.tasksRendered = []
-            console.log(pubSub.events.tasksRendered[0])
-            console.log("All pubsubs turned off")
+            console.log("All pubsubs listening to tasksRendered have been turned off")
         } else {
             // do nothing
-            console.log("tasks rendered does not exist")
+            console.log("tasksRendered does not exist atm")
             console.log(pubSub.events)
         }
         // pubSub.off("tasksRendered", displayTodayTasks)
@@ -351,7 +354,13 @@ const domManipulator = (function() {
         console.log("complete pubsub turned on")
     })
     
-    importantBtn.addEventListener("click", renderImportantTasks)
+    importantBtn.addEventListener("click", function () {
+        refreshProjectDisplay()
+        this.classList.add("active")
+        displayImportantTasks()
+        pubSub.on("tasksRendered", displayImportantTasks)
+        console.log("high priority pubsub turned on")
+    })
 
     
     overdueBtn.addEventListener("click", renderOverdueTasks)
@@ -393,10 +402,8 @@ const domManipulator = (function() {
     // months are indexed at zero! January == 00
     // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate() instead
 
-    function getFormattedDate() {
-        const formattedDate = new Date().toISOString().substring(0, 10);
-        return formattedDate
-    }
+
+   
 
     // need to change this to watch full nav bar (including dynamic ones) and make it so that only one can be active at a time. If none are selected, make "All projects" the default
 
@@ -404,7 +411,7 @@ const domManipulator = (function() {
     // Event listener fn()s
     function displayTodayTasks() {
         const allTaskDivs = content.children
-        const today = getFormattedDate();
+        const today = toDoManager.getFormattedDate();
         for (const div of allTaskDivs) {
             const dueDate = content.childNodes[div.dataset.index].childNodes[4].childNodes[1].childNodes[1].value
             if (dueDate === today && div.childNodes[0].checked === false) {
@@ -426,7 +433,7 @@ const domManipulator = (function() {
 
     function displayThisWeekTasks() {
         const allTaskDivs = content.children
-        const today = getFormattedDate();
+        const today = toDoManager.getFormattedDate();
         const nextWeek = getDateInSevenDays()
         for (const div of allTaskDivs) {
             const dueDate = div.childNodes[4].childNodes[1].childNodes[1].value
@@ -452,7 +459,15 @@ const domManipulator = (function() {
         console.log("User clicks completedTasks")
     }
 
-    function renderImportantTasks() {
+    function displayImportantTasks() {
+        const allTaskDivs = content.children
+        for (const div of allTaskDivs) {
+            if (div.children.item(4).children.item(2).lastChild.value === "high" && div.childNodes[0].checked === false) {
+                // do nothing
+            } else {
+                div.classList.add("display-off")
+            }
+        }
         console.log("User clicks importantTasks")
     }
 
@@ -467,7 +482,9 @@ const domManipulator = (function() {
     // pubSubs
     pubSub.on("taskRemoved", renderFullTasks)
     pubSub.on("taskUpdated", renderFullTasks)
-    pubSub.on("taskCompleted", renderFullTasks)
+    pubSub.on("toggleComplete", renderFullTasks)
+    pubSub.on("toggleComplete", toDoManager.autoDeleteCompletedTasks)
+    // pubSub.on("undoTaskCompleted", renderFullTasks)
     pubSub.on("checklistItemRemoved", renderChecklistItems)
     pubSub.on("checklistItemAdded", renderChecklistItems)
 
