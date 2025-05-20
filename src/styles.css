@@ -136,6 +136,7 @@ body {
     display: flex;
     flex-direction: column;
     margin: 20px 0px;
+    padding: 0px 10px
 }
 
 .left-sidebar nav:first-child {
@@ -265,7 +266,7 @@ body {
     font-size: 0.8rem;
 }
 
-#content ol {
+#content li {
     /* list items */
     display: flex;
     margin: 2px 0px;
@@ -276,16 +277,16 @@ body {
     height: 25px;
 }
 
-#content ol label {
+#content li label {
     margin-left: 10px;
 }
 
-#content ol input[type="checkbox"] {
+#content li input[type="checkbox"] {
     width: 25px;
     height: 18px;
 }
 
-#content ol > button {
+#content li > button {
     margin-left: auto;
     margin-right: 5px;
     padding: 0px 5px;
