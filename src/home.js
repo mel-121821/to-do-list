@@ -93,6 +93,12 @@ const toDoManager = (function() {
         pubSub.emit("toggleComplete", getMasterTaskList())
     }
 
+     // Move to home
+     function getFormattedDate() {
+        const formattedDate = new Date().toISOString().substring(0, 10);
+        return formattedDate
+    }
+
     function getDateThirtyDaysAgo() {
         const today = new Date();
         const nextWeek = new Date(today.setDate(today.getDate() - 30)).toISOString().substring(0, 10);
@@ -210,6 +216,7 @@ const toDoManager = (function() {
         toggleCompleteTask,
         deleteTask,
         updateTask,
+        getFormattedDate,
         completeChecklistItem,
         autoDeleteCompletedTasks,
         deleteUserChecklistItem,
