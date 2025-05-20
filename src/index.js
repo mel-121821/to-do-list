@@ -43,6 +43,7 @@ const domManipulator = (function() {
 
     // get data
     const allTasks = toDoManager.getMasterTaskList();
+    const today = toDoManager.getFormattedDate()
     const allProjects = projectManager.getProjects(); 
     const allPriorities = toDoManager.getPriorities();
 
@@ -285,10 +286,10 @@ const domManipulator = (function() {
         pubSub.emit("tasksRendered", console.log("tasks rendered"))
     }
 
-    // Instead of assigning the class, simply remove it, then add logic to each individual btn to remove active class before re-assigning it to itself and turning on the listener for the pubsub all btns
 
     // Project elements and event listeners (left sidebar)
     
+    // refresh display fn()s
     function refreshProjectDisplay() {
         removeAllActiveClasses()
         removeAllDisplayOffClasses()
@@ -328,6 +329,8 @@ const domManipulator = (function() {
         // pubSub.off("tasksRendered", displayTodayTasks)
     }
 
+
+
     // event listener fn()s
     todayTasksBtn.addEventListener("click", function() {
         refreshProjectDisplay()
@@ -363,7 +366,13 @@ const domManipulator = (function() {
     })
 
     
-    overdueBtn.addEventListener("click", renderOverdueTasks)
+    overdueBtn.addEventListener("click", function () {
+        refreshProjectDisplay()
+        this.classList.add("active")
+        displayOverdueTasks()
+        pubSub.on("tasksRendered", displayOverdueTasks)
+        console.log("overdue pubsub turned on")
+    })
 
     
     allProjectsBtn.addEventListener("click", function() {
@@ -374,6 +383,8 @@ const domManipulator = (function() {
         console.log("all projects pubsub turned on")
     })
 
+
+    // display logic
     function displayAllProjects() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
@@ -411,7 +422,6 @@ const domManipulator = (function() {
     // Event listener fn()s
     function displayTodayTasks() {
         const allTaskDivs = content.children
-        const today = toDoManager.getFormattedDate();
         for (const div of allTaskDivs) {
             const dueDate = content.childNodes[div.dataset.index].childNodes[4].childNodes[1].childNodes[1].value
             if (dueDate === today && div.childNodes[0].checked === false) {
@@ -424,17 +434,11 @@ const domManipulator = (function() {
         console.log(`Date: ${today}`)
     }
 
-
-    function getDateInSevenDays() {
-        const today = new Date();
-        const nextWeek = new Date(today.setDate(today.getDate() + 7)).toISOString().substring(0, 10);
-        return nextWeek
-    }
+    
 
     function displayThisWeekTasks() {
         const allTaskDivs = content.children
-        const today = toDoManager.getFormattedDate();
-        const nextWeek = getDateInSevenDays()
+        const nextWeek = toDoManager.getDateInSevenDays()
         for (const div of allTaskDivs) {
             const dueDate = div.childNodes[4].childNodes[1].childNodes[1].value
             if ((dueDate >= today && dueDate <= nextWeek) && div.childNodes[0].checked === false) {
@@ -471,7 +475,17 @@ const domManipulator = (function() {
         console.log("User clicks importantTasks")
     }
 
-    function renderOverdueTasks() {
+    function displayOverdueTasks() {
+        const allTaskDivs = content.children
+        const today = toDoManager.getFormattedDate()
+        for (const div of allTaskDivs) {
+            const dueDate = div.childNodes[4].childNodes[1].childNodes[1].value
+            if (dueDate < today && div.childNodes[0].checked === false) {
+                // do nothing
+            } else {
+                div.classList.add("display-off")
+            }
+        }
         console.log("User clicks overdueTasks")
     }
 
