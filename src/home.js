@@ -88,14 +88,9 @@ const toDoManager = (function() {
         // console.log(completionStatus)
         masterTaskList[index].isComplete = completionStatus === true ? false : true 
         // console.log(completionStatus)
-        pubSub.emit("toggleComplete", getMasterTaskList())
         console.log(`The following task has been completed ${getMasterTaskList()[index].title}`)
         console.log(masterTaskList[index].isComplete)
-    }
-
-    function getFormattedDate() {
-        const formattedDate = new Date().toISOString().substring(0, 10);
-        return formattedDate
+        pubSub.emit("toggleComplete", getMasterTaskList())
     }
 
     function getDateThirtyDaysAgo() {
@@ -112,9 +107,10 @@ const toDoManager = (function() {
                 console.log(`${task.title} is over 30 days old and was automatically removed`)
                 console.log(masterTaskList.indexOf(task))
                 masterTaskList.splice(masterTaskList.indexOf(task), 1)
+                pubSub.emit("taskRemoved", getMasterTaskList())
             }
         }
-        pubSub.emit("taskRemoved", getMasterTaskList())
+        
     }
 
     function deleteTask() {
