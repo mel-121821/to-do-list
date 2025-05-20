@@ -52,7 +52,7 @@ const toDoManager = (function() {
         {
             title: "Cat Chores",
             project: "Pets",
-            dueDate: "2025-05-17",
+            dueDate: "2025-02-17",
             priority: "normal",
             description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
             userChecklist: [
@@ -79,14 +79,42 @@ const toDoManager = (function() {
         masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist, isComplete));
     };
 
-    addTaskToMasterList("Say hello", "Pets", "2025-05-28", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
+    addTaskToMasterList("Say hello", "Pets", "2025-05-24", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
     
-    function completeTask() {
+    function toggleCompleteTask() {
         const index = this.parentNode.dataset.index;
-        getMasterTaskList()[index].isComplete = true
-        pubSub.emit("taskCompleted", getMasterTaskList())
-        console.log(`The following task has been completed ${getMasterTaskList()[index]}`)
+        let completionStatus = masterTaskList[index].isComplete
+        // console.log(completionStatus)
+        masterTaskList[index].isComplete = completionStatus === true ? false : true 
+        // console.log(completionStatus)
+        pubSub.emit("toggleComplete", getMasterTaskList())
+        console.log(`The following task has been completed ${getMasterTaskList()[index].title}`)
+        console.log(masterTaskList[index].isComplete)
+    }
+
+    function getFormattedDate() {
+        const formattedDate = new Date().toISOString().substring(0, 10);
+        return formattedDate
+    }
+
+    function getDateThirtyDaysAgo() {
+        const today = new Date();
+        const nextWeek = new Date(today.setDate(today.getDate() - 30)).toISOString().substring(0, 10);
+        return nextWeek
+    }
+
+    // completed tasks should be removed if they are over 30 days old
+    function autoDeleteCompletedTasks() {
+        const thirtyDaysAgo = getDateThirtyDaysAgo()
+        for (const task of masterTaskList) {
+            if (task.isComplete === true && task.dueDate <= thirtyDaysAgo) {
+                console.log(`${task.title} is over 30 days old and was automatically removed`)
+                console.log(masterTaskList.indexOf(task))
+                masterTaskList.splice(masterTaskList.indexOf(task), 1)
+            }
+        }
+        pubSub.emit("taskRemoved", getMasterTaskList())
     }
 
     function deleteTask() {
@@ -171,12 +199,23 @@ const toDoManager = (function() {
     // these fn()s get original lists (not copies), which can be modified
     const getMasterTaskList = () => masterTaskList;
     const getPriorities = () => priorities;
+    const getCompletedTasks = function() {
+        const completedTasks = []
+        for (const task of masterTaskList) {
+            if (task.isComplete === true) {
+                completedTasks.push(task)
+            }
+        }
+        return completedTasks
+    }
+
 
     return {
-        completeTask,
+        toggleCompleteTask,
         deleteTask,
         updateTask,
         completeChecklistItem,
+        autoDeleteCompletedTasks,
         deleteUserChecklistItem,
         addChecklistItem,
 
@@ -213,6 +252,9 @@ const pubSub = (function(){
     }
     return events
 })()
+
+
+
 
 // exports
 export{toDoManager}
