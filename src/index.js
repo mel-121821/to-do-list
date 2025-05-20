@@ -40,6 +40,8 @@ const domManipulator = (function() {
     const importantBtn = document.querySelector(".important > button")
     const overdueBtn = document.querySelector(".overdue > button")
     const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
+    const projectsList = document.querySelector(".user-created-projects > ol")
+
 
     // get data
     const allTasks = toDoManager.getMasterTaskList();
@@ -164,14 +166,13 @@ const domManipulator = (function() {
     };
 
     function createProjectDropdown(task) {
-        const allProjects = projectManager.getProjects();
         const projectDropdown = document.createElement("select");
         // projectDropdown.id = "project-dropdown";
         for (const project of allProjects) {
             const option = document.createElement("option")
-            option.value = project;
-            option.textContent = project;
-            if (option.textContent === task.project) {
+            option.value = project.name;
+            option.textContent = project.name;
+            if (option.value === task.project) {
                 option.selected = true;
             } else {
                 // do nothing
@@ -225,7 +226,7 @@ const domManipulator = (function() {
         legend.textContent = "Your checklist items";    
         
         // create checklist items section
-        const checklistItemsDiv = document.createElement("div")
+        const checklistItemsDiv = document.createElement("ul")
 
         // need to have everything appended to the DOM before calling this, otherwise you can't access the div as it doesn't exist yet
         // renderChecklistItems(task, checklistItemsDiv)
@@ -253,7 +254,7 @@ const domManipulator = (function() {
             checklistItemsDiv.innerHTML = ""
             const checklist = task.userChecklist;
             checklist.forEach((item, index) => {
-                const userItemDiv = document.createElement("ol");
+                const userItemDiv = document.createElement("li");
                 userItemDiv.dataset.itemNum = index
                 // console.log(userItemDiv.dataset.itemNum)
 
@@ -477,7 +478,6 @@ const domManipulator = (function() {
 
     function displayOverdueTasks() {
         const allTaskDivs = content.children
-        const today = toDoManager.getFormattedDate()
         for (const div of allTaskDivs) {
             const dueDate = div.childNodes[4].childNodes[1].childNodes[1].value
             if (dueDate < today && div.childNodes[0].checked === false) {
@@ -490,7 +490,39 @@ const domManipulator = (function() {
     }
 
     function renderMyProjectsList() {
+        allProjects.forEach((project, index) => {
+            console.log(project)
+            console.log(index)
+            if (index === 0) {
+                // this index represents all Projects, which already exists on the page, we don't need to duplicate it. 
+                // all projects can't be dynamically created, otherwise it can't be selected by the initial render fn() or the all projects event listener
+                // do nothing
+            } else {
+                const projectListItem = document.createElement("li")
+                projectListItem.dataset.index = index
 
+                const projectBtn = document.createElement("button")
+                projectBtn.classList.add("menu");
+                projectBtn.textContent = project.name 
+                projectBtn.addEventListener("click", function() {
+                    refreshProjectDisplay()
+                    this.classList.add("active")
+                    // displayAllProjects()
+                    // pubSub.on("tasksRendered", displayAllProjects)
+                    // console.log(`${project.name} pubsub turned on`)
+                    console.log(`User switches to ${project.name}`)
+                })
+
+                const deleteProjectBtn = document.createElement("button")
+                deleteProjectBtn.textContent = "-"
+                // deleteProjectBtn.addEventListener("click", console.log(`User deletes ${project.name}`))
+
+                projectListItem.appendChild(projectBtn)
+                projectListItem.appendChild(deleteProjectBtn)
+
+                projectsList.appendChild(projectListItem)
+                }
+        })
     }
 
     // pubSubs
@@ -507,6 +539,7 @@ const domManipulator = (function() {
     // renderChecklistItems(allTasks)
     renderFullTasks(allTasks)
     setFirstRenderDefault()
+    renderMyProjectsList()
 
     return{ renderTaskList }
 })();
