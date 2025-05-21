@@ -46,7 +46,8 @@ const domManipulator = (function() {
     // get data
     const allTasks = toDoManager.getMasterTaskList();
     const today = toDoManager.getFormattedDate()
-    const allProjects = projectManager.getProjects(); 
+    const allProjects = projectManager.getProjects();
+    const allProjectNames = projectManager.getProjectNames(); 
     const allPriorities = toDoManager.getPriorities();
 
     // render
@@ -402,23 +403,11 @@ const domManipulator = (function() {
     }
     
     function setFirstRenderDefault(){
-        const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
         allProjectsBtn.classList.add("active")
         displayAllProjects()
         pubSub.on("tasksRendered", displayAllProjects)
         console.log("all projects pubsub turned on")
-    
     }
-
-    // Important notes about date formats: 
-    // months are indexed at zero! January == 00
-    // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate() instead
-
-
-   
-
-    // need to change this to watch full nav bar (including dynamic ones) and make it so that only one can be active at a time. If none are selected, make "All projects" the default
-
 
     // Event listener fn()s
     function displayTodayTasks() {
@@ -434,8 +423,6 @@ const domManipulator = (function() {
         console.log("User clicks todayTasks")
         console.log(`Date: ${today}`)
     }
-
-    
 
     function displayThisWeekTasks() {
         const allTaskDivs = content.children
@@ -490,12 +477,10 @@ const domManipulator = (function() {
     }
 
     function renderMyProjectsList() {
+        refreshProjectsList();
         allProjects.forEach((project, index) => {
-            console.log(project)
-            console.log(index)
             if (index === 0) {
-                // this index represents all Projects, which already exists on the page, we don't need to duplicate it. 
-                // all projects can't be dynamically created, otherwise it can't be selected by the initial render fn() or the all projects event listener
+                // index 0 = All projects btn, skip this
                 // do nothing
             } else {
                 const projectListItem = document.createElement("li")
@@ -507,15 +492,15 @@ const domManipulator = (function() {
                 projectBtn.addEventListener("click", function() {
                     refreshProjectDisplay()
                     this.classList.add("active")
-                    // displayAllProjects()
-                    // pubSub.on("tasksRendered", displayAllProjects)
-                    // console.log(`${project.name} pubsub turned on`)
-                    console.log(`User switches to ${project.name}`)
+                    console.log(`${this.textContent} button is currently active`)
+                    displaySelectedProject()
+                    pubSub.on("tasksRendered", displaySelectedProject)
+                    console.log(`${project.name} pubsub turned on`)
                 })
 
                 const deleteProjectBtn = document.createElement("button")
                 deleteProjectBtn.textContent = "-"
-                // deleteProjectBtn.addEventListener("click", console.log(`User deletes ${project.name}`))
+                deleteProjectBtn.addEventListener("click", deleteProject)
 
                 projectListItem.appendChild(projectBtn)
                 projectListItem.appendChild(deleteProjectBtn)
@@ -525,14 +510,85 @@ const domManipulator = (function() {
         })
     }
 
+    function refreshProjectsList() {
+        const allProjectItems = document.querySelectorAll(".user-created-projects .menu") 
+        allProjectItems.forEach((project, index) => {
+            if (index === 0) {
+                // do nothing
+            } else {
+                project.parentNode.remove()
+            }
+        })
+    }
+
+    // fn to switch between pkrojects
+    function displaySelectedProject() {
+        const activeProject = getActiveProject()
+        const allTaskDivs = content.children
+        console.log(`${activeProject} is active`)
+        for (const div of allTaskDivs) {
+            if (div.children.item(4).children.item(0).lastChild.value === activeProject && div.childNodes[0].checked === false) {
+                // do nothing
+            } else {
+                div.classList.add("display-off")
+            }  
+        } 
+    }
+
+    function getActiveProject() {
+        const allProjectItems = document.querySelectorAll(".user-created-projects .menu") 
+        for (const item of allProjectItems) {
+            if (item.classList.contains("active")) { return item.textContent
+            }
+        }
+    }
+
+    // decided to not use this as the active project is not preserved when projects re-render. Instead, will create a popup to warn the user that all projects wil be moved to "All" and they will be taken to the "All projects view"
+    function checkAndDeleteProject() {
+        const index = this.parentNode.dataset.index
+        if (this.previousSibling.classList.contains("active")) {
+            deleteProject(index)
+            setFirstRenderDefault()
+        } else {
+            deleteProject(index)
+        }
+        console.log(index)
+        // const allNavBtns = document.querySelectorAll(".menu button, button.menu");
+        // console.log(allNavBtns);
+        // console.log(this.previousSibling.classList)
+    }
+
+    function deleteProject() {
+        const index = this.parentNode.dataset.index
+        projectManager.getProjects().splice(index, 1)
+        console.log(projectManager.getProjects())
+        moveProjectsToAll()
+        pubSub.emit("projectDeleted", allProjects)
+        setFirstRenderDefault()
+    }
+
+    function moveProjectsToAll() {
+        console.log("moveProjects fn called")
+        const projectNamesArr = projectManager.getProjects().map(((project) => project.name))
+        for (const task of allTasks) {
+            if (projectNamesArr.includes(task.project)) {
+                // do nothing
+            } else {
+                task.project = "All"
+                console.log(`${task.title}'s project category was removed, so it will be switched to "All"`)
+            }
+        }
+        pubSub.emit("taskUpdated", toDoManager.getMasterTaskList())
+    }
+
     // pubSubs
     pubSub.on("taskRemoved", renderFullTasks)
     pubSub.on("taskUpdated", renderFullTasks)
     pubSub.on("toggleComplete", renderFullTasks)
     pubSub.on("toggleComplete", toDoManager.autoDeleteCompletedTasks)
-    // pubSub.on("undoTaskCompleted", renderFullTasks)
     pubSub.on("checklistItemRemoved", renderChecklistItems)
     pubSub.on("checklistItemAdded", renderChecklistItems)
+    pubSub.on("projectDeleted", renderMyProjectsList)
 
     // Initial render
     // renderTaskList(allTasks);
