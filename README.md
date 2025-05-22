@@ -166,3 +166,9 @@ https://stackoverflow.com/questions/27271440/javascript-for-changing-button-stat
 
 ClassList.contains():
 https://stackoverflow.com/questions/5898656/check-if-an-element-contains-a-class-in-javascript
+
+Linking an event listener to several btns:
+https://forum.freecodecamp.org/t/linking-an-eventlistener-to-multiple-buttons/333174
+
+How to find the closest parent of a selected type/class/id:
+https://gomakethings.com/how-to-get-a-parent-element-with-vanilla-js/
