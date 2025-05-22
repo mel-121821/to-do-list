@@ -42,7 +42,6 @@ const domManipulator = (function() {
     const allTasks = toDoManager.getMasterTaskList();
     const today = toDoManager.getFormattedDate()
     const allProjects = projectManager.getProjects();
-    const allProjectNames = projectManager.getProjectNames(); 
     
 
     // render
@@ -327,7 +326,6 @@ const domManipulator = (function() {
     }
 
 
-
     // event listener fn()s
     todayTasksBtn.addEventListener("click", function() {
         refreshProjectDisplay()
@@ -571,11 +569,9 @@ const createModals = (function() {
 
     // add task modal elements
     const addTaskModal = document.querySelector(".add-task")
-    const addTaskForm = document.querySelector(".add-task form")
-    const closeModalBtns = document.querySelectorAll(".close-modal")
+    const closeModalBtns = document.querySelectorAll(".close-modal, .cancel")
     const projectModalDropdown = document.querySelector("#project")
     const priorityModalDropdown = document.querySelector("#priority")
-    const checklistDiv = document.querySelector(".checklist")
     const checklistItemsDiv = document.querySelector(".add-checklist-items")
     const addChecklistItemBtn = document.querySelector(".add-item-btn")
 
@@ -588,9 +584,9 @@ const createModals = (function() {
     populatePriorities()
     })
 
+
     closeModalBtns.forEach((btn) => {
         btn.addEventListener("click", (e) => {
-            // console.log(e.target)
         e.preventDefault()
         closeModal(e)
         })
@@ -636,8 +632,8 @@ const createModals = (function() {
     }
 
     function closeModal(e) {
-        const parentForm = e.target.parentNode
-        const parentModal = e.target.parentNode.parentNode
+        const parentForm = e.target.closest("form")
+        const parentModal = e.target.closest("dialog")
         console.log(parentForm)
         console.log(parentModal)
         parentForm.reset()
