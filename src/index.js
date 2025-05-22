@@ -28,11 +28,6 @@ import { pubSub } from "./home.js";
 const domManipulator = (function() {
 
     // cacheDOM
-
-    // using this temporarily for testing
-    const addTaskBtn = document.querySelector(".title > button")
-    addTaskBtn.addEventListener("click", toDoManager.removeCompletedTasks)
-
     const content = document.querySelector("#content")
     const todayTasksBtn = document.querySelector(".today > button");
     const thisWeekTasksBtn = document.querySelector(".this-week > button")
@@ -48,7 +43,7 @@ const domManipulator = (function() {
     const today = toDoManager.getFormattedDate()
     const allProjects = projectManager.getProjects();
     const allProjectNames = projectManager.getProjectNames(); 
-    const allPriorities = toDoManager.getPriorities();
+    
 
     // render
 
@@ -500,7 +495,7 @@ const domManipulator = (function() {
 
                 const deleteProjectBtn = document.createElement("button")
                 deleteProjectBtn.textContent = "-"
-                deleteProjectBtn.addEventListener("click", deleteProject)
+                deleteProjectBtn.addEventListener("click", toDoManager.deleteProject)
 
                 projectListItem.appendChild(projectBtn)
                 projectListItem.appendChild(deleteProjectBtn)
@@ -543,43 +538,6 @@ const domManipulator = (function() {
         }
     }
 
-    // decided to not use this as the active project is not preserved when projects re-render. Instead, will create a popup to warn the user that all projects wil be moved to "All" and they will be taken to the "All projects view"
-    function checkAndDeleteProject() {
-        const index = this.parentNode.dataset.index
-        if (this.previousSibling.classList.contains("active")) {
-            deleteProject(index)
-            setFirstRenderDefault()
-        } else {
-            deleteProject(index)
-        }
-        console.log(index)
-        // const allNavBtns = document.querySelectorAll(".menu button, button.menu");
-        // console.log(allNavBtns);
-        // console.log(this.previousSibling.classList)
-    }
-
-    function deleteProject() {
-        const index = this.parentNode.dataset.index
-        projectManager.getProjects().splice(index, 1)
-        console.log(projectManager.getProjects())
-        moveProjectsToAll()
-        pubSub.emit("projectDeleted", allProjects)
-        setFirstRenderDefault()
-    }
-
-    function moveProjectsToAll() {
-        console.log("moveProjects fn called")
-        const projectNamesArr = projectManager.getProjects().map(((project) => project.name))
-        for (const task of allTasks) {
-            if (projectNamesArr.includes(task.project)) {
-                // do nothing
-            } else {
-                task.project = "All"
-                console.log(`${task.title}'s project category was removed, so it will be switched to "All"`)
-            }
-        }
-        pubSub.emit("taskUpdated", toDoManager.getMasterTaskList())
-    }
 
     // pubSubs
     pubSub.on("taskRemoved", renderFullTasks)
@@ -589,6 +547,7 @@ const domManipulator = (function() {
     pubSub.on("checklistItemRemoved", renderChecklistItems)
     pubSub.on("checklistItemAdded", renderChecklistItems)
     pubSub.on("projectDeleted", renderMyProjectsList)
+    pubSub.on("projectDeleted", setFirstRenderDefault)
 
     // Initial render
     // renderTaskList(allTasks);
@@ -600,8 +559,71 @@ const domManipulator = (function() {
     return{ renderTaskList }
 })();
 
+const createModals = (function() {
+    // Create modals for:
+    // Add task btn
+    // Add checklist item
+    // Delete project
 
+    // main page DOM
+    const addTaskBtn = document.querySelector(".title > button")
 
+    // add task modal elements
+    const addTaskModal = document.querySelector(".add-task")
+    const addTaskForm = document.querySelector(".add-task form")
+    const closeModalBtn = document.querySelector(".close-modal")
+    const projectModalDropdown = document.querySelector("#project")
+    const priorityModalDropdown = document.querySelector("#priority")
+    const checklistDiv = document.querySelector(".checklist")
+    const checklistItemsDiv = document.querySelector(".add-checklist-items")
+    const addChecklistItemBtn = document.querySelector(".add-item-btn")
+    
+
+    addTaskBtn.addEventListener("click", function() { addTaskModal.showModal()
+    populateProjects()
+    populatePriorities()
+    })
+
+    closeModalBtn.addEventListener("click", closeModal)
+
+    addChecklistItemBtn.addEventListener("click", function(e) {
+        // prevents the page from immediately reloading
+        e.preventDefault()
+        addChecklistItemInput()
+    })
+
+    function populateProjects(){
+        const allProjects = projectManager.getProjects().map(((project) => project.name))
+        for (const project of allProjects) {
+            const option = document.createElement("option")
+            option.value = project;
+            option.textContent = project;
+            projectModalDropdown.appendChild(option);
+        } 
+    }
+
+    function populatePriorities() {
+        const allPriorities = toDoManager.getPriorities();
+        for (const priority of allPriorities) {
+            const option = document.createElement("option")
+            option.value = priority;
+            option.textContent = priority;
+            priorityModalDropdown.appendChild(option)
+        }
+    }
+
+    function addChecklistItemInput() {
+        const newChecklistInput = document.createElement("input")
+        newChecklistInput.setAttribute("type", "text")
+        checklistItemsDiv.appendChild(newChecklistInput)
+        addTaskModal.showModal()
+    }
+
+    function closeModal() {
+        addTaskForm.reset()
+        addTaskModal.close()
+    }
+})()
 
 
 
@@ -629,6 +651,22 @@ function manageDisplay() {
     }
     
 }
+
+ // decided to not use this as the active project is not preserved when projects re-render. Instead, will create a popup to warn the user that all projects wil be moved to "All" and they will be taken to the "All projects view"
+ function checkAndDeleteProject() {
+    const index = this.parentNode.dataset.index
+    if (this.previousSibling.classList.contains("active")) {
+        deleteProject(index)
+        setFirstRenderDefault()
+    } else {
+        deleteProject(index)
+    }
+    console.log(index)
+    // const allNavBtns = document.querySelectorAll(".menu button, button.menu");
+    // console.log(allNavBtns);
+    // console.log(this.previousSibling.classList)
+}
+
 
 // function removeAllActiveClasses() {
 //     console.log("removing classes")
