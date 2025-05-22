@@ -1,6 +1,8 @@
 //__________home.js__________
 //__________To-do Logic__________
 
+import { projectManager } from "./projects.js";
+
 const toDoManager = (function() {
 
     // constructor
@@ -93,10 +95,20 @@ const toDoManager = (function() {
         pubSub.emit("toggleComplete", getMasterTaskList())
     }
 
-     // Move to home
-     function getFormattedDate() {
+
+    // Important notes about date formats: 
+    // months are indexed at zero! January == 00
+    // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate() instead
+     
+    function getFormattedDate() {
         const formattedDate = new Date().toISOString().substring(0, 10);
         return formattedDate
+    }
+
+    function getDateInSevenDays() {
+        const today = new Date();
+        const nextWeek = new Date(today.setDate(today.getDate() + 7)).toISOString().substring(0, 10);
+        return nextWeek
     }
 
     function getDateThirtyDaysAgo() {
@@ -184,8 +196,8 @@ const toDoManager = (function() {
     function addChecklistItem() {
         const indexOfTaskDiv = this.parentNode.parentNode.dataset.index;
         const selectedTask = getMasterTaskList()[indexOfTaskDiv]
-        const checklistItemsDiv = this.previousSibling
-        console.log(checklistItemsDiv)
+        const checklistUl = this.previousSibling
+        console.log(checklistUl)
         console.log(selectedTask)
         selectedTask.userChecklist.push("Checklist item added")
 
@@ -197,19 +209,36 @@ const toDoManager = (function() {
         console.log(getMasterTaskList()[indexOfTaskDiv].userChecklist)   
     }
 
+    function deleteProject() {
+        const index = this.parentNode.dataset.index
+        projectManager.getProjects().splice(index, 1)
+        console.log(projectManager.getProjects())
+        moveProjectsToAll()
+        pubSub.emit("projectDeleted", projectManager.getProjects)
+        // setFirstRenderDefault()
+    }
+
+    function moveProjectsToAll() {
+        console.log("moveProjects fn called")
+        const projectNamesArr = projectManager.getProjects().map(((project) => project.name))
+        for (const task of masterTaskList) {
+            if (projectNamesArr.includes(task.project)) {
+                // do nothing
+            } else {
+                task.project = "All"
+                console.log(`${task.title}'s project category was removed, so it will be switched to "All"`)
+            }
+        }
+        pubSub.emit("taskUpdated", masterTaskList)
+    }
+
+
+
     // get data fn()s
     // these fn()s get original lists (not copies), which can be modified
     const getMasterTaskList = () => masterTaskList;
     const getPriorities = () => priorities;
-    const getCompletedTasks = function() {
-        const completedTasks = []
-        for (const task of masterTaskList) {
-            if (task.isComplete === true) {
-                completedTasks.push(task)
-            }
-        }
-        return completedTasks
-    }
+    
 
 
     return {
@@ -217,10 +246,12 @@ const toDoManager = (function() {
         deleteTask,
         updateTask,
         getFormattedDate,
+        getDateInSevenDays,
         completeChecklistItem,
         autoDeleteCompletedTasks,
         deleteUserChecklistItem,
         addChecklistItem,
+        deleteProject,
 
         getMasterTaskList,
         getPriorities,
@@ -259,6 +290,8 @@ const pubSub = (function(){
 
 
 
+
+
 // exports
 export{toDoManager}
 export{pubSub}
@@ -281,3 +314,13 @@ export{pubSub}
 //     console.log(`User has removed the following task: ${getMasterTaskList()[index].title} at index: ${index}`)
 //     removeTaskFromList(index)
 // }
+
+const getCompletedTasks = function() {
+    const completedTasks = []
+    for (const task of masterTaskList) {
+        if (task.isComplete === true) {
+            completedTasks.push(task)
+        }
+    }
+    return completedTasks
+}
