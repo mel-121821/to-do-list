@@ -6,6 +6,45 @@
    <title>To-to List</title>
 </head>
 <body>
+    <dialog class="add-task">
+        <form action="" method="">
+            <legend>Add a Task:</legend>
+            <button class="close-modal">X</button>
+            <div class="inputs">
+                <div class="task-title">
+                    <label for="task-title">Task name:</label>
+                    <input type="text" id="task-title" name="task-title"/>
+                </div>
+                <div class="details">
+                    <label for="project">Project type:</label>
+                    <select name="project" id="project">
+                        <!-- javascript -->
+                    </select>
+                    <label for="due-date">Due date:</label>
+                    <input type="date" id="due-date">
+                    <label for="priority">Priority</label>
+                    <select name="priority" id="priority">
+                        <!-- javascript -->
+                    </select>
+                </div>
+                <div class="description">
+                    <label for="description">Description:  <span>(optional)</span></label>
+                    <textarea name="description" id="description" rows="5" cols="20"></textarea>
+                </div>
+                <div class="checklist">
+                    <div class="add-checklist-items">
+                        <label for="checklist">Add checklist items:</label>
+                        <input type="text" id="checklist" name="checklist">
+                    </div>
+                    <button class="add-item-btn">+</button>
+                </div>
+                <div class="save-div">
+                    <button class="save">Save</button>
+                    <button class="cancel">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </dialog>
     <div class="header">
         <div class="logo">
             <img src="../icon/home.svg" alt="home icon">
