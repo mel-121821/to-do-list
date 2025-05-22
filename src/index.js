@@ -567,16 +567,20 @@ const createModals = (function() {
 
     // main page DOM
     const addTaskBtn = document.querySelector(".title > button")
+    const addProjectBtn = document.querySelector("button.add-project")
 
     // add task modal elements
     const addTaskModal = document.querySelector(".add-task")
     const addTaskForm = document.querySelector(".add-task form")
-    const closeModalBtn = document.querySelector(".close-modal")
+    const closeModalBtns = document.querySelectorAll(".close-modal")
     const projectModalDropdown = document.querySelector("#project")
     const priorityModalDropdown = document.querySelector("#priority")
     const checklistDiv = document.querySelector(".checklist")
     const checklistItemsDiv = document.querySelector(".add-checklist-items")
     const addChecklistItemBtn = document.querySelector(".add-item-btn")
+
+    // add project modal elements
+    const addProjectModal = document.querySelector("dialog.add-project")
     
 
     addTaskBtn.addEventListener("click", function() { addTaskModal.showModal()
@@ -584,9 +588,21 @@ const createModals = (function() {
     populatePriorities()
     })
 
-    closeModalBtn.addEventListener("click", closeModal)
+    closeModalBtns.forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+            // console.log(e.target)
+        e.preventDefault()
+        closeModal(e)
+        })
+    })
+    
 
-    addChecklistItemBtn.addEventListener("click", function(e) {
+    addProjectBtn.addEventListener("click", function() {
+        console.log(this)
+        addProjectModal.showModal()
+    })
+
+    addChecklistItemBtn.addEventListener("click", (e) => {
         // prevents the page from immediately reloading
         e.preventDefault()
         addChecklistItemInput()
@@ -619,9 +635,13 @@ const createModals = (function() {
         addTaskModal.showModal()
     }
 
-    function closeModal() {
-        addTaskForm.reset()
-        addTaskModal.close()
+    function closeModal(e) {
+        const parentForm = e.target.parentNode
+        const parentModal = e.target.parentNode.parentNode
+        console.log(parentForm)
+        console.log(parentModal)
+        parentForm.reset()
+        parentModal.close()
     }
 })()
 
