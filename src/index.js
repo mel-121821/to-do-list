@@ -21,7 +21,7 @@ import { format } from "date-fns"
 // logic functions
 import { toDoManager } from "./home.js";
 import { projectManager } from "./projects.js";
-import { pubSub } from "./home.js";
+import { pubSub } from "./pubsub.js";
 
 
 // display obj IIFE
@@ -493,7 +493,7 @@ const domManipulator = (function() {
 
                 const deleteProjectBtn = document.createElement("button")
                 deleteProjectBtn.textContent = "-"
-                deleteProjectBtn.addEventListener("click", toDoManager.deleteProject)
+                deleteProjectBtn.addEventListener("click", projectManager.deleteProject)
 
                 projectListItem.appendChild(projectBtn)
                 projectListItem.appendChild(deleteProjectBtn)
@@ -538,14 +538,15 @@ const domManipulator = (function() {
 
 
     // pubSubs
-    pubSub.on("taskRemoved", renderFullTasks)
-    pubSub.on("taskUpdated", renderFullTasks)
+    pubSub.on("taskListChanged", renderFullTasks)
     pubSub.on("toggleComplete", renderFullTasks)
     pubSub.on("toggleComplete", toDoManager.autoDeleteCompletedTasks)
-    pubSub.on("checklistItemRemoved", renderChecklistItems)
-    pubSub.on("checklistItemAdded", renderChecklistItems)
+    pubSub.on("checklistItemChanged", renderChecklistItems)
     pubSub.on("projectDeleted", renderMyProjectsList)
     pubSub.on("projectDeleted", setFirstRenderDefault)
+    pubSub.on("projectDeleted", toDoManager.moveProjectsToAll)
+    pubSub.on("projectListChanged", renderMyProjectsList)
+    pubSub.on("projectListChanged", setFirstRenderDefault)
 
     // Initial render
     // renderTaskList(allTasks);
@@ -570,17 +571,24 @@ const createModals = (function() {
     // add task modal elements
     const addTaskModal = document.querySelector(".add-task")
     const closeModalBtns = document.querySelectorAll(".close-modal, .cancel")
+    const taskTitle = document.querySelector("#task-title");
     const projectModalDropdown = document.querySelector("#project")
+    const dueDateModal = document.querySelector("#due-date")
     const priorityModalDropdown = document.querySelector("#priority")
+    const descriptionModal = document.querySelector("#description")
     const checklistItemsDiv = document.querySelector(".add-checklist-items")
     const addChecklistItemBtn = document.querySelector(".add-item-btn")
+    const addTaskSaveBtn = document.querySelector(".add-task .save")
 
     // add project modal elements
     const addProjectModal = document.querySelector("dialog.add-project")
+    const projectName = document.querySelector(".add-project input")
+    const projectSaveBtn = document.querySelector(".add-project .save")
     
 
     addTaskBtn.addEventListener("click", function() { addTaskModal.showModal()
     populateProjects()
+    getDefaultDate()
     populatePriorities()
     })
 
@@ -592,10 +600,16 @@ const createModals = (function() {
         })
     })
     
-
     addProjectBtn.addEventListener("click", function() {
         console.log(this)
         addProjectModal.showModal()
+    })
+
+    projectSaveBtn.addEventListener("click", function(e){
+        e.preventDefault
+        projectManager.addProject(projectName.value)
+        closeModal(e)
+        console.log(projectManager.getProjects())
     })
 
     addChecklistItemBtn.addEventListener("click", (e) => {
@@ -604,7 +618,27 @@ const createModals = (function() {
         addChecklistItemInput()
     })
 
+    addTaskSaveBtn.addEventListener("click", function(e) { 
+        e.preventDefault()
+        // console.log(`${taskTitle.value} ${projectModalDropdown.value} ${dueDateModal.value} ${priorityModalDropdown.value} ${descriptionModal.value} ${getModalChecklistItems()}`)
+        // console.log(getModalChecklistItems())
+        toDoManager.addTaskToMasterList(taskTitle.value, projectModalDropdown.value, dueDateModal.value, priorityModalDropdown.value, descriptionModal.value, getModalChecklistItems())
+        closeModal(e)
+        console.log(toDoManager.getMasterTaskList())
+    })
+
+    const getModalChecklistItems = function() {
+        const items = document.querySelectorAll(".checklist input")
+        const itemsArr = []; 
+        for (const item of items) {
+            console.log(item.value)
+            itemsArr.push(item.value)
+        }
+        return itemsArr
+    }
+
     function populateProjects(){
+        // returns an array of project names only
         const allProjects = projectManager.getProjects().map(((project) => project.name))
         for (const project of allProjects) {
             const option = document.createElement("option")
@@ -612,6 +646,10 @@ const createModals = (function() {
             option.textContent = project;
             projectModalDropdown.appendChild(option);
         } 
+    }
+
+    function getDefaultDate() {
+        dueDateModal.defaultValue = toDoManager.getFormattedDate();
     }
 
     function populatePriorities() {
@@ -634,11 +672,11 @@ const createModals = (function() {
     function closeModal(e) {
         const parentForm = e.target.closest("form")
         const parentModal = e.target.closest("dialog")
-        console.log(parentForm)
-        console.log(parentModal)
         parentForm.reset()
         parentModal.close()
     }
+
+
 })()
 
 
