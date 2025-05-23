@@ -2,6 +2,7 @@
 //__________To-do Logic__________
 
 import { projectManager } from "./projects.js";
+import { pubSub } from "./pubsub.js";
 
 const toDoManager = (function() {
 
@@ -79,9 +80,10 @@ const toDoManager = (function() {
     // fn()s to add tasks
     function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = [], isComplete=false) {
         masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist, isComplete));
+        pubSub.emit("taskListChanged", masterTaskList)
     };
 
-    addTaskToMasterList("Say hello", "Pets", "2025-05-24", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
+    // addTaskToMasterList("Say hello", "Pets", "2025-05-24", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
     
     function toggleCompleteTask() {
@@ -125,7 +127,7 @@ const toDoManager = (function() {
                 console.log(`${task.title} is over 30 days old and was automatically removed`)
                 console.log(masterTaskList.indexOf(task))
                 masterTaskList.splice(masterTaskList.indexOf(task), 1)
-                pubSub.emit("taskRemoved", getMasterTaskList())
+                pubSub.emit("taskListChanged", masterTaskList)
             }
         }
         
@@ -140,7 +142,7 @@ const toDoManager = (function() {
         console.log(removed)
         console.log(pubSub)
 
-        pubSub.emit("taskRemoved", getMasterTaskList())
+        pubSub.emit("taskListChanged", masterTaskList)
     }
 
     // create an to updateTask fn() and call changeProject under it. Add updateTask() to the event listener on the save btn
@@ -156,7 +158,7 @@ const toDoManager = (function() {
         console.log("User saves task info for the following task:")
         console.log(task);
         // pub/sub re-render
-        pubSub.emit("taskUpdated", getMasterTaskList())
+        pubSub.emit("taskListChanged", masterTaskList)
     }
 
     function changeProject(task, element) {
@@ -190,7 +192,7 @@ const toDoManager = (function() {
         console.log("New list of user items:")
         console.log(getMasterTaskList()[indexOfTaskDiv].userChecklist)
         
-        pubSub.emit("checklistItemRemoved", getMasterTaskList())
+        pubSub.emit("checklistItemChanged", masterTaskList)
     }
 
     function addChecklistItem() {
@@ -202,20 +204,11 @@ const toDoManager = (function() {
         selectedTask.userChecklist.push("Checklist item added")
 
         //pubsub - on change, re-render checklist items
-        pubSub.emit("checklistItemAdded", getMasterTaskList())
+        pubSub.emit("checklistItemChanged", masterTaskList)
 
         // To be replaced with a fn() to get user input   
         console.log("User added a new checklist item:")
         console.log(getMasterTaskList()[indexOfTaskDiv].userChecklist)   
-    }
-
-    function deleteProject() {
-        const index = this.parentNode.dataset.index
-        projectManager.getProjects().splice(index, 1)
-        console.log(projectManager.getProjects())
-        moveProjectsToAll()
-        pubSub.emit("projectDeleted", projectManager.getProjects)
-        // setFirstRenderDefault()
     }
 
     function moveProjectsToAll() {
@@ -229,7 +222,7 @@ const toDoManager = (function() {
                 console.log(`${task.title}'s project category was removed, so it will be switched to "All"`)
             }
         }
-        pubSub.emit("taskUpdated", masterTaskList)
+        pubSub.emit("taskListChanged", masterTaskList)
     }
 
 
@@ -242,6 +235,7 @@ const toDoManager = (function() {
 
 
     return {
+        addTaskToMasterList,
         toggleCompleteTask,
         deleteTask,
         updateTask,
@@ -251,41 +245,14 @@ const toDoManager = (function() {
         autoDeleteCompletedTasks,
         deleteUserChecklistItem,
         addChecklistItem,
-        deleteProject,
+        moveProjectsToAll,
 
         getMasterTaskList,
         getPriorities,
     }
 })()
 
-const pubSub = (function(){
-    const events = {
-        events: {},
-        on: function (eventName, fn) {
-            this.events[eventName] = this.events[eventName] || [];
-            this.events[eventName].push(fn);
-            // console.log(this)
-        },
-        off: function(eventName, fn) {
-            if (this.events[eventName]) {
-              for (let i = 0; i < this.events[eventName].length; i++) {
-                if (this.events[eventName][i] === fn) {
-                  this.events[eventName].splice(i, 1);
-                  break;
-                }
-              };
-            }
-          },
-        emit: function (eventName, data) {
-            if (this.events[eventName]) {
-                this.events[eventName].forEach(function(fn) {
-                    fn(data);
-                });
-            }
-        }
-    }
-    return events
-})()
+
 
 
 
@@ -294,7 +261,7 @@ const pubSub = (function(){
 
 // exports
 export{toDoManager}
-export{pubSub}
+
 
 
 
