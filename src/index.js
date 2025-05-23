@@ -471,7 +471,7 @@ const domManipulator = (function() {
 
     function renderMyProjectsList() {
         refreshProjectsList();
-        allProjects.forEach((project, index) => {
+        projectManager.getProjects().forEach((project, index) => {
             if (index === 0) {
                 // index 0 = All projects btn, skip this
                 // do nothing
@@ -568,25 +568,27 @@ const createModals = (function() {
     const addTaskBtn = document.querySelector(".title > button")
     const addProjectBtn = document.querySelector("button.add-project")
 
-    // add task modal elements
-    const addTaskModal = document.querySelector(".add-task")
+    // all modals
     const closeModalBtns = document.querySelectorAll(".close-modal, .cancel")
-    const taskTitle = document.querySelector("#task-title");
-    const projectModalDropdown = document.querySelector("#project")
-    const dueDateModal = document.querySelector("#due-date")
-    const priorityModalDropdown = document.querySelector("#priority")
-    const descriptionModal = document.querySelector("#description")
-    const checklistItemsDiv = document.querySelector(".add-checklist-items")
-    const addChecklistItemBtn = document.querySelector(".add-item-btn")
-    const addTaskSaveBtn = document.querySelector(".add-task .save")
+
+    // add task modal elements
+    const taskModal = document.querySelector(".add-task")
+    const taskModal_Title = document.querySelector("#task-title");
+    const taskModal_ProjectSelector = document.querySelector("#project")
+    const taskModal_DueDateSelector = document.querySelector("#due-date")
+    const taskModal_PrioritySelector = document.querySelector("#priority")
+    const taskModal_Description = document.querySelector("#description")
+    const taskModal_ChecklistDiv = document.querySelector(".add-checklist-items")
+    const taskModal_AddChecklistItemBtn = document.querySelector(".add-item-btn")
+    const taskModal_SaveBtn = document.querySelector(".add-task .save")
 
     // add project modal elements
-    const addProjectModal = document.querySelector("dialog.add-project")
-    const projectName = document.querySelector(".add-project input")
-    const projectSaveBtn = document.querySelector(".add-project .save")
+    const projectModal = document.querySelector("dialog.add-project")
+    const projectModal_Name = document.querySelector(".add-project input")
+    const projectModal_SaveBtn = document.querySelector(".add-project .save")
     
 
-    addTaskBtn.addEventListener("click", function() { addTaskModal.showModal()
+    addTaskBtn.addEventListener("click", function() { taskModal.showModal()
     populateProjects()
     getDefaultDate()
     populatePriorities()
@@ -602,29 +604,29 @@ const createModals = (function() {
     
     addProjectBtn.addEventListener("click", function() {
         console.log(this)
-        addProjectModal.showModal()
+        projectModal.showModal()
     })
 
-    projectSaveBtn.addEventListener("click", function(e){
-        e.preventDefault
-        projectManager.addProject(projectName.value)
-        closeModal(e)
-        console.log(projectManager.getProjects())
-    })
-
-    addChecklistItemBtn.addEventListener("click", (e) => {
+    taskModal_AddChecklistItemBtn.addEventListener("click", (e) => {
         // prevents the page from immediately reloading
         e.preventDefault()
         addChecklistItemInput()
     })
 
-    addTaskSaveBtn.addEventListener("click", function(e) { 
+    taskModal_SaveBtn.addEventListener("click", function(e) { 
         e.preventDefault()
-        // console.log(`${taskTitle.value} ${projectModalDropdown.value} ${dueDateModal.value} ${priorityModalDropdown.value} ${descriptionModal.value} ${getModalChecklistItems()}`)
+        // console.log(`${taskModal_Title.value} ${taskModal_ProjectSelector.value} ${taskModal_DueDateSelector.value} ${taskModal_PrioritySelector.value} ${taskModal_Description.value} ${getModalChecklistItems()}`)
         // console.log(getModalChecklistItems())
-        toDoManager.addTaskToMasterList(taskTitle.value, projectModalDropdown.value, dueDateModal.value, priorityModalDropdown.value, descriptionModal.value, getModalChecklistItems())
+        toDoManager.addTaskToMasterList(taskModal_Title.value, taskModal_ProjectSelector.value, taskModal_DueDateSelector.value, taskModal_PrioritySelector.value, taskModal_Description.value, getModalChecklistItems())
         closeModal(e)
         console.log(toDoManager.getMasterTaskList())
+    })
+
+    projectModal_SaveBtn.addEventListener("click", function(e){
+        e.preventDefault()
+        projectManager.addProject(projectModal_Name.value)
+        closeModal(e)
+        console.log(projectManager.getProjects())
     })
 
     const getModalChecklistItems = function() {
@@ -644,12 +646,12 @@ const createModals = (function() {
             const option = document.createElement("option")
             option.value = project;
             option.textContent = project;
-            projectModalDropdown.appendChild(option);
+            taskModal_ProjectSelector.appendChild(option);
         } 
     }
 
     function getDefaultDate() {
-        dueDateModal.defaultValue = toDoManager.getFormattedDate();
+        taskModal_DueDateSelector.defaultValue = toDoManager.getFormattedDate();
     }
 
     function populatePriorities() {
@@ -658,15 +660,15 @@ const createModals = (function() {
             const option = document.createElement("option")
             option.value = priority;
             option.textContent = priority;
-            priorityModalDropdown.appendChild(option)
+            taskModal_PrioritySelector.appendChild(option)
         }
     }
 
     function addChecklistItemInput() {
         const newChecklistInput = document.createElement("input")
         newChecklistInput.setAttribute("type", "text")
-        checklistItemsDiv.appendChild(newChecklistInput)
-        addTaskModal.showModal()
+        taskModal_ChecklistDiv.appendChild(newChecklistInput)
+        taskModal.showModal()
     }
 
     function closeModal(e) {
