@@ -10,7 +10,7 @@
 
     function addProject(name) {
         projects.push(new Project(name))
-        pubSub.emit("project")
+        pubSub.emit("projectListChanged", projects)
     }
 
     function deleteProject() {
@@ -40,26 +40,12 @@
         }
     ]
 
-     // filter out duplicates
-    const projectArr = projects.map(function(project){
-        return project
-    })
-
     const getProjects = () => projects
-
-    const projectNamesArr = projects.map(((project) => project.name))
-      
-
-    const getProjectNames = () => projectNamesArr
-    // console.log(projectNamesArr)
-
-    
 
     return {
         addProject,
         deleteProject,
         getProjects,
-        getProjectNames,
     }
 })()
 
