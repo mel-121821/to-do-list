@@ -59,6 +59,24 @@
             </div>
         </form>
     </dialog>
+    <dialog class="project-delete-warning">
+        <form action="" method="">
+            <fieldset>
+                <legend>Warning!</legend>
+                <button class="close-modal">X</button>
+                <p>Are you sure you want to delete this project?</p>
+                <p>Any projects under this category will be moved to your "All Projects" folder and you will be returned to the "All Projects" view.</p>
+                <input type="radio" id="confirm-delete" name="delete-project" value="true">
+                <label for="confirm-delete">Yes, I wish to delete this project.</label>
+                <input type="radio" id="cancel-delete" name="delete-project" value="false" checked>
+                <label for="cancel-delete">No, return to home screen</label>
+                <div class="save-div"></div>
+                    <button class="confirm">Confirm</button>
+                    <button class="cancel">Cancel</button>
+                </div>
+            </fieldset>
+        </form>
+    </dialog>
     <div class="header">
         <div class="logo">
             <img src="../icon/home.svg" alt="home icon">
