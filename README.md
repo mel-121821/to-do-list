@@ -172,3 +172,6 @@ https://forum.freecodecamp.org/t/linking-an-eventlistener-to-multiple-buttons/33
 
 How to find the closest parent of a selected type/class/id:
 https://gomakethings.com/how-to-get-a-parent-element-with-vanilla-js/
+
+Get the value of a radio btn:
+https://stackoverflow.com/questions/15839169/how-to-get-the-value-of-a-selected-radio-button
