@@ -13,8 +13,8 @@
         pubSub.emit("projectListChanged", projects)
     }
 
-    function deleteProject() {
-        const index = this.parentNode.dataset.index
+    function deleteProject(projectIndex) {
+        const index = projectIndex;
         projects.splice(index, 1)
         console.log(projectManager.getProjects())
         // moveProjectsToAll()
