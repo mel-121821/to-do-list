@@ -539,14 +539,13 @@ const domManipulator = (function() {
 
     // pubSubs
     pubSub.on("taskListChanged", renderFullTasks)
-    pubSub.on("toggleComplete", renderFullTasks)
     pubSub.on("toggleComplete", toDoManager.autoDeleteCompletedTasks)
     pubSub.on("checklistItemChanged", renderChecklistItems)
-    pubSub.on("projectDeleted", renderMyProjectsList)
-    pubSub.on("projectDeleted", setFirstRenderDefault)
-    pubSub.on("projectDeleted", toDoManager.moveProjectsToAll)
+
     pubSub.on("projectListChanged", renderMyProjectsList)
     pubSub.on("projectListChanged", setFirstRenderDefault)
+    pubSub.on("projectDeleted", toDoManager.moveProjectsToAll)
+   
 
     // Initial render
     // renderTaskList(allTasks);
@@ -567,9 +566,10 @@ const createModals = (function() {
     // main page DOM
     const addTaskBtn = document.querySelector(".title > button")
     const addProjectBtn = document.querySelector("button.add-project")
+   
 
-    // all modals
-    const closeModalBtns = document.querySelectorAll(".close-modal, .cancel")
+    // common modal elements
+    const closeModalBtns = document.querySelectorAll(".close-modal, .cancel");
 
     // add task modal elements
     const taskModal = document.querySelector(".add-task")
@@ -586,25 +586,22 @@ const createModals = (function() {
     const projectModal = document.querySelector("dialog.add-project")
     const projectModal_Name = document.querySelector(".add-project input")
     const projectModal_SaveBtn = document.querySelector(".add-project .save")
+
     
 
-    addTaskBtn.addEventListener("click", function() { taskModal.showModal()
-    populateProjects()
-    getDefaultDate()
-    populatePriorities()
-    })
-
-
+    // common modal event listeners
     closeModalBtns.forEach((btn) => {
         btn.addEventListener("click", (e) => {
         e.preventDefault()
         closeModal(e)
         })
     })
-    
-    addProjectBtn.addEventListener("click", function() {
-        console.log(this)
-        projectModal.showModal()
+
+    // task modal event listeners
+    addTaskBtn.addEventListener("click", function() { taskModal.showModal()
+    populateProjects()
+    getDefaultDate()
+    populatePriorities()
     })
 
     taskModal_AddChecklistItemBtn.addEventListener("click", (e) => {
@@ -615,11 +612,16 @@ const createModals = (function() {
 
     taskModal_SaveBtn.addEventListener("click", function(e) { 
         e.preventDefault()
-        // console.log(`${taskModal_Title.value} ${taskModal_ProjectSelector.value} ${taskModal_DueDateSelector.value} ${taskModal_PrioritySelector.value} ${taskModal_Description.value} ${getModalChecklistItems()}`)
-        // console.log(getModalChecklistItems())
         toDoManager.addTaskToMasterList(taskModal_Title.value, taskModal_ProjectSelector.value, taskModal_DueDateSelector.value, taskModal_PrioritySelector.value, taskModal_Description.value, getModalChecklistItems())
         closeModal(e)
         console.log(toDoManager.getMasterTaskList())
+    })
+
+
+    // project modal event listeners
+    addProjectBtn.addEventListener("click", function() {
+        console.log(this)
+        projectModal.showModal()
     })
 
     projectModal_SaveBtn.addEventListener("click", function(e){
@@ -629,16 +631,17 @@ const createModals = (function() {
         console.log(projectManager.getProjects())
     })
 
-    const getModalChecklistItems = function() {
-        const items = document.querySelectorAll(".checklist input")
-        const itemsArr = []; 
-        for (const item of items) {
-            console.log(item.value)
-            itemsArr.push(item.value)
-        }
-        return itemsArr
+
+    // common modal logic
+    function closeModal(e) {
+        const parentForm = e.target.closest("form")
+        const parentModal = e.target.closest("dialog")
+        parentForm.reset()
+        parentModal.close()
     }
 
+
+    // task modal logic
     function populateProjects(){
         // returns an array of project names only
         const allProjects = projectManager.getProjects().map(((project) => project.name))
@@ -671,92 +674,18 @@ const createModals = (function() {
         taskModal.showModal()
     }
 
-    function closeModal(e) {
-        const parentForm = e.target.closest("form")
-        const parentModal = e.target.closest("dialog")
-        parentForm.reset()
-        parentModal.close()
+    const getModalChecklistItems = function() {
+        const items = document.querySelectorAll(".checklist input")
+        const itemsArr = []; 
+        for (const item of items) {
+            console.log(item.value)
+            itemsArr.push(item.value)
+        }
+        return itemsArr
     }
-
-
 })()
 
 
 
 //__________Unused Code (Delete when finished)__________
 
-
-function getActiveProject() {
-    const allNavBtns = document.querySelectorAll(".menu button, button.menu");
-    for (const button of allNavBtns) {
-        if (button.classList.contains("active")) {
-            return button
-        }
-        return button
-    }
-}
-
-function manageDisplay() {
-    // if todayTasksList is selected, add pubSub
-    const todayBtn = document.querySelector(".today > button");
-    console.log(todayBtn)
-    console.log(todayBtn.classList[0])
-    if (todayBtn.classList[0] === "active") {
-        displayTodayTasks()
-        console.log("Today pubSub is on")
-    }
-    
-}
-
- // decided to not use this as the active project is not preserved when projects re-render. Instead, will create a popup to warn the user that all projects wil be moved to "All" and they will be taken to the "All projects view"
- function checkAndDeleteProject() {
-    const index = this.parentNode.dataset.index
-    if (this.previousSibling.classList.contains("active")) {
-        deleteProject(index)
-        setFirstRenderDefault()
-    } else {
-        deleteProject(index)
-    }
-    console.log(index)
-    // const allNavBtns = document.querySelectorAll(".menu button, button.menu");
-    // console.log(allNavBtns);
-    // console.log(this.previousSibling.classList)
-}
-
-
-// function removeAllActiveClasses() {
-//     console.log("removing classes")
-//     // console.log(e.target)
-//     const allNavBtns = document.querySelectorAll(".menu button, button.menu")
-//     console.log(allNavBtns)
-//     // e.preventDefault()
-//     for (const button of allNavBtns) {
-//         console.log(button)
-//         if (button.classList.contains("active") === true) {
-//             button.classList.remove("active")
-//             console.log(button)
-//         }
-//     }
-    
-//     // for (let i = 0; i < length; i += 1) {
-//     //     const button = allNavBtns[i]
-//     //     if (button.classList.contains("active") === true) {
-//     //         button.classList.remove("active")
-//     //     }
-//     // }
-//     // e.target.classList.add("active");
-//     // console.log(e.target)
-//     // console.log(e.target.classList)
-// }
-
-function assignActiveProjectDisplayed() {
-    // when using a query selectpr, you can ask it to select multiple categories of items, separated by commas
-    // the below example selects buttons under .menu parent class, and buttons with the menu class
-    const allNavBtns = document.querySelectorAll(".menu button, button.menu")
-    console.log(allNavBtns)
-    const length = allNavBtns.length;
-    console.log(length)
-    for (const button of allNavBtns) {
-        button.addEventListener("click", removeAllActiveClasses)
-    }
-}
