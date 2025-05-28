@@ -18,6 +18,7 @@
         projects.splice(index, 1)
         console.log(projectManager.getProjects())
         // moveProjectsToAll()
+        pubSub.emit("projectListChanged", projects)
         pubSub.emit("projectDeleted", projects)
     }
 
