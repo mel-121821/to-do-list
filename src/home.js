@@ -94,7 +94,8 @@ const toDoManager = (function() {
         // console.log(completionStatus)
         console.log(`The following task has been completed ${getMasterTaskList()[index].title}`)
         console.log(masterTaskList[index].isComplete)
-        pubSub.emit("toggleComplete", getMasterTaskList())
+        pubSub.emit("taskListChanged", masterTaskList)
+        pubSub.emit("toggleComplete", masterTaskList)
     }
 
 
@@ -225,6 +226,13 @@ const toDoManager = (function() {
         pubSub.emit("taskListChanged", masterTaskList)
     }
 
+    
+    pubSub.on("projectListChanged", () => pubSub.emit("taskListChanged", masterTaskList));
+
+    function subscribe() {
+        pubSub.emit("taskListChanged", masterTaskList)
+    }
+    
 
 
     // get data fn()s
