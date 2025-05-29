@@ -185,6 +185,14 @@ body {
 
 /*__________Main Content__________*/
 
+.display-info {
+    display: none;
+}
+
+.display-info.active {
+    display: block;
+}
+
 #content {
     display: flex;
     flex-direction: column;
