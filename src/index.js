@@ -53,6 +53,7 @@ const domManipulator = (function() {
 
             // create div for each task
             const taskDiv = document.createElement("div");
+            taskDiv.classList.add("task-div");
 
             taskDiv.dataset.index = index;
 
@@ -88,38 +89,52 @@ const domManipulator = (function() {
             const projectDiv = document.createElement("div");
             const projectLabel = document.createElement("label");
             projectLabel.innerHTML = "Project:";
-            taskDetails.appendChild(projectLabel);
             const projectDropdown = createProjectDropdown(task)
+            projectDropdown.addEventListener("change", (e) => {
+                toDoManager.changeProject(e)
+            })
             
             // date picker
             const dateDiv = document.createElement("div")
             const dateLabel = document.createElement("label")
             dateLabel.innerHTML = "Due date:"
             const datePicker = createDatePicker(task);
+            datePicker.addEventListener("change", (e) => {
+                toDoManager.changeDueDate(e)
+            })
 
             // priority dropdown
             const priorityDiv = document.createElement("div");
             const priorityLabel = document.createElement("label");
             priorityLabel.innerHTML = "Priority:"
             const priorityDropdown = createPriorityDropdown(task);
+            priorityDropdown.addEventListener("change", (e) => {
+                toDoManager.changePriority(e)
+            })
 
             // 3rd row - description
             const taskDescription = createDescription(task);
+            taskDescription.addEventListener("blur", (e) => {
+                toDoManager.changeDescription(e)
+            })
 
             // 4th row - user checklist
             const checklistDiv = createChecklistDiv(task);
             
+
+            // may remove these and have the list update dynamically instead
+
             // 5th row save and cancel section - has own  div
-            const btnDiv = document.createElement("div");
+            // const btnDiv = document.createElement("div");
 
-            // save btn
-            const saveBtn = document.createElement("button");
-            saveBtn.textContent = "Save"
-            saveBtn.addEventListener("click", toDoManager.updateTask)
+            // // save btn
+            // const saveBtn = document.createElement("button");
+            // saveBtn.textContent = "Save"
+            // saveBtn.addEventListener("click", toDoManager.updateTask)
 
-            // cancel btn
-            const cancelBtn = document.createElement("button");
-            cancelBtn.textContent = "Cancel"
+            // // cancel btn
+            // const cancelBtn = document.createElement("button");
+            // cancelBtn.textContent = "Cancel"
 
             // append first row
             taskDiv.appendChild(taskCheckbox);
@@ -142,8 +157,8 @@ const domManipulator = (function() {
             taskDiv.appendChild(checklistDiv);
 
             // append btns
-            btnDiv.append(saveBtn, cancelBtn)
-            taskDiv.append(btnDiv);
+            // btnDiv.append(saveBtn, cancelBtn)
+            // taskDiv.append(btnDiv);
             content.appendChild(taskDiv);
         })  
     }  
@@ -610,9 +625,6 @@ const createModals = (function() {
     const projectDeleteModal = document.querySelector(".project-delete-warning")
     const projectDeleteModal_Confirm = document.querySelector(".confirm")
 
-    // add checklist item modal elements
-
-
 
     // common modal event listeners
     closeModalBtns.forEach((btn) => {
@@ -735,6 +747,8 @@ const createModals = (function() {
         console.log(projectDeleteModal.classList)
     }
 
+
+    // add checklist items modal
     function createAddChecklistItemModal(taskIndex){
         const addChecklistItemModal = document.createElement("dialog");
         addChecklistItemModal.classList.add(`${taskIndex}`)
@@ -758,18 +772,18 @@ const createModals = (function() {
 
         closeBtn.addEventListener("click", (e) => {
             e.preventDefault()
-            closeModal(e)
+            removeModal(e)
         })
 
         saveBtn.addEventListener("click", (e) => {
             e.preventDefault()
             toDoManager.addChecklistItem(e)
-            closeModal(e)
+            removeModal(e)
         })
 
         cancelBtn.addEventListener("click", (e) => {
             e.preventDefault()
-            closeModal(e)
+            removeModal(e)
         })
 
         form.appendChild(legend)
@@ -782,6 +796,11 @@ const createModals = (function() {
         body.appendChild(addChecklistItemModal)
 
         addChecklistItemModal.showModal()
+    }
+
+    function removeModal(e){
+        const parentModal = e.target.closest("dialog")
+        parentModal.remove()
     }
 
     return {
