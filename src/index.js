@@ -230,7 +230,11 @@ const domManipulator = (function() {
         // create btn to add checklist item
         const addBtn = document.createElement("button");
         addBtn.textContent = "+"
-        addBtn.addEventListener("click", toDoManager.addChecklistItem)
+        addBtn.addEventListener("click", (e) => {
+            const taskIndex = e.target.parentNode.parentNode.dataset.index
+            console.log(taskIndex)
+            createModals.createAddChecklistItemModal(taskIndex)
+        })
 
         // append items to checklist div
         checklistDiv.appendChild(legend);
@@ -455,15 +459,6 @@ const domManipulator = (function() {
         console.log("User clicks completedTasks")
     }
 
-    function toggleCompletedTaskInfo(className) {
-        // if (className === "active") {
-        //     displayInfo.style.display = "block"
-        // } else {
-        //     displayInfo.style.display = "none"
-        // }
-        console.log(displayInfo)
-    }
-
     function displayImportantTasks() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
@@ -582,18 +577,16 @@ const domManipulator = (function() {
 })();
 
 const createModals = (function() {
-    // Create modals for:
-    // Add task btn
-    // Add checklist item
-    // Delete project
 
-    // main page DOM
+    // main page DOM elements
     const addTaskBtn = document.querySelector(".title > button")
     const addProjectBtn = document.querySelector("button.add-project")
+    const body = document.querySelector("body")
     
 
     // common modal elements
     const closeModalBtns = document.querySelectorAll(".close-modal, .cancel");
+
 
     // add task modal elements
     const taskModal = document.querySelector(".add-task")
@@ -617,7 +610,9 @@ const createModals = (function() {
     const projectDeleteModal = document.querySelector(".project-delete-warning")
     const projectDeleteModal_Confirm = document.querySelector(".confirm")
 
-    
+    // add checklist item modal elements
+
+
 
     // common modal event listeners
     closeModalBtns.forEach((btn) => {
@@ -627,46 +622,21 @@ const createModals = (function() {
         })
     })
 
+      // common modal logic
+      function closeModal(e) {
+        const parentForm = e.target.closest("form")
+        const parentModal = e.target.closest("dialog")
+        parentForm.reset()
+        parentModal.close()
+    }
+
+
     // task modal event listeners
     addTaskBtn.addEventListener("click", function() { taskModal.showModal()
     populateProjects()
     getDefaultDate()
     populatePriorities()
     })
-
-
-    //_________currently working on this________________
-
-    // deleteProjectBtns.forEach((btn) => {
-    //     const projectIndex = btn.parentNode.dataset.index
-    //     console.log(projectIndex)
-    //     btn.addEventListener("click", () => { showProjectDeleteModal(projectIndex)})
-    // })
-
-    function showProjectDeleteModal(projectIndex) {
-        projectDeleteModal.classList = "";
-        projectDeleteModal.showModal()
-        projectDeleteModal.classList.add(`${projectIndex}`)
-        console.log(projectDeleteModal.classList)
-
-    }
-
-    projectDeleteModal_Confirm.addEventListener("click", (e)=> {
-        e.preventDefault()
-        console.log(e)
-        const projectIndex = projectDeleteModal.className
-        console.log(projectIndex)
-        const radioInputs = document.querySelector("input[name='delete-project']:checked").value;
-        console.log(radioInputs)
-        if (radioInputs === "true") {
-            projectManager.deleteProject(projectIndex)
-            closeModal(e);
-        } else {
-            closeModal(e);
-        } 
-    })
-
-// _______________________________
 
     taskModal_AddChecklistItemBtn.addEventListener("click", (e) => {
         // prevents the page from immediately reloading
@@ -680,29 +650,6 @@ const createModals = (function() {
         closeModal(e)
         console.log(toDoManager.getMasterTaskList())
     })
-
-
-    // project modal event listeners
-    addProjectBtn.addEventListener("click", function() {
-        console.log(this)
-        projectModal.showModal()
-    })
-
-    projectModal_SaveBtn.addEventListener("click", function(e){
-        e.preventDefault()
-        projectManager.addProject(projectModal_Name.value)
-        closeModal(e)
-        console.log(projectManager.getProjects())
-    })
-
-
-    // common modal logic
-    function closeModal(e) {
-        const parentForm = e.target.closest("form")
-        const parentModal = e.target.closest("dialog")
-        parentForm.reset()
-        parentModal.close()
-    }
 
 
     // task modal logic
@@ -748,8 +695,98 @@ const createModals = (function() {
         return itemsArr
     }
 
+
+    // add project modal event listeners
+    addProjectBtn.addEventListener("click", function() {
+        console.log(this)
+        projectModal.showModal()
+    })
+
+    projectModal_SaveBtn.addEventListener("click", function(e){
+        e.preventDefault()
+        projectManager.addProject(projectModal_Name.value)
+        closeModal(e)
+        console.log(projectManager.getProjects())
+    })
+
+
+    // delete project modal event listeners
+    projectDeleteModal_Confirm.addEventListener("click", (e)=> {
+        e.preventDefault()
+        console.log(e)
+        const projectIndex = projectDeleteModal.className
+        console.log(projectIndex)
+        const radioInputs = document.querySelector("input[name='delete-project']:checked").value;
+        console.log(radioInputs)
+        if (radioInputs === "true") {
+            projectManager.deleteProject(projectIndex)
+            closeModal(e);
+        } else {
+            closeModal(e);
+        } 
+    })
+
+
+    // delete project modal logic
+    function showProjectDeleteModal(projectIndex) {
+        projectDeleteModal.classList = "";
+        projectDeleteModal.showModal()
+        projectDeleteModal.classList.add(`${projectIndex}`)
+        console.log(projectDeleteModal.classList)
+    }
+
+    function createAddChecklistItemModal(taskIndex){
+        const addChecklistItemModal = document.createElement("dialog");
+        addChecklistItemModal.classList.add(`${taskIndex}`)
+        console.log(addChecklistItemModal.classList)
+
+        const form = document.createElement("form");
+        const legend = document.createElement("legend") 
+        legend.textContent = "Add checklist item:"
+
+        const closeBtn = document.createElement("button")
+        closeBtn.textContent = "X"
+
+        const input = document.createElement("input");
+        input.setAttribute("type", "text")
+        
+        const saveBtn = document.createElement("button");
+        saveBtn.textContent = "Save";
+
+        const cancelBtn = document.createElement("button");
+        cancelBtn.textContent = "Cancel"
+
+        closeBtn.addEventListener("click", (e) => {
+            e.preventDefault()
+            closeModal(e)
+        })
+
+        saveBtn.addEventListener("click", (e) => {
+            e.preventDefault()
+            toDoManager.addChecklistItem(e)
+            closeModal(e)
+        })
+
+        cancelBtn.addEventListener("click", (e) => {
+            e.preventDefault()
+            closeModal(e)
+        })
+
+        form.appendChild(legend)
+        form.appendChild(closeBtn)
+        form.appendChild(input)
+        form.appendChild(saveBtn)
+        form.appendChild(cancelBtn)
+
+        addChecklistItemModal.appendChild(form)
+        body.appendChild(addChecklistItemModal)
+
+        addChecklistItemModal.showModal()
+    }
+
     return {
         showProjectDeleteModal,
+        createAddChecklistItemModal
     }
 })()
 
