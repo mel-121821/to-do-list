@@ -28,6 +28,7 @@ import { pubSub } from "./pubsub.js";
 const domManipulator = (function() {
 
     // cacheDOM
+    const displayInfo = document.querySelector(".display-info")
     const content = document.querySelector("#content")
     const todayTasksBtn = document.querySelector(".today > button");
     const thisWeekTasksBtn = document.querySelector(".this-week > button")
@@ -287,9 +288,17 @@ const domManipulator = (function() {
     
     // refresh display fn()s
     function refreshProjectDisplay() {
+        deactivateDisplayInfo()
         removeAllActiveClasses()
         removeAllDisplayOffClasses()
         setSubsToOff()
+    }
+
+    function deactivateDisplayInfo() {
+        if (displayInfo.classList.contains("active") === true) {
+            displayInfo.classList.remove("active")
+        }
+        console.log(displayInfo.classList)
     }
 
     function removeAllActiveClasses() {
@@ -346,11 +355,13 @@ const domManipulator = (function() {
    
     completeBtn.addEventListener("click", function () {
         refreshProjectDisplay()
+        displayInfo.classList.add("active")
         this.classList.add("active")
         displayCompletedTasks()
         pubSub.on("tasksRendered", displayCompletedTasks)
         console.log("complete pubsub turned on")
     })
+
     
     importantBtn.addEventListener("click", function () {
         refreshProjectDisplay()
@@ -442,6 +453,15 @@ const domManipulator = (function() {
             }
         }
         console.log("User clicks completedTasks")
+    }
+
+    function toggleCompletedTaskInfo(className) {
+        // if (className === "active") {
+        //     displayInfo.style.display = "block"
+        // } else {
+        //     displayInfo.style.display = "none"
+        // }
+        console.log(displayInfo)
     }
 
     function displayImportantTasks() {
