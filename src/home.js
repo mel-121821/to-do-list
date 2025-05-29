@@ -196,20 +196,23 @@ const toDoManager = (function() {
         pubSub.emit("checklistItemChanged", masterTaskList)
     }
 
-    function addChecklistItem() {
-        const indexOfTaskDiv = this.parentNode.parentNode.dataset.index;
-        const selectedTask = getMasterTaskList()[indexOfTaskDiv]
-        const checklistUl = this.previousSibling
-        console.log(checklistUl)
+    function addChecklistItem(e) {
+        const index = e.target.parentNode.parentNode.className
+        const selectedTask = masterTaskList[index]
+        const userInput = e.target.parentNode.children.item(2).value
+        // const checklistUl = this.previousSibling
+        // console.log(checklistUl)
+        console.log(index)
+        console.log(userInput)
         console.log(selectedTask)
-        selectedTask.userChecklist.push("Checklist item added")
+        selectedTask.userChecklist.push(userInput)
 
         //pubsub - on change, re-render checklist items
         pubSub.emit("checklistItemChanged", masterTaskList)
 
         // To be replaced with a fn() to get user input   
         console.log("User added a new checklist item:")
-        console.log(getMasterTaskList()[indexOfTaskDiv].userChecklist)   
+        console.log(masterTaskList[index].userChecklist)   
     }
 
     function moveProjectsToAll() {
@@ -228,11 +231,6 @@ const toDoManager = (function() {
 
     
     pubSub.on("projectListChanged", () => pubSub.emit("taskListChanged", masterTaskList));
-
-    function subscribe() {
-        pubSub.emit("taskListChanged", masterTaskList)
-    }
-    
 
 
     // get data fn()s
