@@ -162,20 +162,32 @@ const toDoManager = (function() {
         pubSub.emit("taskListChanged", masterTaskList)
     }
 
-    function changeProject(task, element) {
-        const newProject = element.children.item(4).children.item(0).lastChild.value
-        console.log(element.children.item(4).children.item(0).lastChild.value)
-        task.project = newProject;
+    function changeProject(e) {
+        const newProject = e.target.value
+        const taskIndex = e.target.closest(".task-div").dataset.index;
+        masterTaskList[taskIndex].project = newProject
+        pubSub.emit("taskListChanged", masterTaskList)
     }
 
-    function changeDueDate(task, element) {
-        const newDueDate = element.children.item(4).children.item(1).lastChild.value
-        task.dueDate = newDueDate;
+    function changeDueDate(e) {
+        const newDueDate = e.target.value
+        const taskIndex = e.target.closest(".task-div").dataset.index;
+        masterTaskList[taskIndex].dueDate = newDueDate
+        pubSub.emit("taskListChanged", masterTaskList);
     }
 
-    function changePriority(task, element) {
-        const newPriority = element.children.item(4).children.item(2).lastChild.value
-        task.priority = newPriority;
+    function changePriority(e) {
+        const newPriority = e.target.value
+        const taskIndex = e.target.closest(".task-div").dataset.index
+        masterTaskList[taskIndex].priority = newPriority;
+        pubSub.emit("taskListChanged", masterTaskList);
+    }
+
+    function changeDescription(e) {
+        const newDescription = e.target.value
+        const taskIndex = e.target.closest(".task-div").dataset.index
+        masterTaskList[taskIndex].description = newDescription
+        pubSub.emit("taskListChanged", masterTaskList);
     }
 
     function completeChecklistItem() {
@@ -200,11 +212,6 @@ const toDoManager = (function() {
         const index = e.target.parentNode.parentNode.className
         const selectedTask = masterTaskList[index]
         const userInput = e.target.parentNode.children.item(2).value
-        // const checklistUl = this.previousSibling
-        // console.log(checklistUl)
-        console.log(index)
-        console.log(userInput)
-        console.log(selectedTask)
         selectedTask.userChecklist.push(userInput)
 
         //pubsub - on change, re-render checklist items
@@ -245,6 +252,11 @@ const toDoManager = (function() {
         toggleCompleteTask,
         deleteTask,
         updateTask,
+        changeProject,
+        changeDueDate,
+        changePriority,
+        changeDescription,
+
         getFormattedDate,
         getDateInSevenDays,
         completeChecklistItem,
