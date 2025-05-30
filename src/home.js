@@ -80,8 +80,16 @@ const toDoManager = (function() {
     // fn()s to add tasks
     function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = [], isComplete=false) {
         masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist, isComplete));
+        sortListByDueDate()
         pubSub.emit("taskListChanged", masterTaskList)
     };
+
+    function sortListByDueDate() {
+        masterTaskList.sort((a, b) => {
+            return new Date(a.dueDate) - new Date(b.dueDate)
+        });
+        console.log(masterTaskList)
+    }
 
     // addTaskToMasterList("Say hello", "Pets", "2025-05-24", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
@@ -173,6 +181,7 @@ const toDoManager = (function() {
         const newDueDate = e.target.value
         const taskIndex = e.target.closest(".task-div").dataset.index;
         masterTaskList[taskIndex].dueDate = newDueDate
+        sortListByDueDate()
         pubSub.emit("taskListChanged", masterTaskList);
     }
 
