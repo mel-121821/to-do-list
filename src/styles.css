@@ -185,11 +185,27 @@ body {
 
 /*__________Main Content__________*/
 
-.display-info {
+.complete-view-note {
     display: none;
 }
 
-.display-info.active {
+.complete-view-note.active {
+    display: block;
+}
+
+.today-tasks-complete {
+    display: none;
+}
+
+.today-tasks-complete.active {
+    display: block;
+}
+
+.project-empty {
+    display: none;
+}
+
+.project-empty.active {
     display: block;
 }
 
