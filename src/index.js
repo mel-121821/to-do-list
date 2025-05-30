@@ -31,6 +31,7 @@ const domManipulator = (function() {
     const displayInfo = document.querySelector(".display-info")
     const completeViewNote = document.querySelector(".complete-view-note")
     const todayTasksCompleteNotice = document.querySelector(".today-tasks-complete")
+    const projectEmptyNotice = document.querySelector(".project-empty")
     const content = document.querySelector("#content")
     const todayTasksBtn = document.querySelector(".today > button");
     const thisWeekTasksBtn = document.querySelector(".this-week > button")
@@ -305,11 +306,7 @@ const domManipulator = (function() {
             if (notice.classList.contains("active")) {
                 notice.classList.remove("active")
             }
-            // console.log(notice.classList)
         } 
-        // if (completeViewNote.classList.contains("active") === true) {
-        //     completeViewNote.classList.remove("active")
-        // }
     }
 
     function removeAllActiveClasses() {
@@ -333,16 +330,13 @@ const domManipulator = (function() {
     }
 
     function setSubsToOff() {
-        // console.log((pubSub.events.task))
         if (pubSub.events.tasksRendered) {
             pubSub.events.tasksRendered = []
             console.log("All pubsubs listening to tasksRendered have been turned off")
         } else {
             // do nothing
             console.log("tasksRendered does not exist atm")
-            // console.log(pubSub.events)
         }
-        // pubSub.off("tasksRendered", displayTodayTasks)
     }
 
 
@@ -535,7 +529,9 @@ const domManipulator = (function() {
                     this.classList.add("active")
                     console.log(`${this.textContent} button is currently active`)
                     displaySelectedProject()
+                    displayProjectEmptyNotice()
                     pubSub.on("tasksRendered", displaySelectedProject)
+                    pubSub.on("tasksRendered", displayProjectEmptyNotice)
                     console.log(`${project.name} pubsub turned on`)
                 })
 
@@ -553,6 +549,13 @@ const domManipulator = (function() {
                 projectsList.appendChild(projectListItem)
                 }
         })
+    }
+
+    function displayProjectEmptyNotice(){
+        hideDisplayInfo()
+       if (checkIfDisplayIsEmpty() === true) {
+            projectEmptyNotice.classList.add("active")
+       }
     }
 
     function refreshProjectsList() {
@@ -685,6 +688,7 @@ const createModals = (function() {
 
     // task modal logic
     function populateProjects(){
+        taskModal_ProjectSelector.innerHTML = ""
         // returns an array of project names only
         const allProjects = projectManager.getProjects().map(((project) => project.name))
         for (const project of allProjects) {
@@ -700,6 +704,7 @@ const createModals = (function() {
     }
 
     function populatePriorities() {
+        taskModal_PrioritySelector.innerHTML = ""
         const allPriorities = toDoManager.getPriorities();
         for (const priority of allPriorities) {
             const option = document.createElement("option")
