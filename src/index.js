@@ -28,7 +28,9 @@ import { pubSub } from "./pubsub.js";
 const domManipulator = (function() {
 
     // cacheDOM
+    const displayInfo = document.querySelector(".display-info")
     const completeViewNote = document.querySelector(".complete-view-note")
+    const todayTasksCompleteNotice = document.querySelector(".today-tasks-complete")
     const content = document.querySelector("#content")
     const todayTasksBtn = document.querySelector(".today > button");
     const thisWeekTasksBtn = document.querySelector(".this-week > button")
@@ -297,10 +299,17 @@ const domManipulator = (function() {
     }
 
     function deactivateDisplayInfo() {
-        if (completeViewNote.classList.contains("active") === true) {
-            completeViewNote.classList.remove("active")
-        }
-        console.log(completeViewNote.classList)
+        const notices = displayInfo.children
+        console.log(notices)
+        for (const notice of notices) {
+            if (notice.classList.contains("active")) {
+                notice.classList.remove("active")
+            }
+            console.log(notice.classList)
+        } 
+        // if (completeViewNote.classList.contains("active") === true) {
+        //     completeViewNote.classList.remove("active")
+        // }
     }
 
     function removeAllActiveClasses() {
@@ -338,14 +347,46 @@ const domManipulator = (function() {
 
 
     // event listener fn()s
-    todayTasksBtn.addEventListener("click", function() {
+    todayTasksBtn.addEventListener("click", function(e) {
         refreshProjectDisplay()
         this.classList.add("active")
         displayTodayTasks()
+        displayTodayCompleteNotice(e)
         pubSub.on("tasksRendered", displayTodayTasks)
         console.log(pubSub.events)
         console.log("today pubsub turned on")
     })
+
+    function displayTodayCompleteNotice(e){
+       if (checkIfDisplayIsEmpty() === true) {
+        todayTasksCompleteNotice.classList.add("active")
+       }
+        
+        // if (allTaskDivs.some((taskDiv) => taskDiv.classList.contains("display-off"))) {
+        //     todayTasksCompleteNotice.classList.add("active")
+        // }
+        // for (const div of allTaskDivs) {
+        //     if (!div.classList.contains("display-off")){
+        //         // do nothing
+        //     } else {
+        //         todayTasksCompleteNotice.classList.add("active")
+        //     }
+        // } 
+    }
+
+    function checkIfDisplayIsEmpty() {
+        const allTaskDivs = content.children
+        let count = 0;
+        for (const div of allTaskDivs){
+            if (div.classList.contains("display-off")) {
+                count += 1
+            }
+        }
+        if (count === toDoManager.getMasterTaskList().length) {
+            return true
+        }
+        return true
+    }
 
     thisWeekTasksBtn.addEventListener("click", function() {
         refreshProjectDisplay()
