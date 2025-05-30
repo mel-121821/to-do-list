@@ -28,7 +28,7 @@ import { pubSub } from "./pubsub.js";
 const domManipulator = (function() {
 
     // cacheDOM
-    const displayInfo = document.querySelector(".display-info")
+    const completeViewNote = document.querySelector(".complete-view-note")
     const content = document.querySelector("#content")
     const todayTasksBtn = document.querySelector(".today > button");
     const thisWeekTasksBtn = document.querySelector(".this-week > button")
@@ -120,21 +120,6 @@ const domManipulator = (function() {
 
             // 4th row - user checklist
             const checklistDiv = createChecklistDiv(task);
-            
-
-            // may remove these and have the list update dynamically instead
-
-            // 5th row save and cancel section - has own  div
-            // const btnDiv = document.createElement("div");
-
-            // // save btn
-            // const saveBtn = document.createElement("button");
-            // saveBtn.textContent = "Save"
-            // saveBtn.addEventListener("click", toDoManager.updateTask)
-
-            // // cancel btn
-            // const cancelBtn = document.createElement("button");
-            // cancelBtn.textContent = "Cancel"
 
             // append first row
             taskDiv.appendChild(taskCheckbox);
@@ -157,8 +142,6 @@ const domManipulator = (function() {
             taskDiv.appendChild(checklistDiv);
 
             // append btns
-            // btnDiv.append(saveBtn, cancelBtn)
-            // taskDiv.append(btnDiv);
             content.appendChild(taskDiv);
         })  
     }  
@@ -314,10 +297,10 @@ const domManipulator = (function() {
     }
 
     function deactivateDisplayInfo() {
-        if (displayInfo.classList.contains("active") === true) {
-            displayInfo.classList.remove("active")
+        if (completeViewNote.classList.contains("active") === true) {
+            completeViewNote.classList.remove("active")
         }
-        console.log(displayInfo.classList)
+        console.log(completeViewNote.classList)
     }
 
     function removeAllActiveClasses() {
@@ -374,7 +357,7 @@ const domManipulator = (function() {
    
     completeBtn.addEventListener("click", function () {
         refreshProjectDisplay()
-        displayInfo.classList.add("active")
+        completeViewNote.classList.add("active")
         this.classList.add("active")
         displayCompletedTasks()
         pubSub.on("tasksRendered", displayCompletedTasks)
