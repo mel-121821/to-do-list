@@ -292,20 +292,20 @@ const domManipulator = (function() {
     
     // refresh display fn()s
     function refreshProjectDisplay() {
-        deactivateDisplayInfo()
+        hideDisplayInfo()
         removeAllActiveClasses()
         removeAllDisplayOffClasses()
         setSubsToOff()
     }
 
-    function deactivateDisplayInfo() {
+    function hideDisplayInfo() {
         const notices = displayInfo.children
-        console.log(notices)
+        // console.log(notices)
         for (const notice of notices) {
             if (notice.classList.contains("active")) {
                 notice.classList.remove("active")
             }
-            console.log(notice.classList)
+            // console.log(notice.classList)
         } 
         // if (completeViewNote.classList.contains("active") === true) {
         //     completeViewNote.classList.remove("active")
@@ -340,7 +340,7 @@ const domManipulator = (function() {
         } else {
             // do nothing
             console.log("tasksRendered does not exist atm")
-            console.log(pubSub.events)
+            // console.log(pubSub.events)
         }
         // pubSub.off("tasksRendered", displayTodayTasks)
     }
@@ -351,41 +351,34 @@ const domManipulator = (function() {
         refreshProjectDisplay()
         this.classList.add("active")
         displayTodayTasks()
-        displayTodayCompleteNotice(e)
+        displayTodayCompleteNotice()
         pubSub.on("tasksRendered", displayTodayTasks)
+        pubSub.on("tasksRendered", displayTodayCompleteNotice)
         console.log(pubSub.events)
         console.log("today pubsub turned on")
     })
 
-    function displayTodayCompleteNotice(e){
+    function displayTodayCompleteNotice(){
+        hideDisplayInfo()
        if (checkIfDisplayIsEmpty() === true) {
         todayTasksCompleteNotice.classList.add("active")
        }
-        
-        // if (allTaskDivs.some((taskDiv) => taskDiv.classList.contains("display-off"))) {
-        //     todayTasksCompleteNotice.classList.add("active")
-        // }
-        // for (const div of allTaskDivs) {
-        //     if (!div.classList.contains("display-off")){
-        //         // do nothing
-        //     } else {
-        //         todayTasksCompleteNotice.classList.add("active")
-        //     }
-        // } 
     }
 
     function checkIfDisplayIsEmpty() {
         const allTaskDivs = content.children
         let count = 0;
+        let result = false
         for (const div of allTaskDivs){
             if (div.classList.contains("display-off")) {
                 count += 1
             }
         }
         if (count === toDoManager.getMasterTaskList().length) {
-            return true
+            console.log(`# of tasks displayed = ${count}, # of tasks total = ${toDoManager.getMasterTaskList().length}`)
+            result = true
         }
-        return true
+        return result
     }
 
     thisWeekTasksBtn.addEventListener("click", function() {
@@ -450,6 +443,7 @@ const domManipulator = (function() {
     }
     
     function setFirstRenderDefault(){
+        refreshProjectDisplay()
         allProjectsBtn.classList.add("active")
         displayAllProjects()
         pubSub.on("tasksRendered", displayAllProjects)
@@ -597,6 +591,7 @@ const domManipulator = (function() {
 
     // pubSubs
     pubSub.on("taskListChanged", renderFullTasks)
+    // pubSub.on("taskListChanged", hideDisplayInfo)
     pubSub.on("toggleComplete", toDoManager.autoDeleteCompletedTasks)
     pubSub.on("checklistItemChanged", renderChecklistItems)
 
