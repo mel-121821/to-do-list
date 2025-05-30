@@ -34,7 +34,7 @@
                 <div class="checklist">
                     <div class="add-checklist-items">
                         <label for="checklist">Add checklist items:</label>
-                        <input type="text" id="checklist" name="checklist">
+                        <!-- <input type="text" id="checklist" name="checklist"> -->
                     </div>
                     <button class="add-item-btn">+</button>
                 </div>
@@ -133,7 +133,12 @@
    </div>
    <div id="content-wrapper">
         <div class="display-info">
-            <p>*** Completed tasks that are over 30 days past the due date will be automatically removed ***</p>
+            <div class="complete-view-note">
+                <p>*** Note: Completed tasks 30 days past the due date will be auto-deleted ***</p>
+            </div>
+            <div class="today-tasks-complete">
+                <p>Congratulations! You're all caught up for today.</p>
+            </div>
         </div>
         <div id="content">
             <!-- JS generated -->
