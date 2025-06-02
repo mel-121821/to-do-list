@@ -20,12 +20,9 @@ const toDoManager = (function() {
 
         // direct user input
         this.description = description;
-        this.userChecklist = userChecklist;
+        this.userChecklist = Object.fromEntries(userChecklist.map((x => [x, false])));
 
         this.isComplete = isComplete
-
-        // add fn to add checklist item
-        // add fn to remove checklist item
     }
 
     // data lists
@@ -36,9 +33,13 @@ const toDoManager = (function() {
             dueDate: new Date().toISOString().substring(0, 10),
             priority: "low",
             description: "Need eggs, black forest ham, sliced cheese and english muffins",
-            userChecklist: [
-                "Eggs", "BFH, 400g shaved", "Havarti with jalepeno", "Eng muffin (white)", "Also need garlic mayo"
-            ],
+            userChecklist: {
+                "Eggs": false,
+                "BFH 400g shaved": false,
+                "Havarti with jalepeno": false,
+                "Eng muffin (white)": false, 
+                "Also need garlic mayo": false
+            },
             isComplete: false,
         },
         {
@@ -47,9 +48,9 @@ const toDoManager = (function() {
             dueDate: new Date().toISOString().substring(0, 10),
             priority: "high",
             description: "Laundromat opens at 6am",
-            userChecklist: [
-                "Go to the bank to get change"
-            ],
+            userChecklist: {
+                "Go to the bank to get change": false,
+            },
             isComplete: false,
         },
         {
@@ -58,9 +59,12 @@ const toDoManager = (function() {
             dueDate: "2025-02-17",
             priority: "normal",
             description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
-            userChecklist: [
-                "Wash water bowls", "Rotate auto feeder, wash and refill", "Clean litter boxes", "Put cat beds in laundry basket"
-            ],
+            userChecklist: {
+                "Wash water bowls": false, 
+                "Rotate auto feeder, wash and refill": false, 
+                "Clean litter boxes": false, 
+                "Put cat beds in laundry basket": false,
+            },
             isComplete: false,
         },
         {
@@ -69,9 +73,14 @@ const toDoManager = (function() {
             dueDate: new Date().toISOString().substring(0, 10),
             priority: "low",
             description: "Menu: Udon stir-fry",
-            userChecklist: [
-                "Defrost beef strips", "Marinate strips with 1/2 sauce for a few hours", "Blanche udon and broccoli", "Prep onion and garlic", "Saute onion garlic and beef", "Add broccoli and udon", "Add remaining sauce", "Serve"
-            ],
+            userChecklist: {
+                "Defrost beef strips": false, 
+                "Marinate strips with 1/2 sauce for a few hours": false, 
+                "Blanche udon and broccoli": false, "Prep onion and garlic": false, 
+                "Saute onion garlic and beef": false, "Add broccoli and udon": false, 
+                "Add remaining sauce": false, 
+                "Serve": false
+            },
             isComplete: false,
         },
     ]
@@ -88,19 +97,18 @@ const toDoManager = (function() {
         masterTaskList.sort((a, b) => {
             return new Date(a.dueDate) - new Date(b.dueDate)
         });
-        console.log(masterTaskList)
+        // console.log(masterTaskList)
     }
 
     // addTaskToMasterList("Say hello", "Pets", "2025-05-24", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
 
     
     function toggleCompleteTask() {
-        const index = this.parentNode.dataset.index;
+        const index = this.closest(".task-div").dataset.index;
         let completionStatus = masterTaskList[index].isComplete
-        // console.log(completionStatus)
         masterTaskList[index].isComplete = completionStatus === true ? false : true 
-        // console.log(completionStatus)
-        console.log(`The following task has been completed ${getMasterTaskList()[index].title}`)
+
+        console.log(`The following task has been completed ${masterTaskList[index].title}`)
         console.log(masterTaskList[index].isComplete)
         pubSub.emit("taskListChanged", masterTaskList)
         pubSub.emit("toggleComplete", masterTaskList)
@@ -143,30 +151,13 @@ const toDoManager = (function() {
     }
 
     function deleteTask() {
-        const index = this.parentNode.dataset.index;
-        const removed = getMasterTaskList().splice(index, 1)
+        const index = this.closest(".task-div").dataset.index;
+        const removed = masterTaskList.splice(index, 1)
         console.log("Updated masterTaskList:")
-        console.log(toDoManager.getMasterTaskList())
+        console.log(masterTaskList)
         console.log("The following task has been removed:")
         console.log(removed)
-        console.log(pubSub)
 
-        pubSub.emit("taskListChanged", masterTaskList)
-    }
-
-    // create an to updateTask fn() and call changeProject under it. Add updateTask() to the event listener on the save btn
-
-    function updateTask() {
-        // this = dropdown > parentNode = ProjectsDiv > parentNode = TaskDiv > dataset > index
-        const task = getMasterTaskList()[this.parentNode.parentNode.dataset.index]
-        const element = this.parentNode.parentNode
-        console.log(element)
-        changeProject(task, element);
-        changeDueDate(task, element);
-        changePriority(task, element)
-        console.log("User saves task info for the following task:")
-        console.log(task);
-        // pub/sub re-render
         pubSub.emit("taskListChanged", masterTaskList)
     }
 
@@ -200,19 +191,26 @@ const toDoManager = (function() {
     }
 
     function completeChecklistItem() {
-        const itemLabel = this.parentNode.children.item(1);
-        // itemLabel.style.textDecoration = "line-through"
-        itemLabel.style.textDecoration !== "line-through" ? itemLabel.style.textDecoration = "line-through" : itemLabel.style.textDecoration = "none"
+        const taskIndex = this.closest(".task-div").dataset.index;
+        const checklistItem = this.parentNode.children.item(1);
+
+        masterTaskList[taskIndex].userChecklist[`${checklistItem.innerHTML}`] = masterTaskList[taskIndex].userChecklist[`${checklistItem.innerHTML}`] === false ? true : false
+
+        // console.log(masterTaskList[taskIndex].userChecklist[`${checklistItem.innerHTML}`])
+        
+        pubSub.emit("checklistItemChanged", masterTaskList)
+        // checklistItem.style.textDecoration !== "line-through" ? checklistItem.style.textDecoration = "line-through" : checklistItem.style.textDecoration = "none"
     }
 
     function deleteUserChecklistItem() {
-        const indexOfTaskDiv = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
-        const indexOfChecklistItem = this.parentNode.dataset.itemNum;
-        toDoManager.getMasterTaskList()[indexOfTaskDiv].userChecklist.splice(indexOfChecklistItem, 1)
+        const indexOfTaskDiv = this.closest(".task-div").dataset.index;
+        const checklistItem = this.parentNode.children.item(1).innerHTML
+      
+        delete masterTaskList[indexOfTaskDiv].userChecklist[`${checklistItem}`]
 
-        console.log(`User deleted checklist item on task ${indexOfTaskDiv} at index: ${indexOfChecklistItem}`)
-        console.log("New list of user items:")
-        console.log(getMasterTaskList()[indexOfTaskDiv].userChecklist)
+        console.log(`User deleted the ${checklistItem} checklist item on task ${indexOfTaskDiv}.`)
+        // console.log("New list of user items:")
+        // console.log(masterTaskList[indexOfTaskDiv].userChecklist)
         
         pubSub.emit("checklistItemChanged", masterTaskList)
     }
@@ -221,14 +219,13 @@ const toDoManager = (function() {
         const index = e.target.parentNode.parentNode.className
         const selectedTask = masterTaskList[index]
         const userInput = e.target.parentNode.children.item(2).value
-        selectedTask.userChecklist.push(userInput)
+        Object.assign(selectedTask.userChecklist, {[userInput]: false})
 
         //pubsub - on change, re-render checklist items
         pubSub.emit("checklistItemChanged", masterTaskList)
 
-        // To be replaced with a fn() to get user input   
-        console.log("User added a new checklist item:")
-        console.log(masterTaskList[index].userChecklist)   
+        // console.log("User added a new checklist item:")
+        // console.log(masterTaskList[index].userChecklist)   
     }
 
     function moveProjectsToAll() {
@@ -260,7 +257,6 @@ const toDoManager = (function() {
         addTaskToMasterList,
         toggleCompleteTask,
         deleteTask,
-        updateTask,
         changeProject,
         changeDueDate,
         changePriority,
@@ -305,7 +301,7 @@ export{toDoManager}
 
 // function deleteTask() {
 //     const index = this.parentNode.dataset.index;
-//     console.log(`User has removed the following task: ${getMasterTaskList()[index].title} at index: ${index}`)
+//     console.log(`User has removed the following task: ${masterTaskList[index].title} at index: ${index}`)
 //     removeTaskFromList(index)
 // }
 
