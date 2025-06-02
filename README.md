@@ -175,3 +175,18 @@ https://gomakethings.com/how-to-get-a-parent-element-with-vanilla-js/
 
 Get the value of a radio btn:
 https://stackoverflow.com/questions/15839169/how-to-get-the-value-of-a-selected-radio-button
+
+How to convert an array into object keys
+https://stackoverflow.com/questions/54789406/convert-array-to-object-keys
+
+More info: using Object.fromEntries() to create an obj from a list of key:value pairs
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/fromEntries
+
+Using Object.entries to extract iterable keys and values from an obj:
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/entries
+
+Remove a key:value pair from an obj:
+https://www.geeksforgeeks.org/how-to-remove-a-key-from-javascript-object/
+
+Add a key:value pair to an existing obj (Obj.assign):
+https://stackoverflow.com/questions/1168807/how-can-i-add-a-key-value-pair-to-a-javascript-object
