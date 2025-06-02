@@ -232,7 +232,7 @@ const domManipulator = (function() {
         const addBtn = document.createElement("button");
         addBtn.textContent = "+"
         addBtn.addEventListener("click", (e) => {
-            const taskIndex = e.target.parentNode.parentNode.dataset.index
+            const taskIndex = e.target.closest(".task-div").dataset.index
             console.log(taskIndex)
             createModals.createAddChecklistItemModal(taskIndex)
         })
@@ -245,30 +245,26 @@ const domManipulator = (function() {
     } 
 
     function renderChecklistItems(allTasks) {
-        // remove existing elements before adding updated list to page
-        console.log(allTasks)
+        // console.log(allTasks)
         allTasks.forEach((task, index) => {
-            // console.log(`When renderChecklistItems is called , the index of ${task.title} is ${index}`)
-            // console.log(index)
-            // console.log(task.isComplete)
             const checklistItemsDiv = content.children.item(index).children.item(6).children.item(1)
             checklistItemsDiv.innerHTML = ""
             const checklist = task.userChecklist;
-            checklist.forEach((item, index) => {
+            // Object.entries(checklist).forEach((item, index) => {
+            for (const [key, value] of Object.entries(checklist)) {
                 const userItemDiv = document.createElement("li");
-                userItemDiv.dataset.itemNum = index
-                // console.log(userItemDiv.dataset.itemNum)
+                // userItemDiv.dataset.itemNum = index
 
                 // create checkbox
                 const itemCheckbox = document.createElement("input");
                 itemCheckbox.setAttribute("type", "checkbox");
-                itemCheckbox.id = item;
+                itemCheckbox.id = key;
                 itemCheckbox.addEventListener("change", toDoManager.completeChecklistItem)
 
                 // create checkbox label
                 const label = document.createElement("label");
-                label.setAttribute("for", `${item}`)
-                label.innerHTML = `${item}`;
+                label.setAttribute("for", `${key}`)
+                label.innerHTML = `${key}`;
                 
                 // create delete btn
                 const deleteBtn = document.createElement("button");
@@ -278,8 +274,19 @@ const domManipulator = (function() {
                 // append items
                 userItemDiv.append(itemCheckbox, label, deleteBtn)
                 checklistItemsDiv.appendChild(userItemDiv);
-            })
+                applyChecklistStyles(value, userItemDiv, itemCheckbox)
+            }
         })
+    }
+
+    function applyChecklistStyles(value, label, itemCheckbox) {
+        if (value === true) {
+            itemCheckbox.checked = true;
+            label.style.textDecoration = "line-through" 
+        } else {
+            itemCheckbox.checked = false;
+            label.style.textDecoration = "none"
+        }
     }
 
     function renderFullTasks(allTasks) {
@@ -301,7 +308,6 @@ const domManipulator = (function() {
 
     function hideDisplayInfo() {
         const notices = displayInfo.children
-        // console.log(notices)
         for (const notice of notices) {
             if (notice.classList.contains("active")) {
                 notice.classList.remove("active")
@@ -311,7 +317,6 @@ const domManipulator = (function() {
 
     function removeAllActiveClasses() {
         console.log("removing classes")
-        // console.log(e.target)
         const allNavBtns = document.querySelectorAll(".menu button, button.menu")
         for (const button of allNavBtns) {
             if (button.classList.contains("active") === true) {
@@ -455,8 +460,8 @@ const domManipulator = (function() {
                 div.classList.add("display-off")
             }
         }
-        console.log("User clicks todayTasks")
-        console.log(`Date: ${today}`)
+        // console.log("User clicks todayTasks")
+        // console.log(`Date: ${today}`)
     }
 
     function displayThisWeekTasks() {
@@ -470,8 +475,8 @@ const domManipulator = (function() {
                 div.classList.add("display-off")
             }
         }
-        console.log("User clicks this WeekTasks")
-        console.log(`Date range: ${today} to ${nextWeek}`);
+        // console.log("User clicks this WeekTasks")
+        // console.log(`Date range: ${today} to ${nextWeek}`);
     }
 
     function displayCompletedTasks() {
@@ -538,7 +543,7 @@ const domManipulator = (function() {
                 const deleteProjectBtn = document.createElement("button")
                 deleteProjectBtn.textContent = "-"
                 deleteProjectBtn.addEventListener("click", (e) => {
-                    const projectIndex = e.target.parentNode.dataset.index
+                    const projectIndex = e.target.closest(".task-div").dataset.index
                     console.log(projectIndex)
                     createModals.showProjectDeleteModal(projectIndex)
                 })
@@ -725,7 +730,6 @@ const createModals = (function() {
         const items = document.querySelectorAll(".checklist input")
         const itemsArr = []; 
         for (const item of items) {
-            console.log(item.value)
             itemsArr.push(item.value)
         }
         return itemsArr
@@ -734,7 +738,6 @@ const createModals = (function() {
 
     // add project modal event listeners
     addProjectBtn.addEventListener("click", function() {
-        console.log(this)
         projectModal.showModal()
     })
 
@@ -742,18 +745,14 @@ const createModals = (function() {
         e.preventDefault()
         projectManager.addProject(projectModal_Name.value)
         closeModal(e)
-        console.log(projectManager.getProjects())
     })
 
 
     // delete project modal event listeners
     projectDeleteModal_Confirm.addEventListener("click", (e)=> {
         e.preventDefault()
-        console.log(e)
         const projectIndex = projectDeleteModal.className
-        console.log(projectIndex)
         const radioInputs = document.querySelector("input[name='delete-project']:checked").value;
-        console.log(radioInputs)
         if (radioInputs === "true") {
             projectManager.deleteProject(projectIndex)
             closeModal(e);
@@ -768,7 +767,6 @@ const createModals = (function() {
         projectDeleteModal.classList = "";
         projectDeleteModal.showModal()
         projectDeleteModal.classList.add(`${projectIndex}`)
-        console.log(projectDeleteModal.classList)
     }
 
 
@@ -776,7 +774,6 @@ const createModals = (function() {
     function createAddChecklistItemModal(taskIndex){
         const addChecklistItemModal = document.createElement("dialog");
         addChecklistItemModal.classList.add(`${taskIndex}`)
-        console.log(addChecklistItemModal.classList)
 
         const form = document.createElement("form");
         const legend = document.createElement("legend") 
