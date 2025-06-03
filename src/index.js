@@ -789,7 +789,7 @@ const createModals = (function() {
     // add checklist items modal
     function createAddChecklistItemModal(taskIndex){
         const addChecklistItemModal = document.createElement("dialog");
-        addChecklistItemModal.classList.add("checklist-modal")
+        addChecklistItemModal.id = "checklist-modal";
         addChecklistItemModal.classList.add(`${taskIndex}`)
 
         const form = document.createElement("form");
