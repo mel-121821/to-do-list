@@ -209,14 +209,14 @@ const domManipulator = (function() {
         description.maxLength = 3000;
         description.rows = 30;
         description.textContent = task.description;
-        // description.style.display = "none"
+        description.style.display = "none"
         return description;
     }
 
     function createChecklistDiv (task) {
         const checklistDiv = document.createElement("div");
         checklistDiv.classList.add("user-checklist-div");
-        // checklistDiv.style.display = "none"
+        checklistDiv.style.display = "none"
 
         // create legend
         const legend = document.createElement("legend");
@@ -250,7 +250,6 @@ const domManipulator = (function() {
             const checklistItemsDiv = content.children.item(index).children.item(6).children.item(1)
             checklistItemsDiv.innerHTML = ""
             const checklist = task.userChecklist;
-            // Object.entries(checklist).forEach((item, index) => {
             for (const [key, value] of Object.entries(checklist)) {
                 const userItemDiv = document.createElement("li");
                 // userItemDiv.dataset.itemNum = index
@@ -543,7 +542,7 @@ const domManipulator = (function() {
                 const deleteProjectBtn = document.createElement("button")
                 deleteProjectBtn.textContent = "-"
                 deleteProjectBtn.addEventListener("click", (e) => {
-                    const projectIndex = e.target.closest(".task-div").dataset.index
+                    const projectIndex = e.target.parentNode.dataset.index
                     console.log(projectIndex)
                     createModals.showProjectDeleteModal(projectIndex)
                 })
@@ -632,6 +631,7 @@ const createModals = (function() {
 
     // add task modal elements
     const taskModal = document.querySelector(".add-task")
+    const taskModal_Form = document.querySelector(".add-task form")
     const taskModal_Title = document.querySelector("#task-title");
     const taskModal_ProjectSelector = document.querySelector("#project")
     const taskModal_DueDateSelector = document.querySelector("#due-date")
@@ -639,11 +639,11 @@ const createModals = (function() {
     const taskModal_Description = document.querySelector("#description")
     const taskModal_ChecklistDiv = document.querySelector(".add-checklist-items")
     const taskModal_AddChecklistItemBtn = document.querySelector(".add-item-btn")
-    const taskModal_SaveBtn = document.querySelector(".add-task .save")
     
 
     // add project modal elements
     const projectModal = document.querySelector("dialog.add-project")
+    const projectModal_Form = document.querySelector(".add-project form")
     const projectModal_Name = document.querySelector(".add-project input")
     const projectModal_SaveBtn = document.querySelector(".add-project .save")
 
@@ -683,7 +683,7 @@ const createModals = (function() {
         addChecklistItemInput()
     })
 
-    taskModal_SaveBtn.addEventListener("click", function(e) { 
+    taskModal_Form.addEventListener("submit", function(e) { 
         e.preventDefault()
         toDoManager.addTaskToMasterList(taskModal_Title.value, taskModal_ProjectSelector.value, taskModal_DueDateSelector.value, taskModal_PrioritySelector.value, taskModal_Description.value, getModalChecklistItems())
         closeModal(e)
@@ -741,7 +741,7 @@ const createModals = (function() {
         projectModal.showModal()
     })
 
-    projectModal_SaveBtn.addEventListener("click", function(e){
+    projectModal_Form.addEventListener("submit", function(e){
         e.preventDefault()
         projectManager.addProject(projectModal_Name.value)
         closeModal(e)
