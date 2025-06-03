@@ -7,54 +7,62 @@
 </head>
 <body>
     <dialog class="add-task">
-        <form action="" method="">
-            <legend>Add a Task:</legend>
-            <button class="close-modal">X</button>
-            <div class="inputs">
-                <div class="task-title">
-                    <label for="task-title">Task name:</label>
-                    <input type="text" id="task-title" name="task-title"/>
-                </div>
-                <div class="details">
-                    <label for="project">Project type:</label>
-                    <select name="project" id="project">
-                        <!-- javascript -->
-                    </select>
-                    <label for="due-date">Due date:</label>
-                    <input type="date" id="due-date">
-                    <label for="priority">Priority</label>
-                    <select name="priority" id="priority">
-                        <!-- javascript -->
-                    </select>
-                </div>
-                <div class="description">
-                    <label for="description">Description:  <span>(optional)</span></label>
-                    <textarea name="description" id="description" rows="5" cols="20"></textarea>
-                </div>
-                <div class="checklist">
-                    <div class="add-checklist-items">
-                        <label for="checklist">Add checklist items:</label>
-                        <!-- <input type="text" id="checklist" name="checklist"> -->
+        <form action="" method="post">
+            <div>
+                <legend>Add a Task:</legend>
+                <button class="close-modal">x</button>
+                <div class="inputs">
+                    <div class="task-title">
+                        <label for="task-title">Task name:</label>
+                        <input type="text" id="task-title" name="task-title" required/>
                     </div>
-                    <button class="add-item-btn">+</button>
+                    <div class="details">
+                        <div class="project">
+                            <label for="project">Project type:</label>
+                            <select name="project" id="project">
+                                <!-- javascript -->
+                            </select>
+                        </div>
+                        <div class="due-date">
+                            <label for="due-date">Due date:</label>
+                            <input type="date" id="due-date"/>
+                        </div>
+                        <div class="priority">
+                            <label for="priority">Priority:</label>
+                            <select name="priority" id="priority">
+                                <!-- javascript -->
+                            </select>
+                        </div>
+                    </div>
+                    <div class="description">
+                        <label for="description">Description:  <span>(optional)</span></label>
+                        <textarea name="description" id="description" rows="5" cols="20"></textarea>
+                    </div>
+                    <div class="checklist">
+                        <div class="add-checklist-items">
+                            <label for="checklist">Add checklist items:</label>
+                            <!-- <input type="text" id="checklist" name="checklist"> -->
+                        </div>
+                        <button class="add-item-btn">+</button>
+                    </div>
                 </div>
-            </div>
-            <div class="save-div">
-                <button class="save">Save</button>
-                <button class="cancel">Cancel</button>
+                <div class="save-div">
+                    <button type="submit" class="save">Save</button>
+                    <button class="cancel">Cancel</button>
+                </div>
             </div>
         </form>
     </dialog>
     <dialog class="add-project">
-        <form action="" method="">
+        <form action="" method="post">
             <legend>Add a Project:</legend>
             <button class="close-modal">X</button>
             <div class="project-title">
                 <label for="project">Project name:</label>
-                <input type="text" id="add-project" name="add-project">
+                <input type="text" id="add-project" name="add-project" required/>
             </div>
             <div class="save-div">
-                <button class="save">Save</button>
+                <button type="submit" class="save">Save</button>
                 <button class="cancel">Cancel</button>
             </div>
         </form>
@@ -122,14 +130,14 @@
                </ol>
            </div>
         </nav>
-        <div class="themes">
+        <!-- <div class="themes">
             <ol>
                 <button>
                     Themes Placeholder
                 </button>
-                <!-- Dropdown menu -->
+                Dropdown menu
             </ol>
-        </div>
+        </div> -->
    </div>
    <div id="content-wrapper">
         <div class="display-info">
