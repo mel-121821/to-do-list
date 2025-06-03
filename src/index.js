@@ -789,6 +789,7 @@ const createModals = (function() {
     // add checklist items modal
     function createAddChecklistItemModal(taskIndex){
         const addChecklistItemModal = document.createElement("dialog");
+        addChecklistItemModal.classList.add("checklist-modal")
         addChecklistItemModal.classList.add(`${taskIndex}`)
 
         const form = document.createElement("form");
@@ -798,9 +799,15 @@ const createModals = (function() {
         const closeBtn = document.createElement("button")
         closeBtn.textContent = "X"
 
+        const inputDiv = document.createElement("div")
+        inputDiv.classList.add("input")
+        const label = document.createElement("label")
+        label.innerHTML = "Item name:"
         const input = document.createElement("input");
         input.setAttribute("type", "text")
         
+        const saveDiv = document.createElement("div")
+        saveDiv.classList.add("save-div")
         const saveBtn = document.createElement("button");
         saveBtn.textContent = "Save";
 
@@ -812,7 +819,7 @@ const createModals = (function() {
             removeModal(e)
         })
 
-        saveBtn.addEventListener("click", (e) => {
+        form.addEventListener("submit", (e) => {
             e.preventDefault()
             toDoManager.addChecklistItem(e)
             removeModal(e)
@@ -823,11 +830,16 @@ const createModals = (function() {
             removeModal(e)
         })
 
+        inputDiv.appendChild(label)
+        inputDiv.appendChild(input)
+
+        saveDiv.appendChild(saveBtn)
+        saveDiv.appendChild(cancelBtn)
+
         form.appendChild(legend)
         form.appendChild(closeBtn)
-        form.appendChild(input)
-        form.appendChild(saveBtn)
-        form.appendChild(cancelBtn)
+        form.appendChild(inputDiv)
+        form.appendChild(saveDiv)
 
         addChecklistItemModal.appendChild(form)
         body.appendChild(addChecklistItemModal)
