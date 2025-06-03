@@ -671,6 +671,7 @@ const createModals = (function() {
 
     // task modal event listeners
     addTaskBtn.addEventListener("click", function() { taskModal.showModal()
+    removeChecklistItemInputs()
     populateProjects()
     getDefaultDate()
     populatePriorities()
@@ -725,11 +726,19 @@ const createModals = (function() {
         taskModal.showModal()
     }
 
+    function removeChecklistItemInputs(){
+        // if div container contains inputs
+            // remove html input elements
+        console.log(taskModal_ChecklistDiv.children)
+        taskModal_ChecklistDiv.innerHTML = "";
+        console.log(taskModal_ChecklistDiv.children)
+    }
+
     const getModalChecklistItems = function() {
         const items = document.querySelectorAll(".checklist input")
         const itemsArr = []; 
         for (const item of items) {
-            if (!item.value === '') {
+            if (item.value !== '') {
                 itemsArr.push(item.value)
             }
         }
