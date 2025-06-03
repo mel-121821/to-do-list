@@ -645,7 +645,6 @@ const createModals = (function() {
     const projectModal = document.querySelector("dialog.add-project")
     const projectModal_Form = document.querySelector(".add-project form")
     const projectModal_Name = document.querySelector(".add-project input")
-    const projectModal_SaveBtn = document.querySelector(".add-project .save")
 
 
     // delete project modal elements
@@ -730,7 +729,9 @@ const createModals = (function() {
         const items = document.querySelectorAll(".checklist input")
         const itemsArr = []; 
         for (const item of items) {
-            itemsArr.push(item.value)
+            if (!item.value === '') {
+                itemsArr.push(item.value)
+            }
         }
         return itemsArr
     }
