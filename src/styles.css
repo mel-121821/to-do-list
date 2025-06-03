@@ -362,6 +362,40 @@ dialog.add-project {
     grid-area: 3 / 2 / 4 / 4;
 }
 
+
+/*__________Delete Project Modal__________*/
+
+
+/*__________Checklist Modal__________*/
+
+.checklist-modal form {
+    display: grid;
+    grid-template-rows: 30px 1fr 40px;
+    grid-template-columns: 1fr 120px 30px;
+    row-gap: 18px;
+}
+
+.checklist-modal legend {
+    grid-area: 1 / 1 / 2 / 3;
+}
+
+/* .checklist-modal .input {
+    color: aqua;
+    background-color: black;
+} */
+
+.checklist-modal .input {
+    grid-area: 2 / 1 / 3 / 4;
+    display: flex;
+    flex-direction: column;
+    padding: 5px;
+} 
+
+.checklist-modal .save-div {
+    grid-area: 3 / 2 / 4 / 4;
+}
+
+
 /*__________Main Content__________*/
 
 .complete-view-note {
