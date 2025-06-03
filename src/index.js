@@ -150,17 +150,22 @@ const domManipulator = (function() {
     }  
         
     function collapseTask(e) {
-        // considered adding save/cancel btns to collapsable items, but decided against it, as the user may still want to save task details without expanding the menu
-        const description = e.target.parentNode.children.item(5);
-        const checklistDiv = e.target.parentNode.children.item(6);
-        if (description.style.display !== "none" && checklistDiv.style.display !== "none") {
-            description.style.display = "none"
-            checklistDiv.style.display = "none"
+        const taskDiv = e.target.closest(".task-div")
+        if (taskDiv.classList.contains("expanded")) {
+            taskDiv.classList.remove("expanded")
         } else {
-            description.style.display = "block"
-            checklistDiv.style.display = "flex"
-        };
+            taskDiv.classList.add("expanded")
+        }
     };
+
+    function collapseAllTasks() {
+        const allTaskDivs = content.children
+        for (const div of allTaskDivs) {
+            if (div.classList.contains("expanded")) {
+                div.classList.remove("expanded")
+            }
+        }
+    }
 
     function createProjectDropdown(task) {
         const projectDropdown = document.createElement("select");
@@ -209,14 +214,14 @@ const domManipulator = (function() {
         description.maxLength = 3000;
         description.rows = 30;
         description.textContent = task.description;
-        description.style.display = "none"
+        // description.style.display = "none"
         return description;
     }
 
     function createChecklistDiv (task) {
         const checklistDiv = document.createElement("div");
         checklistDiv.classList.add("user-checklist-div");
-        checklistDiv.style.display = "none"
+        // checklistDiv.style.display = "none"
 
         // create legend
         const legend = document.createElement("legend");
@@ -302,6 +307,7 @@ const domManipulator = (function() {
         hideDisplayInfo()
         removeAllActiveClasses()
         removeAllDisplayOffClasses()
+        collapseAllTasks()
         setSubsToOff()
     }
 
