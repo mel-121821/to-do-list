@@ -216,9 +216,11 @@ const toDoManager = (function() {
     }
 
     function addChecklistItem(e) {
-        const index = e.target.parentNode.parentNode.className
+        const index = e.target.parentNode.className
+        console.log(e.target.parentNode.className)
         const selectedTask = masterTaskList[index]
-        const userInput = e.target.parentNode.children.item(2).value
+        const userInput = e.target.children.item(2).children.item(1).value
+        
         Object.assign(selectedTask.userChecklist, {[userInput]: false})
 
         //pubsub - on change, re-render checklist items
