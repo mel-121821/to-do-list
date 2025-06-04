@@ -22,6 +22,7 @@ import { format } from "date-fns"
 import { toDoManager } from "./home.js";
 import { projectManager } from "./projects.js";
 import { pubSub } from "./pubsub.js";
+import { storage } from "./storage.js"
 
 
 // display obj IIFE
@@ -41,12 +42,19 @@ const domManipulator = (function() {
     const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
     const projectsList = document.querySelector(".user-created-projects > ol")
 
+    document.addEventListener("DOMContentLoaded", () => {
+        console.log("DOM loaded, getting data from storage")
+        toDoManager.getTasksFromStorage()
+        projectManager.getProjectsFromStorage()
+    })
+
+    console.log(toDoManager.getMasterTaskList())
+    console.log(projectManager.getProjects())
 
     // get data
     const allTasks = toDoManager.getMasterTaskList();
     const today = toDoManager.getFormattedDate()
     const allProjects = projectManager.getProjects();
-    
 
     // render
 
@@ -616,9 +624,15 @@ const domManipulator = (function() {
     // Initial render
     // renderTaskList(allTasks);
     // renderChecklistItems(allTasks)
-    renderFullTasks(allTasks)
-    setFirstRenderDefault()
-    renderMyProjectsList()
+    document.addEventListener("DOMContentLoaded", () => {
+        renderFullTasks(allTasks)
+        setFirstRenderDefault()
+        renderMyProjectsList()
+    })
+
+    // renderFullTasks(allTasks)
+    // setFirstRenderDefault()
+    // renderMyProjectsList()
 
     return{ renderTaskList }
 })();
@@ -693,7 +707,6 @@ const createModals = (function() {
         e.preventDefault()
         toDoManager.addTaskToMasterList(taskModal_Title.value, taskModal_ProjectSelector.value, taskModal_DueDateSelector.value, taskModal_PrioritySelector.value, taskModal_Description.value, getModalChecklistItems())
         closeModal(e)
-        console.log(toDoManager.getMasterTaskList())
     })
 
 
@@ -735,9 +748,7 @@ const createModals = (function() {
     function removeChecklistItemInputs(){
         // if div container contains inputs
             // remove html input elements
-        console.log(taskModal_ChecklistDiv.children)
         taskModal_ChecklistDiv.innerHTML = "";
-        console.log(taskModal_ChecklistDiv.children)
     }
 
     const getModalChecklistItems = function() {
