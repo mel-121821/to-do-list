@@ -3,6 +3,7 @@
 
 import { projectManager } from "./projects.js";
 import { pubSub } from "./pubsub.js";
+import { storage } from "./storage.js";
 
 const toDoManager = (function() {
 
@@ -26,7 +27,8 @@ const toDoManager = (function() {
     }
 
     // data lists
-    const masterTaskList = [
+
+    let masterTaskList = [
         {
             title: "Make grocery list",
             project: "Food",
@@ -42,48 +44,75 @@ const toDoManager = (function() {
             },
             isComplete: false,
         },
-        {
-            title: "Do Laundry",
-            project: "Laundry",
-            dueDate: new Date().toISOString().substring(0, 10),
-            priority: "high",
-            description: "Laundromat opens at 6am",
-            userChecklist: {
-                "Go to the bank to get change": false,
-            },
-            isComplete: false,
-        },
-        {
-            title: "Cat Chores",
-            project: "Pets",
-            dueDate: "2025-02-17",
-            priority: "normal",
-            description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
-            userChecklist: {
-                "Wash water bowls": false, 
-                "Rotate auto feeder, wash and refill": false, 
-                "Clean litter boxes": false, 
-                "Put cat beds in laundry basket": false,
-            },
-            isComplete: false,
-        },
-        {
-            title: "Make dinner",
-            project: "Food",
-            dueDate: new Date().toISOString().substring(0, 10),
-            priority: "low",
-            description: "Menu: Udon stir-fry",
-            userChecklist: {
-                "Defrost beef strips": false, 
-                "Marinate strips with 1/2 sauce for a few hours": false, 
-                "Blanche udon and broccoli": false, "Prep onion and garlic": false, 
-                "Saute onion garlic and beef": false, "Add broccoli and udon": false, 
-                "Add remaining sauce": false, 
-                "Serve": false
-            },
-            isComplete: false,
-        },
     ]
+
+    function getTasksFromStorage() {
+        if (storage.checkTasksExist() === true) {
+            masterTaskList = storage.getStoredTasks()
+        } else {
+           // do nothing
+        }
+        console.log(masterTaskList)
+    }
+
+    // const masterTaskList = [
+    //     {
+    //         title: "Make grocery list",
+    //         project: "Food",
+    //         dueDate: new Date().toISOString().substring(0, 10),
+    //         priority: "low",
+    //         description: "Need eggs, black forest ham, sliced cheese and english muffins",
+    //         userChecklist: {
+    //             "Eggs": false,
+    //             "BFH 400g shaved": false,
+    //             "Havarti with jalepeno": false,
+    //             "Eng muffin (white)": false, 
+    //             "Also need garlic mayo": false
+    //         },
+    //         isComplete: false,
+    //     },
+    //     {
+    //         title: "Do Laundry",
+    //         project: "Laundry",
+    //         dueDate: new Date().toISOString().substring(0, 10),
+    //         priority: "high",
+    //         description: "Laundromat opens at 6am",
+    //         userChecklist: {
+    //             "Go to the bank to get change": false,
+    //         },
+    //         isComplete: false,
+    //     },
+    //     {
+    //         title: "Cat Chores",
+    //         project: "Pets",
+    //         dueDate: "2025-02-17",
+    //         priority: "normal",
+    //         description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
+    //         userChecklist: {
+    //             "Wash water bowls": false, 
+    //             "Rotate auto feeder, wash and refill": false, 
+    //             "Clean litter boxes": false, 
+    //             "Put cat beds in laundry basket": false,
+    //         },
+    //         isComplete: false,
+    //     },
+    //     {
+    //         title: "Make dinner",
+    //         project: "Food",
+    //         dueDate: new Date().toISOString().substring(0, 10),
+    //         priority: "low",
+    //         description: "Menu: Udon stir-fry",
+    //         userChecklist: {
+    //             "Defrost beef strips": false, 
+    //             "Marinate strips with 1/2 sauce for a few hours": false, 
+    //             "Blanche udon and broccoli": false, "Prep onion and garlic": false, 
+    //             "Saute onion garlic and beef": false, "Add broccoli and udon": false, 
+    //             "Add remaining sauce": false, 
+    //             "Serve": false
+    //         },
+    //         isComplete: false,
+    //     },
+    // ]
     const priorities = ["low", "normal", "high"]
 
     // fn()s to add tasks
@@ -247,15 +276,32 @@ const toDoManager = (function() {
     
     pubSub.on("projectListChanged", () => pubSub.emit("taskListChanged", masterTaskList));
 
+    pubSub.on("taskListChanged", storage.storeTasks)
+
+    // storage.testLocalStorage()
+    // localStorage.clear()
+    // console.log("local storage cleared")
+
+    // storage.getStoredTasks()
+    // projectManager.getProjectsFromStorage()
+
+    // storage.populateStorage("tasks", masterTaskList)
+    // storage.populateStorage("projects", projectManager.getProjects())
+
+    // storage.getStoredTasks()
+    // projectManager.getProjectsFromStorage()
 
     // get data fn()s
     // these fn()s get original lists (not copies), which can be modified
     const getMasterTaskList = () => masterTaskList;
     const getPriorities = () => priorities;
     
+   
+
 
 
     return {
+        getTasksFromStorage,
         addTaskToMasterList,
         toggleCompleteTask,
         deleteTask,
