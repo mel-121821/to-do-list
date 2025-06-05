@@ -42,14 +42,11 @@ const domManipulator = (function() {
     const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
     const projectsList = document.querySelector(".user-created-projects > ol")
 
-    document.addEventListener("DOMContentLoaded", () => {
-        console.log("DOM loaded, getting data from storage")
-        toDoManager.getTasksFromStorage()
-        projectManager.getProjectsFromStorage()
-    })
-
-    console.log(toDoManager.getMasterTaskList())
-    console.log(projectManager.getProjects())
+    // document.addEventListener("DOMContentLoaded", () => {
+    //     console.log("DOM loaded, getting data from storage")
+    //     toDoManager.getTasksFromStorage()
+    //     projectManager.getProjectsFromStorage()
+    // })
 
     // get data
     const allTasks = toDoManager.getMasterTaskList();
@@ -668,7 +665,7 @@ const createModals = (function() {
 
 
     // delete project modal elements
-    const projectDeleteModal = document.querySelector(".project-delete-warning")
+    const projectDeleteModal = document.querySelector("#project-delete-warning")
     const projectDeleteModal_Confirm = document.querySelector(".confirm")
 
 
@@ -795,7 +792,6 @@ const createModals = (function() {
         projectDeleteModal.showModal()
         projectDeleteModal.classList.add(`${projectIndex}`)
     }
-
 
     // add checklist items modal
     function createAddChecklistItemModal(taskIndex){
