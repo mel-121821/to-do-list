@@ -30,17 +30,17 @@ const toDoManager = (function() {
 
     let masterTaskList = [
         {
-            title: "Make grocery list",
-            project: "Food",
+            title: "My task",
+            project: "All",
             dueDate: new Date().toISOString().substring(0, 10),
             priority: "low",
-            description: "Need eggs, black forest ham, sliced cheese and english muffins",
+            description: "My description",
             userChecklist: {
-                "Eggs": false,
-                "BFH 400g shaved": false,
-                "Havarti with jalepeno": false,
-                "Eng muffin (white)": false, 
-                "Also need garlic mayo": false
+                "Feed the cat": false,
+                "Water plants": false,
+                "Wish Dad a Happy Birthday": false,
+                "Pump up bike tires": false,
+                "Make grocery list": false, 
             },
             isComplete: false,
         },
@@ -54,6 +54,8 @@ const toDoManager = (function() {
         }
         console.log(masterTaskList)
     }
+
+    getTasksFromStorage()
 
     // const masterTaskList = [
     //     {
