@@ -14,7 +14,6 @@
                 name: "All"
             },];
 
-    // getProjectsFromStorage()
 
     function getProjectsFromStorage() {
         if (storage.checkProjectsExist() === true) {
@@ -24,6 +23,8 @@
         }
         console.log(projects)
     }
+
+    getProjectsFromStorage()
     
 
     function addProject(name) {
