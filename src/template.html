@@ -8,48 +8,46 @@
 <body>
     <dialog class="add-task">
         <form action="" method="post">
-            <div>
-                <legend>Add a Task:</legend>
-                <button class="close-modal">x</button>
-                <div class="inputs">
-                    <div class="task-title">
-                        <label for="task-title">Task name:</label>
-                        <input type="text" id="task-title" name="task-title" required/>
+            <legend>Add a Task:</legend>
+            <button class="close-modal">x</button>
+            <div class="inputs">
+                <div class="task-title">
+                    <label for="task-title">Task name:</label>
+                    <input type="text" id="task-title" name="task-title" required/>
+                </div>
+                <div class="details">
+                    <div class="project">
+                        <label for="project">Project type:</label>
+                        <select name="project" id="project">
+                            <!-- javascript -->
+                        </select>
                     </div>
-                    <div class="details">
-                        <div class="project">
-                            <label for="project">Project type:</label>
-                            <select name="project" id="project">
-                                <!-- javascript -->
-                            </select>
-                        </div>
-                        <div class="due-date">
-                            <label for="due-date">Due date:</label>
-                            <input type="date" id="due-date"/>
-                        </div>
-                        <div class="priority">
-                            <label for="priority">Priority:</label>
-                            <select name="priority" id="priority">
-                                <!-- javascript -->
-                            </select>
-                        </div>
+                    <div class="due-date">
+                        <label for="due-date">Due date:</label>
+                        <input type="date" id="due-date"/>
                     </div>
-                    <div class="description">
-                        <label for="description">Description:  <span>(optional)</span></label>
-                        <textarea name="description" id="description" rows="5" cols="20"></textarea>
-                    </div>
-                    <div class="checklist">
-                        <div class="add-checklist-items">
-                            <label for="checklist">Add checklist items:</label>
-                            <!-- <input type="text" id="checklist" name="checklist"> -->
-                        </div>
-                        <button class="add-item-btn">+</button>
+                    <div class="priority">
+                        <label for="priority">Priority:</label>
+                        <select name="priority" id="priority">
+                            <!-- javascript -->
+                        </select>
                     </div>
                 </div>
-                <div class="save-div">
-                    <button type="submit" class="save">Save</button>
-                    <button class="cancel">Cancel</button>
+                <div class="description">
+                    <label for="description">Description:  <span>(optional)</span></label>
+                    <textarea name="description" id="description" rows="5" cols="20"></textarea>
                 </div>
+                <div class="checklist">
+                    <label for="checklist">Click below to add checklist items:</label>
+                    <div class="add-checklist-items">
+                        <!-- <input type="text" id="checklist" name="checklist"> -->
+                    </div>
+                    <button class="add-item-btn">+</button>
+                </div>
+            </div>
+            <div class="save-div">
+                <button type="submit" class="save">Save</button>
+                <button class="cancel">Cancel</button>
             </div>
         </form>
     </dialog>
@@ -67,7 +65,7 @@
             </div>
         </form>
     </dialog>
-    <dialog class="project-delete-warning">
+    <dialog id="project-delete-warning">
         <form action="" method="">
             <fieldset>
                 <legend>Warning!</legend>
