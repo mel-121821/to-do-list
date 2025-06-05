@@ -35,7 +35,7 @@ const storage = (function() {
 // ___________My code____________
 
     function checkTasksExist() {
-        if (!localStorage.getItem("tasks")) {
+        if (!localStorage.getItem("tasks") || getStoredTasks().length < 1) {
             return false
         } else {
             console.log("tasks exist in local storage")
