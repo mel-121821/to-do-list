@@ -84,7 +84,8 @@ body {
     background-color: aquamarine;
     display: grid;
     grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 100px;
-    grid-template-columns: 150px 1fr 150px;
+    grid-template-columns: 200px 1fr 200px;
+    /* width: minmax(600px, 100vw) */
 }
 
 button {
@@ -131,7 +132,8 @@ button {
 .left-sidebar {
     grid-area: 2 / 1 / 4 / 2;
     display: grid;
-    grid-template-rows: 200px 1fr 200px;
+    grid-template-rows: 200px fit-content(200px) 100px 1fr;
+    padding: 0px 10px
 }
 
 .left-sidebar nav:first-child,
@@ -141,7 +143,7 @@ button {
     display: flex;
     flex-direction: column;
     margin: 20px 0px;
-    padding: 0px 10px
+    
 }
 
 .left-sidebar nav:first-child {
@@ -507,15 +509,17 @@ dialog.add-project {
 }
 
 #content {
+    /* width: minmax(600px, calc(100vw - 200px)); */
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 20px 0px;
+    padding: 20px 10%;
 }
 
-#content > div {
+#content .task-div {
     /* task divs */
-    width: 80%;
+    min-width: 400px;
+    width: 100%;
     height: fit-content;
     display: grid;
     grid-template-rows: 50px 50px fit-content(100px) fit-content(200px) 30px;
@@ -708,13 +712,14 @@ font-size: 0.8rem;
 
 
 
-@media only screen and (max-width: 750px) {
+@media only screen and (max-width: 850px) {
 
     body {
         background-color: rgb(93, 232, 186);
         display: grid;
         grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 5px 100px;
-        grid-template-columns: 150px 1fr;
+        grid-template-columns: 200px 1fr;
+        min-width: 700px;
     }
 
     .title {
