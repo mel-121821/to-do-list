@@ -121,7 +121,10 @@ const domManipulator = (function() {
             })
 
             // 3rd row - description
+            const descriptionDiv = document.createElement("div");
             const taskDescription = createDescription(task);
+            const descriptionLabel = document.createElement("label")
+            descriptionLabel.innerHTML = "Description"
             taskDescription.addEventListener("blur", (e) => {
                 toDoManager.changeDescription(e)
             })
@@ -146,7 +149,8 @@ const domManipulator = (function() {
             taskDiv.appendChild(taskDetails);
 
             // append description and checklist
-            taskDiv.appendChild(taskDescription);
+            descriptionDiv.append(descriptionLabel, taskDescription)
+            taskDiv.appendChild(descriptionDiv);
             taskDiv.appendChild(checklistDiv);
 
             // append btns
@@ -217,7 +221,7 @@ const domManipulator = (function() {
     function createDescription (task) {
         const description = document.createElement("textarea")
         description.maxLength = 3000;
-        description.rows = 30;
+        description.rows = 5;
         description.textContent = task.description;
         // description.style.display = "none"
         return description;
@@ -665,7 +669,7 @@ const createModals = (function() {
 
 
     // delete project modal elements
-    const projectDeleteModal = document.querySelector("#project-delete-warning")
+    const projectDeleteModal = document.querySelector("#delete-warning")
     const projectDeleteModal_Confirm = document.querySelector(".confirm")
 
 
