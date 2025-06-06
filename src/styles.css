@@ -365,7 +365,95 @@ dialog.add-project {
 
 /*__________Delete Project Modal__________*/
 
+#delete-warning form {
+    display: grid;
+    grid-template-rows: 30px 1fr 40px 40px;
+    grid-template-columns: 1fr 140px 30px;
+    row-gap: 18px;
+}
 
+#delete-warning legend {
+    grid-area: 1 / 1 / 2 / 4
+}
+
+#delete-warning .close-modal {
+    grid-area: 1 / 3 / 2 / 4;
+}
+
+#delete-warning div {
+    grid-area: 2 / 1 / 3 / 4;
+}
+
+#delete-warning p:first-child {
+    margin-bottom: 12px;
+}
+
+#delete-warning fieldset {
+    grid-area: 3 / 1 / 4 / 4;
+    display: flex;
+    flex-direction: column;
+}
+
+#delete-warning fieldset div:first-child {
+    margin-bottom: 10px;
+}
+
+#delete-warning fieldset div {
+    display: flex;
+}
+
+#delete-warning input[type="radio"] {
+    appearance: none;
+}
+
+
+#delete-warning input[type="radio"] {
+    width: 24px;
+    height: 24px;
+    border-radius: 12px;
+    border: 2px solid gray;
+    vertical-align: -2px;
+    outline: none;
+}
+
+#delete-warning input[type="radio"]::before {
+    display: block;
+    content: " ";
+    width: 14px;
+    height: 14px;
+    border-radius: 6px;
+    background-color: blueviolet;
+    font-size: 1.2em;
+    transform: translate(3px, 3px) scale(0);
+    transform-origin: center;
+    transition: all 0.3s ease-in;
+}
+
+
+#delete-warning input[type="radio"]:checked::before {
+    transform: translate(3px, 3px) scale(1);
+    transition: all 0.2s cubic-bezier(0.25, 0.25, 0.56, 2);
+    transition-behavior: normal;
+    transition-duration: 0.2s;
+    transition-timing-function: cubic-bezier(0.25, 0.25, 0.56, 2);
+    transition-delay: 0s;
+
+}
+
+#delete-warning input[type="radio"]:checked::before {
+    transform: translate(3px, 3px) scale(1);
+    transition: all 0.2s cubic-bezier(0.25, 0.25, 0.56, 2);
+}
+
+#delete-warning label {
+    align-self: center;
+    margin-left: 10px;
+    margin-top: 5px;
+}
+
+#delete-warning .save-div {
+    grid-area: 4 / 2 / 5 / 4;
+}
 
 /*__________Checklist Modal__________*/
 
@@ -620,7 +708,7 @@ font-size: 0.8rem;
 
 
 
-@media only screen and (max-width: 650px) {
+@media only screen and (max-width: 750px) {
 
     body {
         background-color: rgb(93, 232, 186);
