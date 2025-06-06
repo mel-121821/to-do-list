@@ -569,16 +569,23 @@ dialog.add-project {
     background-color: rgb(208, 141, 208);
 }
 
-#content > div textarea {
+#content .task-div div:nth-child(6) {
     display: none;
 }
 
-#content > div.expanded textarea {
-    /* description  */
-    background-color: rgb(190, 183, 255);
+#content .task-div.expanded div:nth-child(6) {
+     /* description div (expanded)*/
+    background-color: rgb(230, 227, 251);
     grid-area: 3 / 2 / 4 / 7;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+}
+
+
+#content .task-div.expanded div:nth-child(6) textarea {
+    background-color: rgb(190, 183, 255);
+    align-self: center;
+    width: 99%;
     padding: 7px;
     border-radius: 5px;
     font-family: Arial, Helvetica, sans-serif;
