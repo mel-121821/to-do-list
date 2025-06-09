@@ -62,6 +62,16 @@ table {
 --softened-black: rgba(0, 0, 0, 0.898);
 --translucent-white: rgb(255, 255, 255, 0.8);
 
+/* CSS HSL from Northern Lights Bg */
+--jungle-green: hsla(150, 32%, 49%, 1);
+--eerie-black: hsla(144, 24%, 8%, 1);
+--gray: hsla(180, 2%, 48%, 1);
+--eggplant: hsla(286, 10%, 34%, 1);
+--lavender: rgb(202, 202, 202);
+--pale-pink: rgb(245, 245, 245);
+--viridian: hsla(156, 34%, 36%, 1);
+--celadon: hsla(134, 61%, 77%, 1);
+
 }
 
 
@@ -81,9 +91,9 @@ html {
 }
 
 body {
-    background-color: aquamarine;
+    background-color: black;
     display: grid;
-    grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 100px;
+    grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 50px;
     grid-template-columns: 200px 1fr 200px;
     /* width: minmax(600px, 100vw) */
 }
@@ -91,6 +101,8 @@ body {
 button {
     font-size: 1.1rem;
     padding: 1px 5px;
+    border-radius: 5px;
+    border: 1px solid grey
 }
 
 
@@ -100,13 +112,14 @@ button {
      /* row-start / column-start / row-end / column-end */
     grid-area: 1 / 1 / 2 / 4;
      display: grid;
-     grid-template-columns: 150px 1fr 150px;
+     grid-template-columns: 200px 1fr 200px;
 }
 
 .logo {
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: var(--eggplant);
 }
 
 .logo img {
@@ -120,10 +133,20 @@ button {
     justify-content: space-around
 }
 
-.date-div {
+.title h1 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--pale-pink);
+}
+
+.date-display {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.date-display p {
+    color: var(--pale-pink);
 }
 
 
@@ -133,7 +156,13 @@ button {
     grid-area: 2 / 1 / 4 / 2;
     display: grid;
     grid-template-rows: 200px fit-content(200px) 100px 1fr;
-    padding: 0px 10px
+    padding: 0px 10px;
+    gap: 20px;
+    background-color: var(--eggplant);
+}
+
+.left-sidebar button {
+    background-color: var(--lavender);
 }
 
 .left-sidebar nav:first-child,
@@ -152,8 +181,8 @@ button {
 }
 
 .left-sidebar button.active {
-    background-color: blueviolet;
-    color: white;
+    background-color: var(--pale-pink);
+    color: black;
 }
 
 .my-projects {
@@ -163,13 +192,23 @@ button {
     margin-bottom: 20px;
 }
 
+.my-projects h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--pale-pink);
+}
+
+.user-created-projects {
+    display: flex;
+    flex-direction: column;
+}
 
 .user-created-projects li {
     /* project list items */
     display: flex;
-    margin: 2px 0px;
+    margin: 2px 0px 6px 0px;
     padding: 3px 3px;
-    background-color: rgb(201, 255, 153);
+    
     align-items: center;
     width: 100%;
     height: 25px;
@@ -484,20 +523,41 @@ dialog.add-project {
 
 /*__________Main Content__________*/
 
-.complete-view-note {
+#content-wrapper {
+    position: relative;
+}
+
+#content-wrapper::before {
+    content: "";
+    background-image: url('../img/northern-lights.jpg');
+    background-size: cover;
+    background-repeat: repeat-y;
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    opacity: 1;
+}
+
+.complete-view {
     display: none;
 }
 
-.complete-view-note.active {
+.complete-view.active {
     display: block;
+    position: relative;
+    background-color: var(--gray);
 }
 
-.today-tasks-complete {
+.tasks-done {
     display: none;
 }
 
-.today-tasks-complete.active {
+.tasks-done.active {
     display: block;
+    position: relative;
+    background-color: var(--gray);
 }
 
 .project-empty {
@@ -506,6 +566,8 @@ dialog.add-project {
 
 .project-empty.active {
     display: block;
+    position: relative;
+    background-color: var(--gray);
 }
 
 #content {
@@ -514,6 +576,7 @@ dialog.add-project {
     flex-direction: column;
     align-items: center;
     padding: 20px 10%;
+
 }
 
 #content .task-div {
@@ -524,6 +587,7 @@ dialog.add-project {
     display: grid;
     grid-template-rows: 50px 50px fit-content(100px) fit-content(200px) 30px;
     grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
+    position: relative;
     background-color:aliceblue;
     margin-bottom: 20px;
     border-radius: 5px;
@@ -581,7 +645,6 @@ dialog.add-project {
     flex-direction: column;
 }
 
-
 #content .task-div.expanded div:nth-child(6) textarea {
     background-color: rgb(190, 183, 255);
     align-self: center;
@@ -596,6 +659,7 @@ dialog.add-project {
 /*__________Tasks - Checklist__________*/
 
 #content > div div:nth-child(7) {
+    /* Checklist outer div */
     display: none;
 }
 
@@ -616,12 +680,6 @@ dialog.add-project {
     margin-top: 10px;
 }
 
-#content > div div:nth-child(7) label {
-     /* Outer div > label */
-    display: flex;
-    font-size: 0.8rem;
-}
-
 #content li {
     /* list items */
     display: flex;
@@ -630,11 +688,14 @@ dialog.add-project {
     background-color: rgb(255, 239, 206);
     align-items: center;
     width: 100%;
-    height: 25px;
+    height: 28px;
 }
 
 #content li label {
+    margin-top: 5px;
     margin-left: 10px;
+    display: flex;
+    font-size: 0.9rem;
 }
 
 #content li input[type="checkbox"] {
@@ -645,7 +706,8 @@ dialog.add-project {
 #content li > button {
     margin-left: auto;
     margin-right: 5px;
-    padding: 0px 5px;
+    margin-top: -1px;
+    padding: 0px 7px;
 }
 
 #content > div div:nth-child(7) button {
@@ -663,11 +725,11 @@ dialog.add-project {
     justify-content: space-evenly;
 }
 
-#content > div div:nth-child(8) button {
+/* #content > div div:nth-child(8) button { */
     /* save & cancel btns  */
-    padding: 3px 4px;
+    /* padding: 3px 4px;
     align-self: flex-end;
-}
+} */
 
 
 
@@ -677,13 +739,14 @@ dialog.add-project {
     grid-area: 2 / 3 / 3 / 4;
     display: grid;
     grid-template-rows: 140px 1fr;
+    /* background-color: var(--eggplant); */
 }
 
 .calendar-display {
     display: flex;
     align-items: center;
     text-align: center;
-    background-color: aqua;
+    background-color: var(--eggplant)
 }
 
 
@@ -694,10 +757,12 @@ dialog.add-project {
     display: flex;
     justify-content: center;
     align-items: center;
+    background-color: black;
 }
 
 .footer-text {
 font-size: 0.8rem;
+color: var(--pale-pink);
 }
 
 .footer-icon > a {
@@ -722,9 +787,8 @@ font-size: 0.8rem;
 @media only screen and (max-width: 850px) {
 
     body {
-        background-color: rgb(93, 232, 186);
         display: grid;
-        grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 5px 100px;
+        grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 50px;
         grid-template-columns: 200px 1fr;
         min-width: 700px;
     }
@@ -733,7 +797,7 @@ font-size: 0.8rem;
         grid-area: 1 / 2 / 2 / 4;
     }
     
-    .date-div {
+    .date-display {
         display: none;
     }
 
@@ -742,7 +806,7 @@ font-size: 0.8rem;
     }
 
     .right-sidebar {
-        grid-area: 3 / 1 / 4 / 4;
+        /* grid-area: 3 / 1 / 4 / 4; */
         display: none;
     }
 
