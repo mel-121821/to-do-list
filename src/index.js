@@ -22,16 +22,16 @@ import { format } from "date-fns"
 import { toDoManager } from "./home.js";
 import { projectManager } from "./projects.js";
 import { pubSub } from "./pubsub.js";
-import { storage } from "./storage.js"
 
 
 // display obj IIFE
 const domManipulator = (function() {
 
     // cacheDOM
-    const displayInfo = document.querySelector(".display-info")
-    const completeViewNote = document.querySelector(".complete-view-note")
-    const todayTasksCompleteNotice = document.querySelector(".today-tasks-complete")
+    const dateDisplay = document.querySelector(".date-display > div > p")
+    const displayInfo = document.querySelector(".notices")
+    const completeViewNote = document.querySelector(".complete-view")
+    const todayTasksCompleteNotice = document.querySelector(".tasks-done")
     const projectEmptyNotice = document.querySelector(".project-empty")
     const content = document.querySelector("#content")
     const todayTasksBtn = document.querySelector(".today > button");
@@ -42,18 +42,14 @@ const domManipulator = (function() {
     const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
     const projectsList = document.querySelector(".user-created-projects > ol")
 
-    // document.addEventListener("DOMContentLoaded", () => {
-    //     console.log("DOM loaded, getting data from storage")
-    //     toDoManager.getTasksFromStorage()
-    //     projectManager.getProjectsFromStorage()
-    // })
-
     // get data
     const allTasks = toDoManager.getMasterTaskList();
-    const today = toDoManager.getFormattedDate()
+    const today = toDoManager.getDate()
     const allProjects = projectManager.getProjects();
 
     // render
+
+    dateDisplay.textContent = toDoManager.getFormattedDate()
 
     function renderTaskList (allTasks) {
         content.innerHTML = "";
@@ -725,7 +721,7 @@ const createModals = (function() {
     }
 
     function getDefaultDate() {
-        taskModal_DueDateSelector.defaultValue = toDoManager.getFormattedDate();
+        taskModal_DueDateSelector.defaultValue = toDoManager.getDate();
     }
 
     function populatePriorities() {
