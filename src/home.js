@@ -4,6 +4,7 @@
 import { projectManager } from "./projects.js";
 import { pubSub } from "./pubsub.js";
 import { storage } from "./storage.js";
+import { format } from "date-fns"
 
 const toDoManager = (function() {
 
@@ -46,6 +47,9 @@ const toDoManager = (function() {
         },
     ]
 
+    const priorities = ["low", "normal", "high"]
+
+
     function getTasksFromStorage() {
         if (storage.checkTasksExist() === true) {
             masterTaskList = storage.getStoredTasks()
@@ -57,65 +61,6 @@ const toDoManager = (function() {
 
     getTasksFromStorage()
 
-    // const masterTaskList = [
-    //     {
-    //         title: "Make grocery list",
-    //         project: "Food",
-    //         dueDate: new Date().toISOString().substring(0, 10),
-    //         priority: "low",
-    //         description: "Need eggs, black forest ham, sliced cheese and english muffins",
-    //         userChecklist: {
-    //             "Eggs": false,
-    //             "BFH 400g shaved": false,
-    //             "Havarti with jalepeno": false,
-    //             "Eng muffin (white)": false, 
-    //             "Also need garlic mayo": false
-    //         },
-    //         isComplete: false,
-    //     },
-    //     {
-    //         title: "Do Laundry",
-    //         project: "Laundry",
-    //         dueDate: new Date().toISOString().substring(0, 10),
-    //         priority: "high",
-    //         description: "Laundromat opens at 6am",
-    //         userChecklist: {
-    //             "Go to the bank to get change": false,
-    //         },
-    //         isComplete: false,
-    //     },
-    //     {
-    //         title: "Cat Chores",
-    //         project: "Pets",
-    //         dueDate: "2025-02-17",
-    //         priority: "normal",
-    //         description: "Wash both water bowls, plus automatic feeder and refill. Mix proper ratio of foods: 3 parts HP, 1 part dental and 1 part gastro.",
-    //         userChecklist: {
-    //             "Wash water bowls": false, 
-    //             "Rotate auto feeder, wash and refill": false, 
-    //             "Clean litter boxes": false, 
-    //             "Put cat beds in laundry basket": false,
-    //         },
-    //         isComplete: false,
-    //     },
-    //     {
-    //         title: "Make dinner",
-    //         project: "Food",
-    //         dueDate: new Date().toISOString().substring(0, 10),
-    //         priority: "low",
-    //         description: "Menu: Udon stir-fry",
-    //         userChecklist: {
-    //             "Defrost beef strips": false, 
-    //             "Marinate strips with 1/2 sauce for a few hours": false, 
-    //             "Blanche udon and broccoli": false, "Prep onion and garlic": false, 
-    //             "Saute onion garlic and beef": false, "Add broccoli and udon": false, 
-    //             "Add remaining sauce": false, 
-    //             "Serve": false
-    //         },
-    //         isComplete: false,
-    //     },
-    // ]
-    const priorities = ["low", "normal", "high"]
 
     // fn()s to add tasks
     function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = [], isComplete=false) {
@@ -128,11 +73,7 @@ const toDoManager = (function() {
         masterTaskList.sort((a, b) => {
             return new Date(a.dueDate) - new Date(b.dueDate)
         });
-        // console.log(masterTaskList)
     }
-
-    // addTaskToMasterList("Say hello", "Pets", "2025-05-24", "low", "Description goes here", ["My list item 1", "My list item 2", "My list item 3"]);
-
     
     function toggleCompleteTask() {
         const index = this.closest(".task-div").dataset.index;
@@ -150,13 +91,13 @@ const toDoManager = (function() {
     // months are indexed at zero! January == 00
     // .getDay() doesn't return the day of the week but the location of the weekday related to the week, use .getDate() instead
      
-    function getFormattedDate() {
+    function getDate() {
         const formattedDate = new Date().toISOString().substring(0, 10);
         return formattedDate
     }
 
     function getDateInSevenDays() {
-        const today = new Date();
+        const today = new Date()
         const nextWeek = new Date(today.setDate(today.getDate() + 7)).toISOString().substring(0, 10);
         return nextWeek
     }
@@ -165,6 +106,12 @@ const toDoManager = (function() {
         const today = new Date();
         const nextWeek = new Date(today.setDate(today.getDate() - 30)).toISOString().substring(0, 10);
         return nextWeek
+    }
+
+    function getFormattedDate() {
+        const date = format(new Date(new Date), "MMMM do',' yyyy")
+        return date
+       
     }
 
     // completed tasks should be removed if they are over 30 days old
@@ -226,11 +173,8 @@ const toDoManager = (function() {
         const checklistItem = this.parentNode.children.item(1);
 
         masterTaskList[taskIndex].userChecklist[`${checklistItem.innerHTML}`] = masterTaskList[taskIndex].userChecklist[`${checklistItem.innerHTML}`] === false ? true : false
-
-        // console.log(masterTaskList[taskIndex].userChecklist[`${checklistItem.innerHTML}`])
         
         pubSub.emit("checklistItemChanged", masterTaskList)
-        // checklistItem.style.textDecoration !== "line-through" ? checklistItem.style.textDecoration = "line-through" : checklistItem.style.textDecoration = "none"
     }
 
     function deleteUserChecklistItem() {
@@ -240,8 +184,6 @@ const toDoManager = (function() {
         delete masterTaskList[indexOfTaskDiv].userChecklist[`${checklistItem}`]
 
         console.log(`User deleted the ${checklistItem} checklist item on task ${indexOfTaskDiv}.`)
-        // console.log("New list of user items:")
-        // console.log(masterTaskList[indexOfTaskDiv].userChecklist)
         
         pubSub.emit("checklistItemChanged", masterTaskList)
     }
@@ -255,10 +197,7 @@ const toDoManager = (function() {
         Object.assign(selectedTask.userChecklist, {[userInput]: false})
 
         //pubsub - on change, re-render checklist items
-        pubSub.emit("checklistItemChanged", masterTaskList)
-
-        // console.log("User added a new checklist item:")
-        // console.log(masterTaskList[index].userChecklist)   
+        pubSub.emit("checklistItemChanged", masterTaskList)  
     }
 
     function moveProjectsToAll() {
@@ -284,23 +223,10 @@ const toDoManager = (function() {
     // localStorage.clear()
     // console.log("local storage cleared")
 
-    // storage.getStoredTasks()
-    // projectManager.getProjectsFromStorage()
-
-    // storage.populateStorage("tasks", masterTaskList)
-    // storage.populateStorage("projects", projectManager.getProjects())
-
-    // storage.getStoredTasks()
-    // projectManager.getProjectsFromStorage()
-
     // get data fn()s
     // these fn()s get original lists (not copies), which can be modified
     const getMasterTaskList = () => masterTaskList;
     const getPriorities = () => priorities;
-    
-   
-
-
 
     return {
         getTasksFromStorage,
@@ -312,8 +238,9 @@ const toDoManager = (function() {
         changePriority,
         changeDescription,
 
-        getFormattedDate,
+        getDate,
         getDateInSevenDays,
+        getFormattedDate,
         completeChecklistItem,
         autoDeleteCompletedTasks,
         deleteUserChecklistItem,
@@ -327,40 +254,10 @@ const toDoManager = (function() {
 
 
 
-
-
-
-
-
 // exports
 export{toDoManager}
 
 
 
-
-
-
-
 // Unused code - delete later
 
-// function moveTaskToCompleted(removed) {
-//     toDoManager.getCompletedTaskList().push(removed)
-//     console.log("The following task has been moved to the completedTaskList:")
-//     console.log(toDoManager.getCompletedTaskList())
-// } 
-
-// function deleteTask() {
-//     const index = this.parentNode.dataset.index;
-//     console.log(`User has removed the following task: ${masterTaskList[index].title} at index: ${index}`)
-//     removeTaskFromList(index)
-// }
-
-const getCompletedTasks = function() {
-    const completedTasks = []
-    for (const task of masterTaskList) {
-        if (task.isComplete === true) {
-            completedTasks.push(task)
-        }
-    }
-    return completedTasks
-}
