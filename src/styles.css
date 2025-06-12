@@ -66,6 +66,7 @@ table {
 --jungle-green: hsla(150, 32%, 49%, 1);
 --eerie-black: hsla(144, 24%, 8%, 1);
 --gray: hsla(180, 2%, 48%, 1);
+--eggplant-dark: rgb(51, 43, 53);
 --eggplant: hsla(286, 10%, 34%, 1);
 --lavender: rgb(202, 202, 202);
 --pale-pink: rgb(245, 245, 245);
@@ -94,15 +95,16 @@ body {
     background-color: black;
     display: grid;
     grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 50px;
-    grid-template-columns: 200px 1fr 200px;
+    grid-template-columns: 350px 1fr 200px;
     /* width: minmax(600px, 100vw) */
 }
 
 button {
     font-size: 1.1rem;
     padding: 1px 5px;
-    border-radius: 5px;
-    border: 1px solid grey
+    border-radius: 8px;
+    border: 1px solid var(--eerie-black);
+    background-color: var(--lavender);
 }
 
 
@@ -112,14 +114,14 @@ button {
      /* row-start / column-start / row-end / column-end */
     grid-area: 1 / 1 / 2 / 4;
      display: grid;
-     grid-template-columns: 200px 1fr 200px;
+     grid-template-columns: 300px 1fr 200px;
 }
 
 .logo {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--eggplant);
+    background-color: black;
 }
 
 .logo img {
@@ -155,14 +157,17 @@ button {
 .left-sidebar {
     grid-area: 2 / 1 / 4 / 2;
     display: grid;
-    grid-template-rows: 200px fit-content(200px) 100px 1fr;
-    padding: 0px 10px;
+    grid-template-rows: 300px fit-content(200px) 100px 1fr;
+    padding: 0px 40px;
     gap: 20px;
-    background-color: var(--eggplant);
+    background-color: black;
 }
 
 .left-sidebar button {
-    background-color: var(--lavender);
+    background-color: var(--eggplant);
+    color: var(--pale-pink);
+    padding: 3px 15px;
+
 }
 
 .left-sidebar nav:first-child,
@@ -172,7 +177,9 @@ button {
     display: flex;
     flex-direction: column;
     margin: 20px 0px;
-    
+    background-color: var(--eggplant-dark);
+    padding: 10px;
+    border-radius: 10px;
 }
 
 .left-sidebar nav:first-child {
@@ -189,13 +196,18 @@ button {
     /* my projects header */
     display: flex;
     justify-content: space-between;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
 }
 
 .my-projects h2 {
     font-size: 1.3rem;
     font-weight: 700;
     color: var(--pale-pink);
+    margin-top: 20px;
+}
+
+.add-project {
+    margin-top: 14px;
 }
 
 .user-created-projects {
@@ -206,7 +218,7 @@ button {
 .user-created-projects li {
     /* project list items */
     display: flex;
-    margin: 2px 0px 6px 0px;
+    margin-bottom: 15px;
     padding: 3px 3px;
     
     align-items: center;
@@ -525,6 +537,7 @@ dialog.add-project {
 
 #content-wrapper {
     position: relative;
+    grid-area: 2 / 2 / 3 / 3;
 }
 
 #content-wrapper::before {
@@ -583,14 +596,16 @@ dialog.add-project {
     /* task divs */
     min-width: 400px;
     width: 100%;
+    max-width: 800px;
     height: fit-content;
     display: grid;
-    grid-template-rows: 50px 50px fit-content(100px) fit-content(200px) 30px;
+    grid-template-rows: 50px 50px fit-content(100px) fit-content(200px);
     grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
     position: relative;
-    background-color:aliceblue;
+    background-color: var(--pale-pink);
     margin-bottom: 20px;
-    border-radius: 5px;
+    border-radius: 10px;
+    padding: 20px 10px;
 }
 
 #content .display-off {
@@ -618,6 +633,32 @@ dialog.add-project {
 
 
 /*__________Tasks - Details and Description__________*/
+
+.task-div input[type="checkbox"] {
+    appearance: none;
+}
+
+.task-div input[type="checkbox"] {
+    position: relative;
+    width: 3.7em;
+    height: 3.7em;
+    border: 1px solid var(--eggplant);
+    border-radius: 10px;
+    color: var(--eggplant);
+}
+
+.task-div input[type="checkbox"]::before {
+    content: "✔";
+    position: absolute;
+    font-size: 8.5em;
+    right: -30px;
+    top: -0.4em;
+    visibility: hidden;   
+}
+
+.task-div input[type="checkbox"]:checked::before {
+    visibility: visible;
+}
 
 #content div div:nth-child(5) {
     /* task details div */
@@ -739,15 +780,15 @@ dialog.add-project {
     grid-area: 2 / 3 / 3 / 4;
     display: grid;
     grid-template-rows: 140px 1fr;
-    /* background-color: var(--eggplant); */
+    background-color: black; 
 }
 
-.calendar-display {
+/* .calendar-display {
     display: flex;
     align-items: center;
     text-align: center;
     background-color: var(--eggplant)
-}
+} */
 
 
 /*__________Footer__________*/
@@ -784,13 +825,18 @@ color: var(--pale-pink);
 
 
 
-@media only screen and (max-width: 850px) {
+@media only screen and (max-width: 1050px) {
 
     body {
         display: grid;
         grid-template-rows: 140px minmax(calc(100vh - 240px), 1fr) 50px;
+        grid-template-columns: 250px 1fr;
+        min-width: 850px;
+    }
+
+    .header {
+        display: grid;
         grid-template-columns: 200px 1fr;
-        min-width: 700px;
     }
 
     .title {
@@ -801,12 +847,16 @@ color: var(--pale-pink);
         display: none;
     }
 
+    .left-sidebar {
+        padding: 0px 15px;
+    }
+
     #content-wrapper {
         grid-area: 2 / 2 / 3 / 4;
     }
 
     .right-sidebar {
-        /* grid-area: 3 / 1 / 4 / 4; */
+        grid-area: 3 / 1 / 4 / 4; 
         display: none;
     }
 
