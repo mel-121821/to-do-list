@@ -264,7 +264,7 @@ const domManipulator = (function() {
 
         // create btn to add checklist item
         const addBtn = document.createElement("button");
-        addBtn.textContent = "+"
+        addBtn.textContent = "Add checklist item"
         addBtn.addEventListener("click", (e) => {
             const taskIndex = e.target.closest(".task-div").dataset.index
             console.log(taskIndex)
