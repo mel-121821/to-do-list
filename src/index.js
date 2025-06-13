@@ -15,8 +15,9 @@
 
 import "./styles.css";
 
-// packages
-import { format } from "date-fns"
+// Icons
+import trashBin from "../icon/delete.svg"
+
 
 // logic functions
 import { toDoManager } from "./home.js";
@@ -47,6 +48,9 @@ const domManipulator = (function() {
     const today = toDoManager.getDate()
     const allProjects = projectManager.getProjects();
 
+    // get images
+    
+
     // render
 
     dateDisplay.textContent = toDoManager.getFormattedDate()
@@ -75,13 +79,17 @@ const domManipulator = (function() {
             
             // expand/collapse btn
             const expandBtn = document.createElement("button");
-            expandBtn.textContent = "exp";
+            // expandBtn.textContent = "exp";
+            
+            
             expandBtn.classList.add("exp-col-btn")
             expandBtn.addEventListener("click", collapseTask)
 
             // delete btn
             const deleteBtn = document.createElement("button");
-            deleteBtn.textContent = "del"
+            const deleteIcon = document.createElement('img')
+            deleteIcon.src = trashBin;
+            deleteBtn.appendChild(deleteIcon)
             deleteBtn.classList.add("delete-btn");
             deleteBtn.addEventListener("click", toDoManager.deleteTask)
             
@@ -508,7 +516,7 @@ const domManipulator = (function() {
     function displayImportantTasks() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
-            if (div.children.item(4).children.item(2).lastChild.value === "high" && div.childNodes[0].checked === false) {
+            if (div.children.item(4).children.item(2).lastChild.firstChild.value === "high" && div.childNodes[0].checked === false) {
                 // do nothing
             } else {
                 div.classList.add("display-off")
@@ -594,7 +602,7 @@ const domManipulator = (function() {
         const allTaskDivs = content.children
         console.log(`${activeProject} is active`)
         for (const div of allTaskDivs) {
-            if (div.children.item(4).children.item(0).lastChild.value === activeProject && div.childNodes[0].checked === false) {
+            if (div.children.item(4).children.item(0).lastChild.firstChild.value === activeProject && div.childNodes[0].checked === false) {
                 // do nothing
             } else {
                 div.classList.add("display-off")
