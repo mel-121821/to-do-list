@@ -68,6 +68,8 @@ table {
 --gray: hsla(180, 2%, 48%, 1);
 --eggplant-dark: rgb(51, 43, 53);
 --eggplant: hsla(286, 10%, 34%, 1);
+--eggplant-light: rgb(117, 100, 123);
+--eggplant-pale:rgb(150, 128, 158);
 --lavender: rgb(202, 202, 202);
 --pale-pink: rgb(245, 245, 245);
 --viridian: hsla(156, 34%, 36%, 1);
@@ -267,7 +269,7 @@ label {
 input[type="text"] {
     border-radius: 5px;
     font-size: 1.1rem;
-    border: 1px solid rgb(0, 100, 136);
+    border: 1px solid var(--eggplant);
     outline: 0;
     padding: 3px;
 }
@@ -592,20 +594,35 @@ dialog.add-project {
 
 }
 
-#content .task-div {
+.task-div {
     /* task divs */
     min-width: 400px;
     width: 100%;
     max-width: 800px;
     height: fit-content;
     display: grid;
-    grid-template-rows: 50px 50px fit-content(100px) fit-content(200px);
-    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 25px);
+    grid-template-rows: 60px 60px fit-content(100px) fit-content(200px);
+    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 50px);
     position: relative;
-    background-color: var(--pale-pink);
+
+    /* purple colour scheme */
+    border: 3px solid var(--eggplant-pale);
+    background: linear-gradient(to bottom right, var(--eggplant), var(--eggplant-pale), var(--eggplant));
+
+    /* green colour scheme */
+    /* border: 3px solid var(--jungle-green);
+    background: linear-gradient(to bottom right, var(--eerie-black), var(--viridian), var(--eerie-black)); */
+
+    /* scrap */
+    /* background: linear-gradient(to bottom right, var(--viridian), var(--jungle-green)); */
+
+    /* background: linear-gradient(to bottom right, var(--jungle-green), var(--celadon)); */
+
+    /* background: linear-gradient(to bottom right, var(--eggplant-light), var(--lavender)); */
+
     margin-bottom: 20px;
     border-radius: 10px;
-    padding: 20px 10px;
+    padding: 5px 5px 10px 5px
 }
 
 #content .display-off {
@@ -615,12 +632,41 @@ dialog.add-project {
 
 /*__________Tasks - Top Row (Title)__________*/
 
-#content div h3 {
+.task-div input[type="checkbox"] {
+    appearance: none;
+}
+
+.task-div input[type="checkbox"] {
+    position: relative;
+    width: 3.9em;
+    height: 3.9em;
+    border: 3px solid var(--eggplant);
+    border-radius: 10px;
+    color: var(--eggplant-dark);
+    background-color: var(--pale-pink);
+}
+
+.task-div input[type="checkbox"]::before {
+    content: "✔";
+    position: absolute;
+    font-size: 5.6em;
+    right: -8px;
+    top: -0.23em;
+    visibility: hidden;   
+}
+
+.task-div input[type="checkbox"]:checked::before {
+    visibility: visible;
+}
+
+.task-div h3 {
     grid-area: 1 / 2 / 2 / 7;
-    background-color:aqua;
     display: flex;
     align-items: center;
     padding-left: 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--pale-pink);
 }
 
 .exp-col-btn,
@@ -632,61 +678,99 @@ dialog.add-project {
 }
 
 
+
+
 /*__________Tasks - Details and Description__________*/
 
-.task-div input[type="checkbox"] {
-    appearance: none;
-}
-
-.task-div input[type="checkbox"] {
-    position: relative;
-    width: 3.7em;
-    height: 3.7em;
-    border: 1px solid var(--eggplant);
-    border-radius: 10px;
-    color: var(--eggplant);
-}
-
-.task-div input[type="checkbox"]::before {
-    content: "✔";
-    position: absolute;
-    font-size: 8.5em;
-    right: -30px;
-    top: -0.4em;
-    visibility: hidden;   
-}
-
-.task-div input[type="checkbox"]:checked::before {
-    visibility: visible;
-}
-
-#content div div:nth-child(5) {
-    /* task details div */
-    grid-area: 2 / 2 / 3 / 7;
+.task-div .details {
+    /* task details wrapper div */
+    grid-area: 2 / 2 / 3 / 8;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    background: greenyellow
+    background: linear-gradient(to bottom right, var(--eggplant-dark), var(--eggplant), var(--eggplant-dark));
+
+    
+    border-radius: 5px;
 }
 
-#content > div div:nth-child(2) {
-    /* Due date div */
-    background-color: rgb(208, 141, 208);
+.task-div .details div {
+    /* all individual details divs */
+   display: flex;
+   flex-direction: column;
+   width: 100%;
+   padding: 0px 7px;
 }
 
-#content .task-div div:nth-child(6) {
+.task-div .details label {
+    /* all individual details div labels */
+   font-size: 1rem;
+   color: var(--pale-pink);
+   font-weight: 700;
+   margin-left: 7px;
+}
+
+.task-div .details select,
+.task-div .details input[type="date"] {
+    appearance: none;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    border: 3px solid var(--eggplant);
+    /* max-width: 170px; */
+}
+
+.task-div .details select{
+    /* Project/Priority div */
+   padding: 2px 5px 2px 5px;
+   width: 100%;
+   border: 3px solid var(--eggplant);
+}
+
+.task-div .details input[type="date"] {
+    font-family: inherit;
+    padding: 1px 5px 0px 5px;
+    background-color: var(--pale-pink);
+}
+
+.task-div .details select:focus {
+    outline: none;
+}
+
+.task-div .details div:nth-child(1),
+.task-div .details div:nth-child(3) {
+    /* Project/Priority div */
+   position: relative;
+   max-width: 180px;
+}
+
+.task-div .details div:nth-child(1) div::after,
+.task-div .details div:nth-child(3) div::after {
+    /* Project/Priority div */
+    content: "▼";
+    font-size: 1.1rem;
+    top: 23px;
+    right: 15px;
+    position: absolute;
+}
+
+.task-div .details div:nth-child(2) {
+    max-width: 180px;
+}
+
+.task-div div:nth-child(6) {
+    /* description div (collapsed)*/
     display: none;
 }
 
-#content .task-div.expanded div:nth-child(6) {
+.task-div.expanded div:nth-child(6) {
      /* description div (expanded)*/
     background-color: rgb(230, 227, 251);
-    grid-area: 3 / 2 / 4 / 7;
+    grid-area: 3 / 2 / 4 / 8;
     display: flex;
     flex-direction: column;
 }
 
-#content .task-div.expanded div:nth-child(6) textarea {
+.task-div.expanded div:nth-child(6) textarea {
     background-color: rgb(190, 183, 255);
     align-self: center;
     width: 99%;
@@ -706,7 +790,7 @@ dialog.add-project {
 
 #content > div.expanded div:nth-child(7) {
     /* Outer div */
-    grid-area: 4 / 2 / 5 / 7;
+    grid-area: 4 / 2 / 5 / 8;
     display: flex;
     flex-direction: column;
     background-color: rgb(201, 238, 239);
@@ -759,12 +843,12 @@ dialog.add-project {
 
 /*__________Tasks - Save/Cancel__________*/
 
-#content > div div:nth-child(8) {
-    /* save & cancel div */
+/* #content > div div:nth-child(8) {
+    /* save & cancel div
     grid-area: 5 / 5 / 6 / 8;
     display: flex;
     justify-content: space-evenly;
-}
+} */
 
 /* #content > div div:nth-child(8) button { */
     /* save & cancel btns  */
@@ -825,7 +909,7 @@ color: var(--pale-pink);
 
 
 
-@media only screen and (max-width: 1050px) {
+@media only screen and (max-width: 1150px) {
 
     body {
         display: grid;
