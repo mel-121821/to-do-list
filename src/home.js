@@ -218,6 +218,7 @@ const toDoManager = (function() {
     pubSub.on("projectListChanged", () => pubSub.emit("taskListChanged", masterTaskList));
 
     pubSub.on("taskListChanged", storage.storeTasks)
+    pubSub.on("checklistItemChanged", storage.storeTasks)
 
     // storage.testLocalStorage()
     // localStorage.clear()
