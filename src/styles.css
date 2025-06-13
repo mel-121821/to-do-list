@@ -73,6 +73,7 @@ table {
 --lavender: rgb(202, 202, 202);
 --pale-pink: rgb(245, 245, 245);
 --viridian: hsla(156, 34%, 36%, 1);
+--viridian-dark: rgb(26, 52, 42);
 --celadon: hsla(134, 61%, 77%, 1);
 
 }
@@ -107,6 +108,7 @@ button {
     border-radius: 8px;
     border: 1px solid var(--eerie-black);
     background-color: var(--lavender);
+    cursor: pointer;
 }
 
 
@@ -134,13 +136,14 @@ button {
 .title {
     display: flex;
     align-items: center;
-    justify-content: space-around
+    justify-content: space-around;
 }
 
 .title h1 {
     font-size: 2rem;
     font-weight: 700;
     color: var(--pale-pink);
+    
 }
 
 .date-display {
@@ -190,7 +193,7 @@ button {
 }
 
 .left-sidebar button.active {
-    background-color: var(--pale-pink);
+    background-color: var(--lavender);
     color: black;
 }
 
@@ -602,12 +605,20 @@ dialog.add-project {
     height: fit-content;
     display: grid;
     grid-template-rows: 60px 60px fit-content(100px) fit-content(200px);
-    grid-template-columns: 50px repeat(5, 1fr) repeat(2, 50px);
+    grid-template-columns: 60px repeat(5, 1fr) repeat(2, 30px);
     position: relative;
 
-    /* purple colour scheme */
+    /* purple/black colour scheme */
+    /* border: 3px solid var(--eggplant-pale);
+    background: linear-gradient(to bottom right, var(--eerie-black), var(--eggplant-dark), var(--eerie-black)); */
+
+    /* dark purple colour scheme */
     border: 3px solid var(--eggplant-pale);
-    background: linear-gradient(to bottom right, var(--eggplant), var(--eggplant-pale), var(--eggplant));
+    background: linear-gradient(to bottom right, var(--eggplant-dark), var(--eggplant), var(--eggplant-dark));
+
+    /* light purple colour scheme */
+    /* border: 3px solid var(--eggplant-pale);
+    background: linear-gradient(to bottom right, var(--eggplant), var(--eggplant-pale), var(--eggplant)); */
 
     /* green colour scheme */
     /* border: 3px solid var(--jungle-green);
@@ -634,20 +645,19 @@ dialog.add-project {
 
 .task-div input[type="checkbox"] {
     appearance: none;
-}
-
-.task-div input[type="checkbox"] {
     position: relative;
     width: 3.9em;
     height: 3.9em;
     border: 3px solid var(--eggplant);
     border-radius: 10px;
     color: var(--eggplant-dark);
-    background-color: var(--pale-pink);
+    background-color: var(--lavender);
+    cursor: pointer;
 }
 
 .task-div input[type="checkbox"]::before {
     content: "✔";
+    color: var(--eggplant-dark);
     position: absolute;
     font-size: 5.6em;
     right: -8px;
@@ -667,6 +677,7 @@ dialog.add-project {
     font-size: 1.2rem;
     font-weight: 700;
     color: var(--pale-pink);
+    cursor: pointer;
 }
 
 .exp-col-btn,
@@ -675,8 +686,18 @@ dialog.add-project {
     display: flex; 
     align-self: center;
     justify-content: center;
+    margin: 0px 12px 10px 0px;
+    padding: 3px 3px;
+    background-color: transparent;
+    border: none;
 }
 
+.delete-btn img,
+.exp-col-btn img {
+    width: 30px;
+    height: auto;
+    
+}
 
 
 
@@ -684,12 +705,22 @@ dialog.add-project {
 
 .task-div .details {
     /* task details wrapper div */
-    grid-area: 2 / 2 / 3 / 8;
+    grid-area: 2 / 2 / 3 / 7;
     display: flex;
     align-items: center;
     justify-content: space-evenly;
-    background: linear-gradient(to bottom right, var(--eggplant-dark), var(--eggplant), var(--eggplant-dark));
 
+    /* dark purple colour scheme */
+    /* background: linear-gradient(to bottom right, var(--eggplant-dark), var(--eggplant), var(--eggplant-dark)); */
+
+    /* light purple colour scheme */
+    /* background: linear-gradient(to bottom right, var(--eggplant-light), var(--lavender), var(--eggplant-light)); */
+
+    /* light green colour scheme */
+    /* background: linear-gradient(to bottom right, var(--jungle-green), var(--celadon), var(--jungle-green)); */
+
+    /* dark green colour scheme */
+    /* background: linear-gradient(to bottom right, var(--eerie-black), var(--eerie-black), var(--eerie-black)); */
     
     border-radius: 5px;
 }
@@ -702,7 +733,7 @@ dialog.add-project {
    padding: 0px 7px;
 }
 
-.task-div .details label {
+.task-div label {
     /* all individual details div labels */
    font-size: 1rem;
    color: var(--pale-pink);
@@ -716,7 +747,8 @@ dialog.add-project {
     font-size: 0.9rem;
     border-radius: 5px;
     border: 3px solid var(--eggplant);
-    /* max-width: 170px; */
+    cursor: pointer;
+
 }
 
 .task-div .details select{
@@ -724,12 +756,13 @@ dialog.add-project {
    padding: 2px 5px 2px 5px;
    width: 100%;
    border: 3px solid var(--eggplant);
+   background-color: var(--lavender);
 }
 
 .task-div .details input[type="date"] {
     font-family: inherit;
     padding: 1px 5px 0px 5px;
-    background-color: var(--pale-pink);
+    background-color: var(--lavender);
 }
 
 .task-div .details select:focus {
@@ -764,14 +797,19 @@ dialog.add-project {
 
 .task-div.expanded div:nth-child(6) {
      /* description div (expanded)*/
-    background-color: rgb(230, 227, 251);
-    grid-area: 3 / 2 / 4 / 8;
+    grid-area: 3 / 2 / 4 / 7;
     display: flex;
     flex-direction: column;
+    padding: 20px;
+    color: var(--pale-pink);
+}
+
+.task-div.expanded div:nth-child(6) label {
+    margin-left: 12px;
 }
 
 .task-div.expanded div:nth-child(6) textarea {
-    background-color: rgb(190, 183, 255);
+    background-color: var(--lavender);
     align-self: center;
     width: 99%;
     padding: 7px;
@@ -783,21 +821,26 @@ dialog.add-project {
 
 /*__________Tasks - Checklist__________*/
 
-#content > div div:nth-child(7) {
+.task-div .user-checklist-div {
     /* Checklist outer div */
     display: none;
 }
 
-#content > div.expanded div:nth-child(7) {
+.task-div.expanded .user-checklist-div {
     /* Outer div */
-    grid-area: 4 / 2 / 5 / 8;
+    grid-area: 4 / 2 / 5 / 7;
     display: flex;
     flex-direction: column;
-    background-color: rgb(201, 238, 239);
+    align-items: center;
+    background-color: var(--lavender);
+    border-radius: 5px;
+    margin: 20px;
 }
 
-#content > div legend {
-    font-size: 0.9rem;
+.task-div legend {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--eggplant-dark);
     align-self: center;
     height: 30px;
     display: flex;
@@ -805,12 +848,40 @@ dialog.add-project {
     margin-top: 10px;
 }
 
-#content li {
+.user-checklist-div ul {
+    width: 90%;
+    align-self: center;
+}
+
+.task-div li input[type="checkbox"] {
+    width: 1.5em;
+    height: 1.5em;
+    border: 1px solid var(--eggplant);
+    border-radius: 5px;
+    margin-left: 10px;
+}
+
+
+.task-div li input[type="checkbox"]::before {
+    content: "✔";
+    position: absolute;
+    font-size: 2.5em;
+    right: -7px;
+    top: -0.29em;
+    visibility: hidden;   
+}
+
+.task-div input[type="checkbox"]:checked::before {
+    visibility: visible;
+}
+
+.task-div li {
     /* list items */
     display: flex;
     margin: 2px 0px;
     padding: 3px 3px;
-    background-color: rgb(255, 239, 206);
+    background-color: var(--pale-pink);
+    border-radius: 5px;
     align-items: center;
     width: 100%;
     height: 28px;
@@ -821,23 +892,30 @@ dialog.add-project {
     margin-left: 10px;
     display: flex;
     font-size: 0.9rem;
+    color: var(--eggplant)
 }
 
-#content li input[type="checkbox"] {
+/* #content li input[type="checkbox"] {
     width: 25px;
     height: 18px;
-}
+} */
 
-#content li > button {
+#content .user-checklist-div li > button {
     margin-left: auto;
     margin-right: 5px;
     margin-top: -1px;
     padding: 0px 7px;
+    border: 1px solid var(--eggplant);
 }
 
-#content > div div:nth-child(7) button {
+.user-checklist-div > button {
     /* Outer div > add-button */
-    align-self: flex-start;
+    align-self: center;
+    margin: 10px;
+    padding: 3px 20px 0px 20px;
+    border: 1px solid var(--eggplant);
+    background-color: var(--eggplant-light);
+    color: var(--pale-pink)
 }
 
 
