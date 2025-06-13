@@ -88,6 +88,7 @@ const domManipulator = (function() {
             // 2nd row - details section in own div 
             // keeping these fn()s seperate from render fn() as they are more complex
             const taskDetails = document.createElement("div")
+            taskDetails.classList.add("details")
 
             // project dropdown
             const projectDiv = document.createElement("div");
@@ -173,6 +174,7 @@ const domManipulator = (function() {
     }
 
     function createProjectDropdown(task) {
+        const projectDropdownWrapper = document.createElement("div");
         const projectDropdown = document.createElement("select");
         // projectDropdown.id = "project-dropdown";
         for (const project of allProjects) {
@@ -186,8 +188,8 @@ const domManipulator = (function() {
             }
             projectDropdown.appendChild(option);
         }
-        
-        return projectDropdown;
+        projectDropdownWrapper.appendChild(projectDropdown)
+        return projectDropdownWrapper;
     }
 
     function createDatePicker(task) {
@@ -198,7 +200,8 @@ const domManipulator = (function() {
     }
 
     function createPriorityDropdown (task) {
-    const priorities = toDoManager.getPriorities();
+        const priorities = toDoManager.getPriorities();
+        const priorityDropdownWrapper = document.createElement("div");
         const priorityDropdown = document.createElement("select");
         for (const priority of priorities) {
             const option = document.createElement("option");
@@ -211,7 +214,8 @@ const domManipulator = (function() {
             }
             priorityDropdown.appendChild(option)
         }
-        return priorityDropdown;
+        priorityDropdownWrapper.appendChild(priorityDropdown)
+        return priorityDropdownWrapper;
     }
 
     function createDescription (task) {
