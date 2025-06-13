@@ -17,6 +17,7 @@ import "./styles.css";
 
 // Icons
 import trashBin from "../icon/delete.svg"
+import edit from "../icon/edit.svg"
 
 
 // logic functions
@@ -75,15 +76,16 @@ const domManipulator = (function() {
             // task title
             const taskTitle = document.createElement("h3");
             taskTitle.textContent = `${task.title}`
-            taskTitle.addEventListener("click", collapseTask)
+            taskTitle.addEventListener("click", expandTask)
             
             // expand/collapse btn
             const expandBtn = document.createElement("button");
             // expandBtn.textContent = "exp";
-            
-            
+            const editIcon = document.createElement('img')
+            editIcon.src = edit;
+            expandBtn.appendChild(editIcon);
             expandBtn.classList.add("exp-col-btn")
-            expandBtn.addEventListener("click", collapseTask)
+            expandBtn.addEventListener("click", expandTask)
 
             // delete btn
             const deleteBtn = document.createElement("button");
@@ -163,14 +165,24 @@ const domManipulator = (function() {
         })  
     }  
         
-    function collapseTask(e) {
+    // function expandTask(e) {
+    //     const taskDiv = e.target.closest(".task-div")
+    //     if (taskDiv.classList.contains("expanded")) {
+    //         taskDiv.classList.remove("expanded")
+    //     } else {
+    //         taskDiv.classList.add("expanded")
+    //     }
+    // };
+
+    function expandTask(e) {
         const taskDiv = e.target.closest(".task-div")
         if (taskDiv.classList.contains("expanded")) {
-            taskDiv.classList.remove("expanded")
+            collapseAllTasks()
         } else {
+            collapseAllTasks()
             taskDiv.classList.add("expanded")
         }
-    };
+    }
 
     function collapseAllTasks() {
         const allTaskDivs = content.children
@@ -322,10 +334,10 @@ const domManipulator = (function() {
     // refresh display fn()s
     function refreshProjectDisplay() {
         hideDisplayInfo()
-        removeAllActiveClasses()
-        removeAllDisplayOffClasses()
-        collapseAllTasks()
-        setSubsToOff()
+        removeActiveClass()
+        removeDisplayOffClass()
+        // collapseAllTasks()
+        removeSubs()
     }
 
     function hideDisplayInfo() {
@@ -337,7 +349,7 @@ const domManipulator = (function() {
         } 
     }
 
-    function removeAllActiveClasses() {
+    function removeActiveClass() {
         console.log("removing classes")
         const allNavBtns = document.querySelectorAll(".menu button, button.menu")
         for (const button of allNavBtns) {
@@ -347,7 +359,7 @@ const domManipulator = (function() {
         }
     }
 
-    function removeAllDisplayOffClasses() {
+    function removeDisplayOffClass() {
         const taskDivs = content.children
         for (const div of taskDivs) {
             if (div.classList.contains("display-off")) {
@@ -356,7 +368,7 @@ const domManipulator = (function() {
         }
     }
 
-    function setSubsToOff() {
+    function removeSubs() {
         if (pubSub.events.tasksRendered) {
             pubSub.events.tasksRendered = []
             console.log("All pubsubs listening to tasksRendered have been turned off")
@@ -633,15 +645,15 @@ const domManipulator = (function() {
     // Initial render
     // renderTaskList(allTasks);
     // renderChecklistItems(allTasks)
-    document.addEventListener("DOMContentLoaded", () => {
-        renderFullTasks(allTasks)
-        setFirstRenderDefault()
-        renderMyProjectsList()
-    })
+    // document.addEventListener("DOMContentLoaded", () => {
+    //     renderFullTasks(allTasks)
+    //     setFirstRenderDefault()
+    //     renderMyProjectsList()
+    // })
 
-    // renderFullTasks(allTasks)
-    // setFirstRenderDefault()
-    // renderMyProjectsList()
+    renderFullTasks(allTasks)
+    setFirstRenderDefault()
+    renderMyProjectsList()
 
     return{ renderTaskList }
 })();
