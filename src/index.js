@@ -60,119 +60,86 @@ const domManipulator = (function() {
         content.innerHTML = "";
         allTasks.forEach((task, index) => {
 
-            // create div for each task
+            // task div
             const taskDiv = document.createElement("div");
             taskDiv.classList.add("task-div");
-
             taskDiv.dataset.index = index;
 
-            // 1st row
-            const taskCheckbox = document.createElement("input");
-            taskCheckbox.setAttribute("type", "checkbox");
-            taskCheckbox.checked = task.isComplete;
-            taskCheckbox.addEventListener("click", toDoManager.toggleCompleteTask)
-            // no brackets after isCompleteTask, otherwise the function will be called immediately   
-
-            // task title
-            const taskTitle = document.createElement("h3");
-            taskTitle.textContent = `${task.title}`
-            taskTitle.addEventListener("click", expandTask)
+            // components from top to bottom
+            // first row
+            const taskCheckbox = renderCheckbox(task)
+            const taskTitle = renderTitle(task);
+            const editBtn = renderEditBtn()
+            const deleteBtn = renderDeleteBtn()
             
-            // expand/collapse btn
-            const expandBtn = document.createElement("button");
-            // expandBtn.textContent = "exp";
-            const editIcon = document.createElement('img')
-            editIcon.src = edit;
-            expandBtn.appendChild(editIcon);
-            expandBtn.classList.add("exp-col-btn")
-            expandBtn.addEventListener("click", expandTask)
-
-            // delete btn
-            const deleteBtn = document.createElement("button");
-            const deleteIcon = document.createElement('img')
-            deleteIcon.src = trashBin;
-            deleteBtn.appendChild(deleteIcon)
-            deleteBtn.classList.add("delete-btn");
-            deleteBtn.addEventListener("click", toDoManager.deleteTask)
-            
-            // 2nd row - details section in own div 
-            // keeping these fn()s seperate from render fn() as they are more complex
+            // 2nd row (details section)
             const taskDetails = document.createElement("div")
             taskDetails.classList.add("details")
+            const projectDiv = renderProjectDropdown(task);
+            const dateDiv = renderDatePicker(task)
+            const priorityDiv =  renderPriorityDropdown(task)
 
-            // project dropdown
-            const projectDiv = document.createElement("div");
-            const projectLabel = document.createElement("label");
-            projectLabel.innerHTML = "Project:";
-            const projectDropdown = createProjectDropdown(task)
-            projectDropdown.addEventListener("change", (e) => {
-                toDoManager.changeProject(e)
-            })
-            
-            // date picker
-            const dateDiv = document.createElement("div")
-            const dateLabel = document.createElement("label")
-            dateLabel.innerHTML = "Due date:"
-            const datePicker = createDatePicker(task);
-            datePicker.addEventListener("change", (e) => {
-                toDoManager.changeDueDate(e)
-            })
-
-            // priority dropdown
-            const priorityDiv = document.createElement("div");
-            const priorityLabel = document.createElement("label");
-            priorityLabel.innerHTML = "Priority:"
-            const priorityDropdown = createPriorityDropdown(task);
-            priorityDropdown.addEventListener("change", (e) => {
-                toDoManager.changePriority(e)
-            })
-
-            // 3rd row - description
-            const descriptionDiv = document.createElement("div");
-            const taskDescription = createDescription(task);
-            const descriptionLabel = document.createElement("label")
-            descriptionLabel.innerHTML = "Description"
-            taskDescription.addEventListener("blur", (e) => {
-                toDoManager.changeDescription(e)
-            })
-
-            // 4th row - user checklist
+            // 3/4th row (description and checklist)
+            const taskDescription = renderDescription(task)
             const checklistDiv = createChecklistDiv(task);
 
             // append first row
-            taskDiv.appendChild(taskCheckbox);
-            taskDiv.appendChild(taskTitle);
-            taskDiv.appendChild(expandBtn);
-            taskDiv.appendChild(deleteBtn);
+            // taskDiv.appendChild(taskCheckbox);
+            taskDiv.appendChild((renderCheckbox(task)))
+            taskDiv.appendChild((renderTitle(task)));
+            taskDiv.appendChild((renderEditBtn()));
+            taskDiv.appendChild((renderDeleteBtn()));
 
             // append details row in own div
-            projectDiv.append(projectLabel, projectDropdown)
-            dateDiv.append(dateLabel, datePicker)
-            priorityDiv.append(priorityLabel, priorityDropdown)
-
-            taskDetails.appendChild(projectDiv);
-            taskDetails.appendChild(dateDiv);
-            taskDetails.appendChild(priorityDiv);
+            taskDetails.appendChild((renderProjectDropdown(task)));
+            taskDetails.appendChild((renderDatePicker(task)));
+            taskDetails.appendChild((renderPriorityDropdown(task)));
             taskDiv.appendChild(taskDetails);
 
             // append description and checklist
-            descriptionDiv.append(descriptionLabel, taskDescription)
-            taskDiv.appendChild(descriptionDiv);
-            taskDiv.appendChild(checklistDiv);
+            taskDiv.appendChild((renderDescription(task)))
+            taskDiv.appendChild((createChecklistDiv()));
 
-            // append btns
+            // append to page
             content.appendChild(taskDiv);
         })  
     }  
         
-    // function expandTask(e) {
-    //     const taskDiv = e.target.closest(".task-div")
-    //     if (taskDiv.classList.contains("expanded")) {
-    //         taskDiv.classList.remove("expanded")
-    //     } else {
-    //         taskDiv.classList.add("expanded")
-    //     }
-    // };
+    function renderCheckbox(task) {
+        const checkbox = document.createElement("input");
+        checkbox.setAttribute("type", "checkbox");
+        checkbox.checked = task.isComplete;
+        checkbox.addEventListener("click", toDoManager.toggleCompleteTask)
+        // no brackets after toggleCompleteTask, otherwise the function will be called immediately   
+        return checkbox;
+    }
+
+    function renderTitle(task) {
+        const taskTitle = document.createElement("h3");
+        taskTitle.textContent = `${task.title}`
+        taskTitle.addEventListener("click", expandTask)
+        return taskTitle
+    }
+
+    function renderEditBtn() {
+        const editBtn = document.createElement("button");
+        const editIcon = document.createElement('img')
+        editIcon.src = edit;
+        editBtn.appendChild(editIcon);
+        editBtn.classList.add("exp-col-btn")
+        editBtn.addEventListener("click", expandTask)
+        return editBtn
+    }
+
+    function renderDeleteBtn() {
+        const deleteBtn = document.createElement("button");
+        const deleteIcon = document.createElement('img')
+        deleteIcon.src = trashBin;
+        deleteBtn.appendChild(deleteIcon)
+        deleteBtn.classList.add("delete-btn");
+        deleteBtn.addEventListener("click", toDoManager.deleteTask)
+        return deleteBtn
+    }
 
     function expandTask(e) {
         const taskDiv = e.target.closest(".task-div")
@@ -193,10 +160,19 @@ const domManipulator = (function() {
         }
     }
 
-    function createProjectDropdown(task) {
-        const projectDropdownWrapper = document.createElement("div");
+    function renderProjectDropdown(task) {
+        // outer div
+        const projectDiv = document.createElement("div");
+
+        // label
+        const projectLabel = document.createElement("label");
+        projectLabel.innerHTML = "Project:";
+       
+        // dropdown wrapper
+        const dropdownWrapper = document.createElement("div");
+
+        // dropdown
         const projectDropdown = document.createElement("select");
-        // projectDropdown.id = "project-dropdown";
         for (const project of allProjects) {
             const option = document.createElement("option")
             option.value = project.name;
@@ -208,20 +184,50 @@ const domManipulator = (function() {
             }
             projectDropdown.appendChild(option);
         }
-        projectDropdownWrapper.appendChild(projectDropdown)
-        return projectDropdownWrapper;
+        projectDropdown.addEventListener("change", (e) => {
+            toDoManager.changeProject(e)
+        })
+        dropdownWrapper.appendChild(projectDropdown)
+        projectDiv.appendChild(projectLabel)
+        projectDiv.appendChild(dropdownWrapper)
+        return projectDiv;
     }
+``
+    function renderDatePicker(task) {
+        // outer div
+        const dateDiv = document.createElement("div")
 
-    function createDatePicker(task) {
+        // label
+        const dateLabel = document.createElement("label")
+        dateLabel.innerHTML = "Due date:"
+
+        // date picker
         const datePicker = document.createElement("input")
         datePicker.setAttribute("type", "date");
         datePicker.defaultValue = task.dueDate;
-        return datePicker;
+
+        datePicker.addEventListener("change", (e) => {
+            toDoManager.changeDueDate(e)
+        })
+
+        dateDiv.appendChild(dateLabel)
+        dateDiv.appendChild(datePicker)
+        return dateDiv;
     }
 
-    function createPriorityDropdown (task) {
+    function renderPriorityDropdown (task) {
+        // outer div
+        const priorityDiv = document.createElement("div");
+
+        // label
+        const priorityLabel = document.createElement("label");
+        priorityLabel.innerHTML = "Priority:"
+        
+        // priority wrapper
+        const dropdownWrapper = document.createElement("div");
+
+        // priorty picker
         const priorities = toDoManager.getPriorities();
-        const priorityDropdownWrapper = document.createElement("div");
         const priorityDropdown = document.createElement("select");
         for (const priority of priorities) {
             const option = document.createElement("option");
@@ -234,17 +240,36 @@ const domManipulator = (function() {
             }
             priorityDropdown.appendChild(option)
         }
-        priorityDropdownWrapper.appendChild(priorityDropdown)
-        return priorityDropdownWrapper;
+        priorityDropdown.addEventListener("change", (e) => {
+            toDoManager.changePriority(e)
+        })
+        dropdownWrapper.appendChild(priorityDropdown)
+        priorityDiv.appendChild(priorityLabel)
+        priorityDiv.appendChild(dropdownWrapper)
+        return priorityDiv;
     }
 
-    function createDescription (task) {
+    function renderDescription(task) {
+        // create outer div
+        const descriptionDiv = document.createElement("div");
+
+        // create label
+        const descriptionLabel = document.createElement("label")
+        descriptionLabel.innerHTML = "Description"
+
+        // create textarea
         const description = document.createElement("textarea")
         description.maxLength = 3000;
         description.rows = 5;
         description.textContent = task.description;
-        // description.style.display = "none"
-        return description;
+        description.addEventListener("blur", (e) => {
+            toDoManager.changeDescription(e)
+        })
+
+        // append to div
+        descriptionDiv.appendChild(descriptionLabel)
+        descriptionDiv.appendChild(description)
+        return descriptionDiv;
     }
 
     function createChecklistDiv (task) {
