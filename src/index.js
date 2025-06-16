@@ -59,29 +59,14 @@ const domManipulator = (function() {
     function renderTaskList (allTasks) {
         content.innerHTML = "";
         allTasks.forEach((task, index) => {
-
             // task div
             const taskDiv = document.createElement("div");
             taskDiv.classList.add("task-div");
             taskDiv.dataset.index = index;
-
-            // components from top to bottom
-            // first row
-            const taskCheckbox = renderCheckbox(task)
-            const taskTitle = renderTitle(task);
-            const editBtn = renderEditBtn()
-            const deleteBtn = renderDeleteBtn()
             
             // 2nd row (details section)
             const taskDetails = document.createElement("div")
             taskDetails.classList.add("details")
-            const projectDiv = renderProjectDropdown(task);
-            const dateDiv = renderDatePicker(task)
-            const priorityDiv =  renderPriorityDropdown(task)
-
-            // 3/4th row (description and checklist)
-            const taskDescription = renderDescription(task)
-            const checklistDiv = createChecklistDiv(task);
 
             // append first row
             // taskDiv.appendChild(taskCheckbox);
@@ -139,25 +124,6 @@ const domManipulator = (function() {
         deleteBtn.classList.add("delete-btn");
         deleteBtn.addEventListener("click", toDoManager.deleteTask)
         return deleteBtn
-    }
-
-    function expandTask(e) {
-        const taskDiv = e.target.closest(".task-div")
-        if (taskDiv.classList.contains("expanded")) {
-            collapseAllTasks()
-        } else {
-            collapseAllTasks()
-            taskDiv.classList.add("expanded")
-        }
-    }
-
-    function collapseAllTasks() {
-        const allTaskDivs = content.children
-        for (const div of allTaskDivs) {
-            if (div.classList.contains("expanded")) {
-                div.classList.remove("expanded")
-            }
-        }
     }
 
     function renderProjectDropdown(task) {
@@ -275,75 +241,107 @@ const domManipulator = (function() {
     function createChecklistDiv (task) {
         const checklistDiv = document.createElement("div");
         checklistDiv.classList.add("user-checklist-div");
-        // checklistDiv.style.display = "none"
 
         // create legend
         const legend = document.createElement("legend");
         legend.textContent = "Your checklist items";    
         
         // create checklist items section
-        const checklistItemsDiv = document.createElement("ul")
+        const checklistUl = document.createElement("ul")
 
-        // need to have everything appended to the DOM before calling this, otherwise you can't access the div as it doesn't exist yet
-        // renderChecklistItems(task, checklistItemsDiv)
+        // append items to checklist div
+        checklistDiv.appendChild(legend);
+        checklistDiv.appendChild(checklistUl);
+        checklistDiv.append((renderAddChecklistItemBtn()));
+        return checklistDiv;
+    } 
 
-        // create btn to add checklist item
+    function renderAddChecklistItemBtn() {
         const addBtn = document.createElement("button");
         addBtn.textContent = "Add checklist item"
         addBtn.addEventListener("click", (e) => {
             const taskIndex = e.target.closest(".task-div").dataset.index
             console.log(taskIndex)
-            createModals.createAddChecklistItemModal(taskIndex)
+            createModals.createAddChecklistItemModal(taskIndex);
         })
-
-        // append items to checklist div
-        checklistDiv.appendChild(legend);
-        checklistDiv.appendChild(checklistItemsDiv);
-        checklistDiv.append(addBtn);
-        return checklistDiv;
-    } 
+        return addBtn
+    }
 
     function renderChecklistItems(allTasks) {
-        // console.log(allTasks)
         allTasks.forEach((task, index) => {
-            const checklistItemsDiv = content.children.item(index).children.item(6).children.item(1)
-            checklistItemsDiv.innerHTML = ""
+            const checklistUl = document.querySelectorAll(".user-checklist-div")[index].children.item(1)
+            checklistUl.innerHTML = ""
             const checklist = task.userChecklist;
             for (const [key, value] of Object.entries(checklist)) {
                 const userItemDiv = document.createElement("li");
-                // userItemDiv.dataset.itemNum = index
 
-                // create checkbox
-                const itemCheckbox = document.createElement("input");
-                itemCheckbox.setAttribute("type", "checkbox");
-                itemCheckbox.id = key;
-                itemCheckbox.addEventListener("change", toDoManager.completeChecklistItem)
-
-                // create checkbox label
-                const label = document.createElement("label");
-                label.setAttribute("for", `${key}`)
-                label.innerHTML = `${key}`;
-                
-                // create delete btn
-                const deleteBtn = document.createElement("button");
-                deleteBtn.textContent = "-"
-                deleteBtn.addEventListener("click", toDoManager.deleteUserChecklistItem)
+                // create checkbox label/item name
+                // const label = document.createElement("label");
+                // label.setAttribute("for", `task${index}-${key}`)
+                // label.innerHTML = `${key}`;
 
                 // append items
-                userItemDiv.append(itemCheckbox, label, deleteBtn)
-                checklistItemsDiv.appendChild(userItemDiv);
-                applyChecklistStyles(value, userItemDiv, itemCheckbox)
+                // userItemDiv.append(itemCheckbox, label, deleteBtn)
+                userItemDiv.appendChild((renderChecklistCheckbox(key, index)))
+                userItemDiv.appendChild((createCheckboxLabel(key, index)));
+                userItemDiv.appendChild((renderChecklistDeleteBtn()))
+                checklistUl.appendChild(userItemDiv);
+                applyChecklistStyles(value, userItemDiv)
             }
         })
     }
 
-    function applyChecklistStyles(value, label, itemCheckbox) {
+    function renderChecklistCheckbox(key, index) {
+        const itemCheckbox = document.createElement("input");
+        itemCheckbox.setAttribute("type", "checkbox");
+        itemCheckbox.id = `task${index}-${key}`;
+
+        itemCheckbox.addEventListener("change", toDoManager.completeChecklistItem)
+
+        return itemCheckbox
+    }
+
+    function createCheckboxLabel(key, index) {
+        const label = document.createElement("label");
+        label.setAttribute("for", `task${index}-${key}`)
+        label.innerHTML = `${key}`;
+        return label
+    }
+
+    function renderChecklistDeleteBtn() {
+        const deleteBtn = document.createElement("button");
+        deleteBtn.textContent = "-"
+        deleteBtn.addEventListener("click", toDoManager.deleteUserChecklistItem);
+        return deleteBtn;
+    }
+
+    function expandTask(e) {
+        const taskDiv = e.target.closest(".task-div")
+        if (taskDiv.classList.contains("expanded")) {
+            collapseAllTasks()
+        } else {
+            collapseAllTasks()
+            taskDiv.classList.add("expanded")
+        }
+    }
+
+    function collapseAllTasks() {
+        const allTaskDivs = content.children
+        for (const div of allTaskDivs) {
+            if (div.classList.contains("expanded")) {
+                div.classList.remove("expanded")
+            }
+        }
+    }
+
+    function applyChecklistStyles(value, userItemDiv) {
+        const itemCheckbox = userItemDiv.firstChild
         if (value === true) {
             itemCheckbox.checked = true;
-            label.style.textDecoration = "line-through" 
+            userItemDiv.classList.add("item-complete")
         } else {
             itemCheckbox.checked = false;
-            label.style.textDecoration = "none"
+            userItemDiv.classList = []
         }
     }
 
