@@ -143,7 +143,7 @@ const toDoManager = (function() {
         const newProject = e.target.value
         const taskIndex = e.target.closest(".task-div").dataset.index;
         masterTaskList[taskIndex].project = newProject
-        pubSub.emit("taskListChanged", masterTaskList)
+        pubSub.emit("detailsChanged", masterTaskList)
     }
 
     function changeDueDate(e) {
@@ -151,21 +151,21 @@ const toDoManager = (function() {
         const taskIndex = e.target.closest(".task-div").dataset.index;
         masterTaskList[taskIndex].dueDate = newDueDate
         sortListByDueDate()
-        pubSub.emit("taskListChanged", masterTaskList);
+        pubSub.emit("detailsChanged", masterTaskList);
     }
 
     function changePriority(e) {
         const newPriority = e.target.value
         const taskIndex = e.target.closest(".task-div").dataset.index
         masterTaskList[taskIndex].priority = newPriority;
-        pubSub.emit("taskListChanged", masterTaskList);
+        pubSub.emit("detailsChanged", masterTaskList);
     }
 
     function changeDescription(e) {
         const newDescription = e.target.value
         const taskIndex = e.target.closest(".task-div").dataset.index
         masterTaskList[taskIndex].description = newDescription
-        pubSub.emit("taskListChanged", masterTaskList);
+        pubSub.emit("descriptionUpdated", masterTaskList);
     }
 
     function completeChecklistItem() {
@@ -219,7 +219,9 @@ const toDoManager = (function() {
 
     pubSub.on("taskListChanged", storage.storeTasks)
     pubSub.on("checklistItemChanged", storage.storeTasks)
-
+    pubSub.on("descriptionChanged", storage.storeTasks)
+    pubSub.on("detailsChanged", storage.storeTasks)
+    
     // storage.testLocalStorage()
     // localStorage.clear()
     // console.log("local storage cleared")
