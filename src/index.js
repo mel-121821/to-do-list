@@ -49,9 +49,6 @@ const domManipulator = (function() {
     const today = toDoManager.getDate()
     const allProjects = projectManager.getProjects();
 
-    // get images
-    
-
     // render
 
     dateDisplay.textContent = toDoManager.getFormattedDate()
@@ -139,6 +136,7 @@ const domManipulator = (function() {
 
         // dropdown
         const projectDropdown = document.createElement("select");
+        projectDropdown.classList.add("task-project")
         for (const project of allProjects) {
             const option = document.createElement("option")
             option.value = project.name;
@@ -150,15 +148,31 @@ const domManipulator = (function() {
             }
             projectDropdown.appendChild(option);
         }
+        // event listener
         projectDropdown.addEventListener("change", (e) => {
             toDoManager.changeProject(e)
         })
+
+        // append to div
         dropdownWrapper.appendChild(projectDropdown)
         projectDiv.appendChild(projectLabel)
         projectDiv.appendChild(dropdownWrapper)
         return projectDiv;
     }
-``
+
+    function refreshProjectDropdown(allTasks) {
+        allTasks.forEach((task, index) => {
+            const projectInput = document.querySelectorAll(".task-project")[index];
+            for (const option of projectInput) {
+                if (option.value === task.project) {
+                    option.selected = true;
+                } else {
+                    // do nothing
+                }
+            }
+        })
+    }
+
     function renderDatePicker(task) {
         // outer div
         const dateDiv = document.createElement("div")
@@ -170,15 +184,26 @@ const domManipulator = (function() {
         // date picker
         const datePicker = document.createElement("input")
         datePicker.setAttribute("type", "date");
+        datePicker.classList.add("task-duedate")
         datePicker.defaultValue = task.dueDate;
 
+        // event listener
         datePicker.addEventListener("change", (e) => {
             toDoManager.changeDueDate(e)
         })
 
+        // append to div
         dateDiv.appendChild(dateLabel)
         dateDiv.appendChild(datePicker)
         return dateDiv;
+    }
+
+
+    function refreshDatePicker(allTasks) {
+        allTasks.forEach((task, index) => {
+            const dateInput = document.querySelectorAll(".task-duedate")[index];
+            dateInput.defaultValue = task.dueDate;
+        })
     }
 
     function renderPriorityDropdown (task) {
@@ -195,6 +220,7 @@ const domManipulator = (function() {
         // priorty picker
         const priorities = toDoManager.getPriorities();
         const priorityDropdown = document.createElement("select");
+        priorityDropdown.classList.add("task-priority")
         for (const priority of priorities) {
             const option = document.createElement("option");
             option.value = priority;
@@ -206,13 +232,35 @@ const domManipulator = (function() {
             }
             priorityDropdown.appendChild(option)
         }
+        // event listener
         priorityDropdown.addEventListener("change", (e) => {
             toDoManager.changePriority(e)
         })
+
+        // append to div
         dropdownWrapper.appendChild(priorityDropdown)
         priorityDiv.appendChild(priorityLabel)
         priorityDiv.appendChild(dropdownWrapper)
         return priorityDiv;
+    }
+
+    function refreshPrioritytDropdown(allTasks) {
+        allTasks.forEach((task, index) => {
+            const priorityInput = document.querySelectorAll(".task-priority")[index];
+            for (const option of priorityInput) {
+                if (option.value === task.priority) {
+                    option.selected = true;
+                } else {
+                    // do nothing
+                }
+            }
+        })
+    }
+
+    function refreshDetails(allTasks) {
+        refreshProjectDropdown(allTasks);
+        refreshDatePicker(allTasks);
+        refreshPrioritytDropdown(allTasks);
     }
 
     function renderDescription(task) {
@@ -225,9 +273,12 @@ const domManipulator = (function() {
 
         // create textarea
         const description = document.createElement("textarea")
+        description.classList.add("description")
         description.maxLength = 3000;
         description.rows = 5;
         description.textContent = task.description;
+
+        // event listener
         description.addEventListener("blur", (e) => {
             toDoManager.changeDescription(e)
         })
@@ -236,6 +287,14 @@ const domManipulator = (function() {
         descriptionDiv.appendChild(descriptionLabel)
         descriptionDiv.appendChild(description)
         return descriptionDiv;
+    }
+
+    function refreshDescription(allTasks) {
+        allTasks.forEach((task, index) => {
+            const descriptionInput = document.querySelectorAll(".description")[index];
+            descriptionInput.innerHTML = ""
+            descriptionInput.innerHTML = task.description;
+        })
     }
 
     function createChecklistDiv (task) {
@@ -275,15 +334,9 @@ const domManipulator = (function() {
             for (const [key, value] of Object.entries(checklist)) {
                 const userItemDiv = document.createElement("li");
 
-                // create checkbox label/item name
-                // const label = document.createElement("label");
-                // label.setAttribute("for", `task${index}-${key}`)
-                // label.innerHTML = `${key}`;
-
                 // append items
-                // userItemDiv.append(itemCheckbox, label, deleteBtn)
                 userItemDiv.appendChild((renderChecklistCheckbox(key, index)))
-                userItemDiv.appendChild((createCheckboxLabel(key, index)));
+                userItemDiv.appendChild((renderCheckboxLabel(key, index)));
                 userItemDiv.appendChild((renderChecklistDeleteBtn()))
                 checklistUl.appendChild(userItemDiv);
                 applyChecklistStyles(value, userItemDiv)
@@ -301,7 +354,7 @@ const domManipulator = (function() {
         return itemCheckbox
     }
 
-    function createCheckboxLabel(key, index) {
+    function renderCheckboxLabel(key, index) {
         const label = document.createElement("label");
         label.setAttribute("for", `task${index}-${key}`)
         label.innerHTML = `${key}`;
@@ -356,14 +409,13 @@ const domManipulator = (function() {
     
     // refresh display fn()s
     function refreshProjectDisplay() {
-        hideDisplayInfo()
+        hideNotices()
         removeActiveClass()
         removeDisplayOffClass()
-        // collapseAllTasks()
         removeSubs()
     }
 
-    function hideDisplayInfo() {
+    function hideNotices() {
         const notices = displayInfo.children
         for (const notice of notices) {
             if (notice.classList.contains("active")) {
@@ -415,7 +467,7 @@ const domManipulator = (function() {
     })
 
     function displayTodayCompleteNotice(){
-        hideDisplayInfo()
+        hideNotices()
        if (checkIfDisplayIsEmpty() === true) {
         todayTasksCompleteNotice.classList.add("active")
        }
@@ -577,44 +629,53 @@ const domManipulator = (function() {
         refreshProjectsList();
         projectManager.getProjects().forEach((project, index) => {
             if (index === 0) {
-                // index 0 = All projects btn, skip this
-                // do nothing
+                // index 0 = All projects btn, skip this and do nothing
             } else {
                 const projectListItem = document.createElement("li")
                 projectListItem.dataset.index = index
 
-                const projectBtn = document.createElement("button")
-                projectBtn.classList.add("menu");
-                projectBtn.textContent = project.name 
-                projectBtn.addEventListener("click", function() {
-                    refreshProjectDisplay()
-                    this.classList.add("active")
-                    console.log(`${this.textContent} button is currently active`)
-                    displaySelectedProject()
-                    displayProjectEmptyNotice()
-                    pubSub.on("tasksRendered", displaySelectedProject)
-                    pubSub.on("tasksRendered", displayProjectEmptyNotice)
-                    console.log(`${project.name} pubsub turned on`)
-                })
-
-                const deleteProjectBtn = document.createElement("button")
-                deleteProjectBtn.textContent = "-"
-                deleteProjectBtn.addEventListener("click", (e) => {
-                    const projectIndex = e.target.parentNode.dataset.index
-                    console.log(projectIndex)
-                    createModals.showProjectDeleteModal(projectIndex)
-                })
-
-                projectListItem.appendChild(projectBtn)
-                projectListItem.appendChild(deleteProjectBtn)
+                projectListItem.appendChild((renderProjectBtn(project)))
+                projectListItem.appendChild((renderProjectDeleteBtn()))
 
                 projectsList.appendChild(projectListItem)
                 }
         })
     }
 
+    function renderProjectBtn(project) {
+        const projectBtn = document.createElement("button")
+        projectBtn.classList.add("menu");
+        projectBtn.textContent = project.name 
+
+        // event listener
+        projectBtn.addEventListener("click", function() {
+            refreshProjectDisplay()
+            this.classList.add("active")
+            console.log(`${this.textContent} button is currently active`)
+            displaySelectedProject()
+            displayProjectEmptyNotice()
+            pubSub.on("tasksRendered", displaySelectedProject)
+            pubSub.on("tasksRendered", displayProjectEmptyNotice)
+            console.log(`${project.name} pubsub turned on`)
+        })
+        return projectBtn;
+    }
+
+    function renderProjectDeleteBtn() {
+        const deleteProjectBtn = document.createElement("button")
+        deleteProjectBtn.textContent = "-";
+
+        //event listener
+        deleteProjectBtn.addEventListener("click", (e) => {
+            const projectIndex = e.target.parentNode.dataset.index
+            console.log(projectIndex);
+            createModals.showProjectDeleteModal(projectIndex);
+        });
+        return deleteProjectBtn;
+    }
+
     function displayProjectEmptyNotice(){
-        hideDisplayInfo()
+        hideNotices()
        if (checkIfDisplayIsEmpty() === true) {
             projectEmptyNotice.classList.add("active")
        }
@@ -631,7 +692,7 @@ const domManipulator = (function() {
         })
     }
 
-    // fn to switch between pkrojects
+    // fn to switch between projects
     function displaySelectedProject() {
         const activeProject = getActiveProject()
         const allTaskDivs = content.children
@@ -654,12 +715,15 @@ const domManipulator = (function() {
     }
 
 
-    // pubSubs
+    // task pubSubs
     pubSub.on("taskListChanged", renderFullTasks)
-    // pubSub.on("taskListChanged", hideDisplayInfo)
     pubSub.on("toggleComplete", toDoManager.autoDeleteCompletedTasks)
-    pubSub.on("checklistItemChanged", renderChecklistItems)
+    pubSub.on("checklistChanged", renderChecklistItems)
+    pubSub.on("detailsChanged", refreshDetails)
+    pubSub.on("descriptionChanged", refreshDescription)
+    
 
+    // project pubsubs
     pubSub.on("projectListChanged", renderMyProjectsList)
     pubSub.on("projectListChanged", setFirstRenderDefault)
     pubSub.on("projectDeleted", toDoManager.moveProjectsToAll)
