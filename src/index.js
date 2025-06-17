@@ -394,7 +394,11 @@ const domManipulator = (function() {
             userItemDiv.classList.add("item-complete")
         } else {
             itemCheckbox.checked = false;
-            userItemDiv.classList = []
+            if (userItemDiv.classList.contains("item-complete")) {
+                userItemDiv.classList.remove("item-complete")
+            } else {
+                // do nothing
+            }
         }
     }
 
