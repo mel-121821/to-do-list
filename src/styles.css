@@ -66,6 +66,7 @@ table {
 --jungle-green: hsla(150, 32%, 49%, 1);
 --eerie-black: hsla(144, 24%, 8%, 1);
 --gray: hsla(180, 2%, 48%, 1);
+--light-gray: rgb(230, 241, 241);
 --eggplant-dark: rgb(51, 43, 53);
 --eggplant: hsla(286, 10%, 34%, 1);
 --eggplant-light: rgb(117, 100, 123);
@@ -555,37 +556,34 @@ dialog.add-project {
     right: 0px;
     bottom: 0px;
     left: 0px;
-    opacity: 1;
+    opacity: 0.8;
 }
 
-.complete-view {
-    display: none;
+.notices {
+    padding: 20px 10%;  
+    display: flex;
+    justify-content: center;
 }
 
-.complete-view.active {
-    display: block;
-    position: relative;
-    background-color: var(--gray);
-}
-
-.tasks-done {
-    display: none;
-}
-
-.tasks-done.active {
-    display: block;
-    position: relative;
-    background-color: var(--gray);
-}
-
+.complete-view,
+.tasks-done,
 .project-empty {
     display: none;
 }
 
+.complete-view.active,
+.tasks-done.active,
 .project-empty.active {
     display: block;
+    width: clamp(400px, 100%, 800px);
     position: relative;
-    background-color: var(--gray);
+    background-color: var(--light-gray);
+    border-radius: 5px;
+    border: 10px solid var(--lavender);
+    padding: 20px 30px;
+    color: var(--eggplant-dark);
+    text-align: center;
+    font-size: 1.1rem;
 }
 
 #content {
@@ -599,9 +597,10 @@ dialog.add-project {
 
 .task-div {
     /* task divs */
-    min-width: 400px;
+    width: clamp(400px, 100%, 800px);
+    /* min-width: 400px;
     width: 100%;
-    max-width: 800px;
+    max-width: 800px; */
     height: fit-content;
     display: grid;
     grid-template-rows: 60px 60px fit-content(100px) fit-content(200px);
@@ -800,16 +799,19 @@ dialog.add-project {
     grid-area: 3 / 2 / 4 / 7;
     display: flex;
     flex-direction: column;
+    margin: 10px 0px;
     padding: 20px;
-    color: var(--pale-pink);
+    border-radius: 5px;
+    background-color: var(--lavender);
 }
 
 .task-div.expanded div:nth-child(6) label {
     margin-left: 12px;
+    color: var(--eggplant-dark);
 }
 
 .task-div.expanded div:nth-child(6) textarea {
-    background-color: var(--lavender);
+    background-color: var(--pale-pink);
     align-self: center;
     width: 99%;
     padding: 7px;
@@ -834,7 +836,7 @@ dialog.add-project {
     align-items: center;
     background-color: var(--lavender);
     border-radius: 5px;
-    margin: 20px;
+    margin: 20px 0px;
 }
 
 .task-div legend {
