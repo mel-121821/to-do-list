@@ -173,8 +173,8 @@ const toDoManager = (function() {
         const checklistItem = this.parentNode.children.item(1);
 
         masterTaskList[taskIndex].userChecklist[`${checklistItem.innerHTML}`] = masterTaskList[taskIndex].userChecklist[`${checklistItem.innerHTML}`] === false ? true : false
-        
-        pubSub.emit("checklistItemChanged", masterTaskList)
+
+        pubSub.emit("checklistChanged", masterTaskList)
     }
 
     function deleteUserChecklistItem() {
@@ -185,19 +185,20 @@ const toDoManager = (function() {
 
         console.log(`User deleted the ${checklistItem} checklist item on task ${indexOfTaskDiv}.`)
         
-        pubSub.emit("checklistItemChanged", masterTaskList)
+        pubSub.emit("checklistChanged", masterTaskList)
     }
 
     function addChecklistItem(e) {
         const index = e.target.parentNode.className
         console.log(e.target.parentNode.className)
         const selectedTask = masterTaskList[index]
-        const userInput = e.target.children.item(2).children.item(1).value
+        const userInput = e.target.children.item(1).children.item(1).value
+        console.log(e.target.children.item(1).children.item(1).value)
         
         Object.assign(selectedTask.userChecklist, {[userInput]: false})
 
         //pubsub - on change, re-render checklist items
-        pubSub.emit("checklistItemChanged", masterTaskList)  
+        pubSub.emit("checklistChanged", masterTaskList)  
     }
 
     function moveProjectsToAll() {
@@ -218,7 +219,7 @@ const toDoManager = (function() {
     pubSub.on("projectListChanged", () => pubSub.emit("taskListChanged", masterTaskList));
 
     pubSub.on("taskListChanged", storage.storeTasks)
-    pubSub.on("checklistItemChanged", storage.storeTasks)
+    pubSub.on("checklistChanged", storage.storeTasks)
     pubSub.on("descriptionChanged", storage.storeTasks)
     pubSub.on("detailsChanged", storage.storeTasks)
     
