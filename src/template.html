@@ -8,8 +8,10 @@
 <body>
     <dialog class="add-task">
         <form action="" method="post">
-            <legend>Add a Task:</legend>
-            <button class="close-modal">x</button>
+            <div class="modal-title">
+                <legend>Add a Task:</legend>
+                <button class="close-modal">x</button>
+            </div>
             <div class="inputs">
                 <div class="task-title">
                     <label for="task-title">Task name:</label>
@@ -18,9 +20,11 @@
                 <div class="details">
                     <div class="project">
                         <label for="project">Project type:</label>
-                        <select name="project" id="project">
-                            <!-- javascript -->
-                        </select>
+                        <div class="wrapper">
+                            <select name="project" id="project">
+                                <!-- javascript -->
+                            </select>
+                        </div>
                     </div>
                     <div class="due-date">
                         <label for="due-date">Due date:</label>
@@ -28,9 +32,11 @@
                     </div>
                     <div class="priority">
                         <label for="priority">Priority:</label>
-                        <select name="priority" id="priority">
-                            <!-- javascript -->
-                        </select>
+                        <div class="wrapper">
+                            <select name="priority" id="priority">
+                                <!-- javascript -->
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="description">
@@ -53,8 +59,10 @@
     </dialog>
     <dialog class="add-project">
         <form action="" method="post">
-            <legend>Add a Project:</legend>
-            <button class="close-modal">X</button>
+            <div class="modal-title">
+                <legend>Add a Project:</legend>
+                <button class="close-modal">x</button>
+            </div>
             <div class="project-title">
                 <label for="project">Project name:</label>
                 <input type="text" id="add-project" name="add-project" required/>
@@ -67,8 +75,10 @@
     </dialog>
     <dialog id="delete-warning">
         <form action="" method="">
-            <legend>Warning!</legend>
-            <button class="close-modal">X</button>
+            <div class="modal-title">
+                <legend>Warning!</legend>
+                <button class="close-modal">x</button>
+            </div>
             <div>
                 <p>Are you sure you want to delete this project?</p>
                 <p>Any projects under this category will be moved to your "All Projects" folder and you will be returned to the "All Projects" view.</p>
@@ -95,7 +105,9 @@
         </div>
         <div class="title">
             <h1>To-do List</h1>
-            <button>Add Task</button>
+            <button>
+                <span>+</span>Add Task
+            </button>
         </div>
         <div class="date-display">
             <div>
@@ -144,7 +156,7 @@
    <div id="content-wrapper">
         <div class="notices">
             <div class="complete-view">
-                <p>*** Note: Completed tasks 30 days past the due date will be auto-deleted ***</p>
+                <p>Note: Completed tasks 30 days past the due date will be auto-deleted</p>
             </div>
             <div class="tasks-done">
                 <p>Congratulations! You're all caught up for today.</p>
@@ -158,10 +170,10 @@
         </div>
     </div>
    <div class="right-sidebar">
-       <div class="calendar-display">
+       <!-- <div class="calendar-display">
             <div>Calendar Placeholder</div>
-           <!-- calendar img -->
-       </div>
+           calendar img
+       </div> -->
     </div>
     <div class="footer">
         <div class="footer-text">
@@ -169,7 +181,7 @@
         </div>
         <div class="footer-icon">
             <a href="https://github.com/mel-121821/to-do-list/" target="_blank">
-                <img class="svg" src="../icon/github.svg" alt=""/>
+                <img class="svg" src="../icon/github.svg" alt="Github icon"/>
             </a>
         </div>
     </div>
