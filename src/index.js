@@ -4,7 +4,6 @@
 // Reassessed plan, set index.js to only do the following:
 // interact with DOM via query selectors
 // generate popups to gather user data
-// local storage??
 // event listeners
 
 // home.js should include logic in the following categories:
@@ -118,7 +117,7 @@ const domManipulator = (function() {
         const deleteIcon = document.createElement('img')
         deleteIcon.src = trashBin;
         deleteBtn.appendChild(deleteIcon)
-        deleteBtn.classList.add("delete-btn");
+        deleteBtn.classList.add("delete-task-btn");
         deleteBtn.addEventListener("click", toDoManager.deleteTask)
         return deleteBtn
     }
@@ -133,6 +132,7 @@ const domManipulator = (function() {
        
         // dropdown wrapper
         const dropdownWrapper = document.createElement("div");
+        dropdownWrapper.classList.add("wrapper")
 
         // dropdown
         const projectDropdown = document.createElement("select");
@@ -216,6 +216,7 @@ const domManipulator = (function() {
         
         // priority wrapper
         const dropdownWrapper = document.createElement("div");
+        dropdownWrapper.classList.add("wrapper")
 
         // priorty picker
         const priorities = toDoManager.getPriorities();
@@ -321,7 +322,7 @@ const domManipulator = (function() {
         addBtn.addEventListener("click", (e) => {
             const taskIndex = e.target.closest(".task-div").dataset.index
             console.log(taskIndex)
-            createModals.createAddChecklistItemModal(taskIndex);
+            displayModals.createChecklistModal(taskIndex);
         })
         return addBtn
     }
@@ -667,13 +668,16 @@ const domManipulator = (function() {
 
     function renderProjectDeleteBtn() {
         const deleteProjectBtn = document.createElement("button")
-        deleteProjectBtn.textContent = "-";
+        const deleteIcon = document.createElement('img')
+        deleteIcon.src = trashBin;
+        deleteProjectBtn.appendChild(deleteIcon)
+        deleteProjectBtn.classList.add("delete-project-btn");
 
         //event listener
         deleteProjectBtn.addEventListener("click", (e) => {
             const projectIndex = e.target.parentNode.dataset.index
             console.log(projectIndex);
-            createModals.showProjectDeleteModal(projectIndex);
+            displayModals.showProjectDeleteModal(projectIndex);
         });
         return deleteProjectBtn;
     }
@@ -749,7 +753,7 @@ const domManipulator = (function() {
     return{ renderTaskList }
 })();
 
-const createModals = (function() {
+const displayModals = (function() {
 
     // main page DOM elements
     const addTaskBtn = document.querySelector(".title > button")
@@ -909,37 +913,22 @@ const createModals = (function() {
     }
 
     // add checklist items modal
-    function createAddChecklistItemModal(taskIndex){
-        const addChecklistItemModal = document.createElement("dialog");
-        addChecklistItemModal.id = "checklist-modal";
-        addChecklistItemModal.classList.add(`${taskIndex}`)
+    function createChecklistModal(taskIndex){
+        const checklistModal = document.createElement("dialog");
+        checklistModal.id = "checklist-modal";
+        checklistModal.classList.add(`${taskIndex}`)
 
+        // create form
         const form = document.createElement("form");
-        const legend = document.createElement("legend") 
-        legend.textContent = "Add checklist item:"
-
-        const closeBtn = document.createElement("button")
-        closeBtn.textContent = "X"
-
-        const inputDiv = document.createElement("div")
-        inputDiv.classList.add("input")
-        const label = document.createElement("label")
-        label.innerHTML = "Item name:"
-        const input = document.createElement("input");
-        input.setAttribute("type", "text")
         
         const saveDiv = document.createElement("div")
         saveDiv.classList.add("save-div")
-        const saveBtn = document.createElement("button");
-        saveBtn.textContent = "Save";
 
-        const cancelBtn = document.createElement("button");
-        cancelBtn.textContent = "Cancel"
-
-        closeBtn.addEventListener("click", (e) => {
-            e.preventDefault()
-            removeModal(e)
-        })
+        form.appendChild((createChecklistModal_TopRow()))
+        form.appendChild((createChecklistModal_Input()))
+        saveDiv.appendChild((createChecklistModal_SaveBtn()))
+        saveDiv.appendChild((createChecklistModal_CancelBtn()))
+        form.appendChild(saveDiv)
 
         form.addEventListener("submit", (e) => {
             e.preventDefault()
@@ -947,26 +936,63 @@ const createModals = (function() {
             removeModal(e)
         })
 
+        checklistModal.appendChild(form)
+        body.appendChild(checklistModal)
+
+        checklistModal.showModal()
+    }
+
+    function createChecklistModal_TopRow() {
+        const modal_TopRow = document.createElement("div")
+
+        const legend = document.createElement("legend") 
+        legend.textContent = "Add checklist item:"
+
+        const closeBtn = document.createElement("button")
+        closeBtn.textContent = "x"
+
+        closeBtn.addEventListener("click", (e) => {
+            e.preventDefault()
+            removeModal(e)
+        })
+
+        modal_TopRow.appendChild(legend)
+        modal_TopRow.appendChild(closeBtn)
+        return modal_TopRow
+    }
+
+    function createChecklistModal_Input() {
+        const inputDiv = document.createElement("div")
+        inputDiv.classList.add("input")
+
+        const label = document.createElement("label")
+        label.innerHTML = "Item name:"
+
+        const input = document.createElement("input");
+        input.setAttribute("type", "text")
+
+        inputDiv.appendChild(label)
+        inputDiv.appendChild(input)
+
+        return inputDiv
+    }
+
+    function createChecklistModal_SaveBtn() {
+        const saveBtn = document.createElement("button");
+        saveBtn.textContent = "Save";
+        return saveBtn
+    }
+
+    function createChecklistModal_CancelBtn() {
+        const cancelBtn = document.createElement("button");
+        cancelBtn.textContent = "Cancel"
+
         cancelBtn.addEventListener("click", (e) => {
             e.preventDefault()
             removeModal(e)
         })
 
-        inputDiv.appendChild(label)
-        inputDiv.appendChild(input)
-
-        saveDiv.appendChild(saveBtn)
-        saveDiv.appendChild(cancelBtn)
-
-        form.appendChild(legend)
-        form.appendChild(closeBtn)
-        form.appendChild(inputDiv)
-        form.appendChild(saveDiv)
-
-        addChecklistItemModal.appendChild(form)
-        body.appendChild(addChecklistItemModal)
-
-        addChecklistItemModal.showModal()
+        return cancelBtn
     }
 
     function removeModal(e){
@@ -976,7 +1002,7 @@ const createModals = (function() {
 
     return {
         showProjectDeleteModal,
-        createAddChecklistItemModal
+        createChecklistModal
     }
 })()
 
