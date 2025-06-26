@@ -49,6 +49,20 @@ const toDoManager = (function() {
 
     const priorities = ["low", "normal", "high"]
 
+    let themes = [
+        {
+            name:"northern-lights",
+            active: true
+        }, 
+        {
+            name: "theme-2",
+            active: false
+        }, 
+        {
+            name: "theme-3",
+            active: false
+        }]
+
 
     function getTasksFromStorage() {
         if (storage.checkTasksExist() === true) {
@@ -61,6 +75,16 @@ const toDoManager = (function() {
 
     getTasksFromStorage()
 
+    function getThemesFromStorage() {
+        if (storage.checkThemesExist() === true) {
+            themes = storage.getStoredThemes()
+        } else {
+            // do nothing
+        }
+        console.log(themes)
+    }
+
+    getThemesFromStorage()
 
     // fn()s to add tasks
     function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = [], isComplete=false) {
@@ -215,6 +239,24 @@ const toDoManager = (function() {
         pubSub.emit("taskListChanged", masterTaskList)
     }
 
+
+    // Theme fn()s
+
+    function setTheme(index) {
+        console.log(toDoManager.getThemes()[index])
+        removeCurrentTheme();
+        toDoManager.getThemes()[index].active = true;
+        console.log(toDoManager.getThemes())
+        pubSub.emit("themeChanged", themes)
+    }
+
+    function removeCurrentTheme() {
+        const themes = toDoManager.getThemes();
+        for (const theme of themes) {
+            // console.log(theme.active)
+            theme.active = false 
+        }
+    }
     
     pubSub.on("projectListChanged", () => pubSub.emit("taskListChanged", masterTaskList));
 
@@ -222,6 +264,7 @@ const toDoManager = (function() {
     pubSub.on("checklistChanged", storage.storeTasks)
     pubSub.on("descriptionChanged", storage.storeTasks)
     pubSub.on("detailsChanged", storage.storeTasks)
+    pubSub.on("themeChanged", storage.storeThemes)
     
     // storage.testLocalStorage()
     // localStorage.clear()
@@ -231,6 +274,9 @@ const toDoManager = (function() {
     // these fn()s get original lists (not copies), which can be modified
     const getMasterTaskList = () => masterTaskList;
     const getPriorities = () => priorities;
+    const getThemes = () => themes
+
+    
 
     return {
         getTasksFromStorage,
@@ -250,9 +296,11 @@ const toDoManager = (function() {
         deleteUserChecklistItem,
         addChecklistItem,
         moveProjectsToAll,
+        setTheme,
 
         getMasterTaskList,
         getPriorities,
+        getThemes
     }
 })()
 
