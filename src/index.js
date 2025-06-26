@@ -132,7 +132,7 @@ const domManipulator = (function() {
        
         // dropdown wrapper
         const dropdownWrapper = document.createElement("div");
-        dropdownWrapper.classList.add("wrapper")
+        dropdownWrapper.classList.add("select-wrapper")
 
         // dropdown
         const projectDropdown = document.createElement("select");
@@ -216,7 +216,7 @@ const domManipulator = (function() {
         
         // priority wrapper
         const dropdownWrapper = document.createElement("div");
-        dropdownWrapper.classList.add("wrapper")
+        dropdownWrapper.classList.add("select-wrapper")
 
         // priorty picker
         const priorities = toDoManager.getPriorities();
@@ -757,7 +757,7 @@ const displayModals = (function() {
 
     // main page DOM elements
     const addTaskBtn = document.querySelector(".title > button")
-    const addProjectBtn = document.querySelector("button.add-project")
+    const addProjectBtn = document.querySelector("button.add-project-btn")
     const body = document.querySelector("body")
     
 
@@ -765,7 +765,7 @@ const displayModals = (function() {
     const closeModalBtns = document.querySelectorAll(".close-modal, .cancel");
 
 
-    // add task modal elements
+    // add-task modal elements
     const taskModal = document.querySelector(".add-task")
     const taskModal_Form = document.querySelector(".add-task form")
     const taskModal_Title = document.querySelector("#task-title");
@@ -777,13 +777,13 @@ const displayModals = (function() {
     const taskModal_AddChecklistItemBtn = document.querySelector(".add-item-btn")
     
 
-    // add project modal elements
+    // add-project modal elements
     const projectModal = document.querySelector("dialog.add-project")
     const projectModal_Form = document.querySelector(".add-project form")
     const projectModal_Name = document.querySelector(".add-project input")
 
 
-    // delete project modal elements
+    // delete-project modal elements
     const projectDeleteModal = document.querySelector("#delete-warning")
     const projectDeleteModal_Confirm = document.querySelector(".confirm")
 
@@ -944,11 +944,13 @@ const displayModals = (function() {
 
     function createChecklistModal_TopRow() {
         const modal_TopRow = document.createElement("div")
+        modal_TopRow.classList.add("modal-title")
 
         const legend = document.createElement("legend") 
         legend.textContent = "Add checklist item:"
 
         const closeBtn = document.createElement("button")
+        closeBtn.classList.add("close-modal")
         closeBtn.textContent = "x"
 
         closeBtn.addEventListener("click", (e) => {
@@ -1004,6 +1006,77 @@ const displayModals = (function() {
         showProjectDeleteModal,
         createChecklistModal
     }
+})()
+
+const displayTheme = (function(){
+    const body = document.querySelector("body")
+    const allThemeBtns = document.querySelectorAll(".themes > div > button")
+    
+    // btn_Theme1.addEventListener("click", () => {
+    //     deactivateThemes()
+    //     const theme1 = toDoManager.getThemes()[0];
+    //     console.log(theme1)
+    //     theme1.active = true;
+    //     console.log(toDoManager.getThemes())
+    // })
+
+   // when btn is clicked
+    // set theme.active to false for all
+    // set theme associated with btn as active
+    // update render 
+
+    allThemeBtns.forEach((btn, index) => {
+        btn.addEventListener("click", (e) => {
+            toDoManager.setTheme(index)
+            renderThemeStyles(e)
+        })
+    })
+
+    function renderThemeStyles(e) {
+        deactivateThemeBtns()
+        e.target.classList.add("active")
+        setBodyStyle()
+    }
+
+    function setBodyStyle() {
+        body.className = "";
+        const allThemes = toDoManager.getThemes()
+        for (const theme of allThemes) {
+            if (theme.active === true) {
+                body.className = theme.name
+            }
+        }
+    }
+
+    function deactivateThemeBtns() {
+        allThemeBtns.forEach((btn) => {
+            if (btn.classList.contains("active")) {
+                btn.classList.remove("active")
+            } else {
+                // do nothing
+            }
+        })
+    }
+
+    function getActiveBtn() {
+        const allThemes = toDoManager.getThemes()
+        allThemes.forEach((theme, index) => {
+            console.log(index)
+            if (theme.active === true) {
+                console.log(allThemeBtns[index])
+                allThemeBtns[index].classList.add("active")
+            }
+        })
+    }
+
+    function setInitialRender() {
+        getActiveBtn()
+        setBodyStyle()
+    }
+
+    setInitialRender()
+
+
 })()
 
 
