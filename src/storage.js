@@ -48,16 +48,6 @@ const storage = (function() {
         return tasks
     }
 
-    // function getStoredTasks() {
-    //     let tasks;
-    //     if (!localStorage.getItem("tasks")) {
-    //         tasks = []
-    //     } else {
-    //         tasks = JSON.parse(localStorage.getItem("tasks"))
-    //     }
-    //     console.log(tasks)
-    //     return tasks
-    // }
 
     function checkProjectsExist() { 
         if (!localStorage.getItem("projects")) {
@@ -75,6 +65,22 @@ const storage = (function() {
         return projects
     }
 
+    function checkThemesExist() {
+        if (!localStorage.getItem("themes")) {
+            console.log("No themes in local storage")
+            return false
+        } else {
+            console.log("Themes exist in local storage")
+            return true
+        }
+    }
+
+    function getStoredThemes() {
+        let themes = JSON.parse(localStorage.getItem("themes"))
+        console.log(themes)
+        return themes
+    }
+
     // function populateStorage(key, data) {
     //     localStorage.setItem(key, JSON.stringify(data))
     // }
@@ -87,6 +93,11 @@ const storage = (function() {
     function storeProjects(data) {
         localStorage.setItem("projects", JSON.stringify(data))
         console.log(JSON.parse(localStorage.getItem("projects")))
+    }
+
+    function storeThemes(data) {
+        localStorage.setItem("themes", JSON.stringify(data))
+        console.log(JSON.parse(localStorage.getItem("themes")))
     }
 
     function clearLocalStorage() {
@@ -105,6 +116,10 @@ const storage = (function() {
         checkProjectsExist,
         getStoredProjects,
         storeProjects,
+
+        checkThemesExist,
+        getStoredThemes,
+        storeThemes,
 
         clearLocalStorage,
     }
