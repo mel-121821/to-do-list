@@ -6,7 +6,10 @@ import { pubSub } from "./pubsub.js";
 import { storage } from "./storage.js";
 import { format } from "date-fns"
 
+
 const toDoManager = (function() {
+
+    // storage.clearLocalStorage()
 
     // constructor
     function Task(title, project, dueDate, priority, description, userChecklist = [], isComplete = false) {
@@ -33,7 +36,7 @@ const toDoManager = (function() {
         {
             title: "My task",
             project: "All",
-            dueDate: new Date().toISOString().substring(0, 10),
+            dueDate: "2025-07-05",
             priority: "low",
             description: "My description",
             userChecklist: {
@@ -44,6 +47,7 @@ const toDoManager = (function() {
                 "Make grocery list": false, 
             },
             isComplete: false,
+            isExpanded: false,
         },
     ]
 
@@ -55,7 +59,7 @@ const toDoManager = (function() {
             active: true
         }, 
         {
-            name: "theme-2",
+            name: "blue-wave",
             active: false
         }, 
         {
@@ -87,8 +91,8 @@ const toDoManager = (function() {
     getThemesFromStorage()
 
     // fn()s to add tasks
-    function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = [], isComplete=false) {
-        masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist, isComplete));
+    function addTaskToMasterList (title, project, dueDate, priority, description, userChecklist = [], isComplete=false, isExpanded=false) {
+        masterTaskList.push(new Task(title, project, dueDate, priority, description, userChecklist, isComplete, isExpanded));
         sortListByDueDate()
         pubSub.emit("taskListChanged", masterTaskList)
     };
@@ -108,6 +112,39 @@ const toDoManager = (function() {
         console.log(masterTaskList[index].isComplete)
         pubSub.emit("taskListChanged", masterTaskList)
         pubSub.emit("toggleComplete", masterTaskList)
+    }
+
+
+    function expandTask(e) {
+        const taskDivIndex = e.target.closest(".task-div").dataset.index;
+        if (masterTaskList[taskDivIndex].isExpanded === true) {
+            collapseAllTasks()
+        } else {
+            collapseAllTasks()
+            masterTaskList[taskDivIndex].isExpanded = true;
+        }
+        console.log(masterTaskList)
+        pubSub.emit("taskListChanged", masterTaskList)
+
+        // if (taskDiv.classList.contains("expanded")) {
+        //     collapseAllTasks()
+        // } else {
+        //     collapseAllTasks()
+        //     taskDiv.classList.add("expanded")
+        // }
+    }
+
+    function collapseAllTasks() {
+        for (const task of masterTaskList) {
+            task.isExpanded = false;
+        }
+
+        // const allTaskDivs = content.children
+        // for (const div of allTaskDivs) {
+        //     if (div.classList.contains("expanded")) {
+        //         div.classList.remove("expanded")
+        //     }
+        // }
     }
 
 
@@ -167,7 +204,7 @@ const toDoManager = (function() {
         const newProject = e.target.value
         const taskIndex = e.target.closest(".task-div").dataset.index;
         masterTaskList[taskIndex].project = newProject
-        pubSub.emit("detailsChanged", masterTaskList)
+        pubSub.emit("taskListChanged", masterTaskList)
     }
 
     function changeDueDate(e) {
@@ -175,21 +212,21 @@ const toDoManager = (function() {
         const taskIndex = e.target.closest(".task-div").dataset.index;
         masterTaskList[taskIndex].dueDate = newDueDate
         sortListByDueDate()
-        pubSub.emit("detailsChanged", masterTaskList);
+        pubSub.emit("taskListChanged", masterTaskList);
     }
 
     function changePriority(e) {
         const newPriority = e.target.value
         const taskIndex = e.target.closest(".task-div").dataset.index
         masterTaskList[taskIndex].priority = newPriority;
-        pubSub.emit("detailsChanged", masterTaskList);
+        pubSub.emit("taskListChanged", masterTaskList);
     }
 
     function changeDescription(e) {
         const newDescription = e.target.value
         const taskIndex = e.target.closest(".task-div").dataset.index
         masterTaskList[taskIndex].description = newDescription
-        pubSub.emit("descriptionUpdated", masterTaskList);
+        pubSub.emit("taskListChanged", masterTaskList);
     }
 
     function completeChecklistItem() {
@@ -243,15 +280,14 @@ const toDoManager = (function() {
     // Theme fn()s
 
     function setTheme(index) {
-        console.log(toDoManager.getThemes()[index])
         removeCurrentTheme();
-        toDoManager.getThemes()[index].active = true;
+        themes[index].active = true;
         console.log(toDoManager.getThemes())
+        console.log(themes)
         pubSub.emit("themeChanged", themes)
     }
 
     function removeCurrentTheme() {
-        const themes = toDoManager.getThemes();
         for (const theme of themes) {
             // console.log(theme.active)
             theme.active = false 
@@ -263,7 +299,6 @@ const toDoManager = (function() {
     pubSub.on("taskListChanged", storage.storeTasks)
     pubSub.on("checklistChanged", storage.storeTasks)
     pubSub.on("descriptionChanged", storage.storeTasks)
-    pubSub.on("detailsChanged", storage.storeTasks)
     pubSub.on("themeChanged", storage.storeThemes)
     
     // storage.testLocalStorage()
@@ -276,12 +311,13 @@ const toDoManager = (function() {
     const getPriorities = () => priorities;
     const getThemes = () => themes
 
-    
+    // storage.clearLocalStorage()
 
     return {
         getTasksFromStorage,
         addTaskToMasterList,
         toggleCompleteTask,
+        expandTask,
         deleteTask,
         changeProject,
         changeDueDate,
@@ -304,7 +340,7 @@ const toDoManager = (function() {
     }
 })()
 
-
+// storage.clearLocalStorage()
 
 // exports
 export{toDoManager}
