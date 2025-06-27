@@ -58,6 +58,7 @@ const domManipulator = (function() {
             // task div
             const taskDiv = document.createElement("div");
             taskDiv.classList.add("task-div");
+            checkExpandedStatus(taskDiv, task)
             taskDiv.dataset.index = index;
             
             // 2nd row (details section)
@@ -85,6 +86,12 @@ const domManipulator = (function() {
             content.appendChild(taskDiv);
         })  
     }  
+
+    function checkExpandedStatus(taskDiv, task) {
+        if (task.isExpanded === true) {
+            taskDiv.classList.add("expanded")
+        }
+    }
         
     function renderCheckbox(task) {
         const checkbox = document.createElement("input");
@@ -98,7 +105,7 @@ const domManipulator = (function() {
     function renderTitle(task) {
         const taskTitle = document.createElement("h3");
         taskTitle.textContent = `${task.title}`
-        taskTitle.addEventListener("click", expandTask)
+        taskTitle.addEventListener("click", toDoManager.expandTask)
         return taskTitle
     }
 
@@ -108,7 +115,7 @@ const domManipulator = (function() {
         editIcon.src = edit;
         editBtn.appendChild(editIcon);
         editBtn.classList.add("exp-col-btn")
-        editBtn.addEventListener("click", expandTask)
+        editBtn.addEventListener("click", toDoManager.expandTask)
         return editBtn
     }
 
@@ -160,18 +167,18 @@ const domManipulator = (function() {
         return projectDiv;
     }
 
-    function refreshProjectDropdown(allTasks) {
-        allTasks.forEach((task, index) => {
-            const projectInput = document.querySelectorAll(".task-project")[index];
-            for (const option of projectInput) {
-                if (option.value === task.project) {
-                    option.selected = true;
-                } else {
-                    // do nothing
-                }
-            }
-        })
-    }
+    // function refreshProjectDropdown(allTasks) {
+    //     allTasks.forEach((task, index) => {
+    //         const projectInput = document.querySelectorAll(".task-project")[index];
+    //         for (const option of projectInput) {
+    //             if (option.value === task.project) {
+    //                 option.selected = true;
+    //             } else {
+    //                 // do nothing
+    //             }
+    //         }
+    //     })
+    // }
 
     function renderDatePicker(task) {
         // outer div
@@ -199,12 +206,12 @@ const domManipulator = (function() {
     }
 
 
-    function refreshDatePicker(allTasks) {
-        allTasks.forEach((task, index) => {
-            const dateInput = document.querySelectorAll(".task-duedate")[index];
-            dateInput.defaultValue = task.dueDate;
-        })
-    }
+    // function refreshDatePicker(allTasks) {
+    //     allTasks.forEach((task, index) => {
+    //         const dateInput = document.querySelectorAll(".task-duedate")[index];
+    //         dateInput.defaultValue = task.dueDate;
+    //     })
+    // }
 
     function renderPriorityDropdown (task) {
         // outer div
@@ -245,24 +252,24 @@ const domManipulator = (function() {
         return priorityDiv;
     }
 
-    function refreshPrioritytDropdown(allTasks) {
-        allTasks.forEach((task, index) => {
-            const priorityInput = document.querySelectorAll(".task-priority")[index];
-            for (const option of priorityInput) {
-                if (option.value === task.priority) {
-                    option.selected = true;
-                } else {
-                    // do nothing
-                }
-            }
-        })
-    }
+    // function refreshPrioritytDropdown(allTasks) {
+    //     allTasks.forEach((task, index) => {
+    //         const priorityInput = document.querySelectorAll(".task-priority")[index];
+    //         for (const option of priorityInput) {
+    //             if (option.value === task.priority) {
+    //                 option.selected = true;
+    //             } else {
+    //                 // do nothing
+    //             }
+    //         }
+    //     })
+    // }
 
-    function refreshDetails(allTasks) {
-        refreshProjectDropdown(allTasks);
-        refreshDatePicker(allTasks);
-        refreshPrioritytDropdown(allTasks);
-    }
+    // function refreshDetails(allTasks) {
+    //     refreshProjectDropdown(allTasks);
+    //     refreshDatePicker(allTasks);
+    //     refreshPrioritytDropdown(allTasks);
+    // }
 
     function renderDescription(task) {
         // create outer div
@@ -290,13 +297,13 @@ const domManipulator = (function() {
         return descriptionDiv;
     }
 
-    function refreshDescription(allTasks) {
-        allTasks.forEach((task, index) => {
-            const descriptionInput = document.querySelectorAll(".description")[index];
-            descriptionInput.innerHTML = ""
-            descriptionInput.innerHTML = task.description;
-        })
-    }
+    // function refreshDescription(allTasks) {
+    //     allTasks.forEach((task, index) => {
+    //         const descriptionInput = document.querySelectorAll(".description")[index];
+    //         descriptionInput.innerHTML = ""
+    //         descriptionInput.innerHTML = task.description;
+    //     })
+    // }
 
     function createChecklistDiv (task) {
         const checklistDiv = document.createElement("div");
@@ -367,25 +374,6 @@ const domManipulator = (function() {
         deleteBtn.textContent = "-"
         deleteBtn.addEventListener("click", toDoManager.deleteUserChecklistItem);
         return deleteBtn;
-    }
-
-    function expandTask(e) {
-        const taskDiv = e.target.closest(".task-div")
-        if (taskDiv.classList.contains("expanded")) {
-            collapseAllTasks()
-        } else {
-            collapseAllTasks()
-            taskDiv.classList.add("expanded")
-        }
-    }
-
-    function collapseAllTasks() {
-        const allTaskDivs = content.children
-        for (const div of allTaskDivs) {
-            if (div.classList.contains("expanded")) {
-                div.classList.remove("expanded")
-            }
-        }
     }
 
     function applyChecklistStyles(value, userItemDiv) {
@@ -727,8 +715,9 @@ const domManipulator = (function() {
     pubSub.on("taskListChanged", renderFullTasks)
     pubSub.on("toggleComplete", toDoManager.autoDeleteCompletedTasks)
     pubSub.on("checklistChanged", renderChecklistItems)
-    pubSub.on("detailsChanged", refreshDetails)
-    pubSub.on("descriptionChanged", refreshDescription)
+    
+    // pubSub.on("detailsChanged", refreshDetails)
+    // pubSub.on("descriptionChanged", refreshDescription)
     
 
     // project pubsubs
@@ -1058,7 +1047,7 @@ const displayTheme = (function(){
         })
     }
 
-    function getActiveBtn() {
+    function setActiveBtn() {
         const allThemes = toDoManager.getThemes()
         allThemes.forEach((theme, index) => {
             console.log(index)
@@ -1070,13 +1059,11 @@ const displayTheme = (function(){
     }
 
     function setInitialRender() {
-        getActiveBtn()
+        setActiveBtn()
         setBodyStyle()
     }
 
     setInitialRender()
-
-
 })()
 
 
