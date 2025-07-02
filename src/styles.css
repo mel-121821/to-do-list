@@ -63,20 +63,30 @@ table {
 --translucent-white: rgb(255, 255, 255, 0.8);
 
 /* CSS HSL from Northern Lights Bg */
---jungle-green: hsla(150, 32%, 49%, 1);
---eerie-black: hsla(144, 24%, 8%, 1);
---gray: rgb(193, 204, 204);
---light-gray: rgb(230, 241, 241);
---eggplant-dark: rgb(51, 43, 53);
---eggplant: hsla(286, 10%, 34%, 1);
---eggplant-light: rgb(117, 100, 123);
---eggplant-pale:rgb(150, 128, 158);
---lavender: rgb(202, 202, 202);
---pale-pink: rgb(245, 245, 245);
---viridian: hsla(156, 34%, 36%, 1);
---viridian-dark: rgb(26, 52, 42);
---celadon: hsla(134, 61%, 77%, 1);
+--t1-jungle-green: hsla(150, 32%, 49%, 1);
+--t1-eerie-black: hsla(144, 24%, 8%, 1);
+--t1-gray: rgb(193, 204, 204);
+--t1-light-gray: rgb(230, 241, 241);
+--t1-eggplant-dark: rgb(51, 43, 53);
+--t1-eggplant: hsla(286, 10%, 34%, 1);
+--t1-eggplant-light: rgb(117, 100, 123);
+--t1-eggplant-pale:rgb(150, 128, 158);
+--t1-lavender: rgb(202, 202, 202);
+--t1-pale-pink: rgb(245, 245, 245);
+--t1-viridian: hsla(156, 34%, 36%, 1);
+--t1-viridian-dark: rgb(26, 52, 42);
+--t1-celadon: hsla(134, 61%, 77%, 1);
 
+/* HSL from Blue Wave Bg */
+--t2-non-photo-blue-dark: rgb(102, 170, 197);
+--t2-non-photo-blue: hsla(197, 75%, 81%, 1);
+--t2-non-photo-blue-pale: rgb(208, 242, 255);
+--t2-picton-blue: hsla(202, 80%, 58%, 1);
+--t2-picton-blue-dark: rgb(26, 105, 150);
+--t2-azure-web: hsla(180, 100%, 97%, 1);
+--t2-celeste: hsla(180, 100%, 89%, 1);
+--t2-maya-blue: hsla(202, 88%, 67%, 1);
+--t2-maya-blue: hsl(202, 88%, 67%);
 }
 
 
@@ -91,231 +101,500 @@ table {
 }
 
 html {
-    font-size: 16px;
+    font-size: 14px;
     font-family: Arial, Helvetica, sans-serif;
 }
 
 body {
     display: grid;
-    grid-template-rows: 100px minmax(calc(100vh - 240px), 1fr) 50px;
-    grid-template-columns: 350px 1fr 250px;
+    grid-template-rows: 100px minmax(calc(100vh - 180px), 1fr) 80px;
+    grid-template-columns: 300px 1fr 250px;
     /* width: minmax(600px, 100vw) */
 }
 
 /*__________Themes (x3)__________*/
 /*__________Theme 1 - Northern Lights__________*/
 
-body {
+body.northern-lights {
     background-color: black;
 }
 
-input[type="text"] {
-    background-color: var(--pale-pink);
-    border: 1px solid var(--eggplant);
+.northern-lights input[type="text"],
+.northern-lights textarea {
+    background-color: var(--t1-pale-pink);
+    box-shadow: 1px 1px 3px 0px var(--t1-eggplant-pale)
 }
 
-select,
-input[type="date"] {
-    border: 1px solid var(--eggplant);
-    background-color: var(--pale-pink);
+.northern-lights select,
+.northern-lights input[type="date"] {
+    /* border: 1px solid var(--t1-eggplant-light); */
+    background-color: var(--t1-pale-pink);
+    box-shadow: 1px 1px 3px 0px var(--t1-eggplant-pale)
 }
 
-textarea {
-    background-color: var(--pale-pink);
+/* .northern-lights button {
+    border: 1px solid var(--t1-eerie-black);
+    background-color: var(--t1-lavender);
+} */
+
+.northern-lights .title h1 {
+    color: var(--t1-pale-pink);  
 }
 
-button {
-    border: 1px solid var(--eerie-black);
-    background-color: var(--lavender);
+.northern-lights .project-view {
+    color: var(--t1-pale-pink);  
 }
 
-.title h1 {
-    color: var(--pale-pink);  
+.northern-lights .project-view button {
+    /* border: 3px solid var(--t1-eggplant-light); */
+    background-color: var(--t1-eggplant);
+    color: var(--t1-pale-pink);
+    box-shadow: 1px 1px 3px 0px var(--t1-lavender);
 }
 
-.title button {
-    border: 3px solid var(--eggplant-light);
-    background-color: var(--eggplant-dark);
-    color: var(--lavender);
+.northern-lights .date-display p {
+    color: var(--t1-pale-pink);
 }
 
-.date-display p {
-    color: var(--pale-pink);
-}
-
-.left-sidebar {
+.northern-lights .left-sidebar {
     background-color: black;
 }
 
-.left-sidebar button {
-    background-color: var(--eggplant);
-    color: var(--pale-pink);
+.northern-lights .left-sidebar button {
+    background-color: var(--t1-eggplant);
+    color: var(--t1-pale-pink);
+    box-shadow: 2px 2px 4px 0px var(--t1-eerie-black);
 }
 
-.left-sidebar nav:first-child,
-.left-sidebar nav:nth-child(2),
-.left-sidebar .themes {
+.northern-lights .left-sidebar nav:first-child,
+.northern-lights .left-sidebar nav:nth-child(2),
+.northern-lights .left-sidebar .themes {
     /* static project nav section
     and user created project section */
-    background-color: var(--eggplant-dark);
-    color: var(--pale-pink);
+    background-color: var(--t1-eggplant-dark);
+    color: var(--t1-pale-pink);
 }
 
-.left-sidebar button.active {
-    background-color: var(--lavender);
+.northern-lights .left-sidebar button.active {
+    background-color: var(--t1-lavender);
     color: black;
 }
 
-dialog {
-    background-color: var(--lavender); 
+.northern-lights dialog {
+    background-color: var(--t1-lavender); 
 }
 
-dialog::backdrop {
-    background-color: var(--eerie-black);
+.northern-lights input[type="text"]:focus,
+.northern-lights input[type="date"]:focus,
+.northern-lights textarea:focus,
+.northern-lights select:focus {
+    box-shadow: 2px 2px 4px 0px var(--t1-eggplant);
+}
+
+.northern-lights dialog::backdrop {
+    background-color: var(--t1-eerie-black);
     opacity: 0.5;
 }
 
-dialog button {
-    background-color: var(--eggplant);
-    color: var(--pale-pink);
+.northern-lights dialog button {
+    background-color: var(--t1-eggplant);
+    color: var(--t1-pale-pink);
 }
 
-#delete-warning .wrapper-div {
-    background-color: var(--pale-pink);
+.northern-lights #delete-warning .wrapper-div {
+    background-color: var(--t1-pale-pink);
+    box-shadow: 1px 1px 3px 0px var(--t1-eggplant-pale)
 }
 
-#delete-warning input[type="radio"] {
-    border: 2px solid var(--eggplant);
+.northern-lights #delete-warning input[type="radio"] {
+    border: 2px solid var(--t1-eggplant);
 }
 
-#delete-warning input[type="radio"]::before {
-    background-color: var(--eggplant-light);
+.northern-lights #delete-warning input[type="radio"]::before {
+    background-color: var(--t1-eggplant-light);
 }
 
-#content-wrapper::before {
+.northern-lights #content-wrapper::before {
     background-image: url('../img/northern-lights.jpg');
     opacity: 0.8;
 }
 
-.complete-view.active,
-.tasks-done.active,
-.project-empty.active {
-    background-color: var(--light-gray);
-    border: 10px solid var(--lavender);
-    color: var(--eggplant-dark);
+.northern-lights .complete-view.active,
+.northern-lights .tasks-done.active,
+.northern-lights .project-empty.active {
+    background-color: var(--t1-light-gray);
+    border: 10px solid var(--t1-lavender);
+    color: var(--t1-eggplant-dark);
+
 }
 
-.task-div {
+.northern-lights .task-div {
     /* purple/black colour scheme */
-    /* border: 3px solid var(--eggplant-pale);
-    background: linear-gradient(to bottom right, var(--eerie-black), var(--eggplant-dark), var(--eerie-black)); */
+    /* border: 3px solid var(--t1-eggplant-pale);
+    background: linear-gradient(to bottom right, var(--t1-eerie-black), var(--t1-eggplant-dark), var(--t1-eerie-black)); */
 
     /* dark purple colour scheme */
-    border: 3px solid var(--eggplant-pale);
-    background: linear-gradient(to bottom right, var(--eggplant-dark), var(--eggplant), var(--eggplant-dark));
+    background: linear-gradient(to bottom right, var(--t1-eggplant-light), var(--t1-eggplant));
+    box-shadow: 3px 3px 6px 0px black
+
+    /* background: linear-gradient(to bottom right, var(--t1-jungle-green), var(--t1-viridian));
+    box-shadow: 3px 3px 6px 0px black */
 
     /* light purple colour scheme */
-    /* border: 3px solid var(--eggplant-pale);
-    background: linear-gradient(to bottom right, var(--eggplant), var(--eggplant-pale), var(--eggplant)); */
+    /* box-shadow: 3px 3px 6px 0px black;
+   background-color: var(--t1-eggplant-pale); */
 
     /* green colour scheme */
-    /* border: 3px solid var(--jungle-green);
-    background: linear-gradient(to bottom right, var(--eerie-black), var(--viridian), var(--eerie-black)); */
+    /* border: 3px solid var(--t1-jungle-green);
+    background: linear-gradient(to bottom right, var(--t1-eerie-black), var(--t1-viridian), var(--t1-eerie-black)); */
 
     /* scrap */
-    /* background: linear-gradient(to bottom right, var(--viridian), var(--jungle-green)); */
+    /* background: linear-gradient(to bottom right, var(--t1-viridian), var(--t1-jungle-green)); */
 
-    /* background: linear-gradient(to bottom right, var(--jungle-green), var(--celadon)); */
+    /* background: linear-gradient(to bottom right, var(--t1-jungle-green), var(--t1-celadon)); */
 
-    /* background: linear-gradient(to bottom right, var(--eggplant-light), var(--lavender)); */
+    /* background: linear-gradient(to bottom right, var(--t1-eggplant-light), var(--t1-lavender)); */
 }
 
-.task-div input[type="checkbox"] {
-    border: 1px solid var(--eggplant-dark);
-    color: var(--eggplant-dark);
-    background-color: var(--lavender);
+.northern-lights .task-div input[type="checkbox"] {
+    /* border: 1px solid var(--t1-eggplant-dark); */
+    color: var(--t1-eggplant-dark);
+    background-color: var(--t1-lavender);
+    box-shadow: 1px 1px 3px 0px black;
 }
 
-.task-div input[type="checkbox"]::before {
-    color: var(--eggplant-dark); 
+.northern-lights .task-div input[type="checkbox"]::before {
+    color: var(--t1-eggplant-dark); 
 }
 
-.task-div h3 {
-    color: var(--pale-pink);
+.northern-lights .task-div h3 {
+    color: var(--t1-pale-pink);
 }
 
-.task-div label {
+.northern-lights .task-div label {
     /* all individual details div labels */
-   color: var(--pale-pink);
+   color: var(--t1-pale-pink);
 }
 
-.task-div .details select,
-.task-div .details input[type="date"] {
-    border: 3px solid var(--eggplant);
-    background-color: var(--lavender);
+.northern-lights .task-div .details select,
+.northern-lights .task-div .details input[type="date"] {
+    /* border: 2px solid var(--t1-eggplant); */
+    box-shadow: 1px 1px 3px 0px var(--t1-eggplant-dark);
+    background-color: var(--t1-lavender);
 }
 
-.task-div.expanded div:nth-child(6) {
+.northern-lights .task-div.expanded div:nth-child(6) {
     /* description div (expanded)*/
-   background-color: var(--lavender);
+   background-color: var(--t1-lavender);
+   box-shadow: 2px 2px 4px 0px var(--t1-eggplant-dark)
 }
 
-.task-div.expanded div:nth-child(6) label {
-   color: var(--eggplant-dark);
+.northern-lights .task-div.expanded div:nth-child(6) label {
+   color: var(--t1-eggplant-dark);
 }
 
-.task-div.expanded div:nth-child(6) textarea {
-   background-color: var(--pale-pink);
-}
+/* .northern-lights .task-div.expanded div:nth-child(6) textarea {
+   background-color: var(--t1-pale-pink);
+} */
 
-.task-div.expanded .user-checklist-div {
+.northern-lights .task-div.expanded .user-checklist-div {
     /* Outer div */
-    background-color: var(--lavender);
+    background-color: var(--t1-lavender);
+    box-shadow: 2px 2px 4px 0px var(--t1-eggplant-dark)
 }
 
-.task-div legend {
-    color: var(--eggplant-dark);
+.northern-lights .task-div legend {
+    color: var(--t1-eggplant-dark);
 }
 
-.task-div li input[type="checkbox"] {
-    border: 1px solid var(--eggplant);
+.northern-lights .task-div li input[type="checkbox"] {
+    border: 1px solid var(--t1-eggplant);
+    box-shadow: none;
 }
 
-.task-div li {
+.northern-lights .task-div li {
     /* list items */
-    background-color: var(--pale-pink);
+    background-color: var(--t1-pale-pink);
+    box-shadow: 1px 1px 3px 0px var(--t1-eggplant-pale)
 }
 
-.task-div li.item-complete::before {
-    background-color: var(--lavender);
+.northern-lights .task-div li.item-complete::before {
+    background-color: var(--t1-lavender);
     opacity: 0.4;
 }
 
-.task-div li label {
-    color: var(--eggplant);
+.northern-lights .task-div li label {
+    color: var(--t1-eggplant);
 }
 
-#content .user-checklist-div li > button {
-    border: 1px solid var(--eggplant);
+.northern-lights #content .user-checklist-div li > button {
+    border: 1px solid var(--t1-eggplant);
+    background-color: var(--t1-lavender);
 }
 
-.user-checklist-div > button {
+.northern-lights .user-checklist-div > button {
     /* Outer div > add-button */
-    border: 1px solid var(--eggplant);
-    background-color: var(--eggplant-light);
-    color: var(--pale-pink);
+    /* border: 1px solid var(--t1-eggplant); */
+    box-shadow: 2px 2px 4px 0px black;
+    background-color: var(--t1-eggplant-light);
+    color: var(--t1-pale-pink);
 }
 
-.right-sidebar {
+.northern-lights .right-sidebar {
     background-color: black; 
 }
 
-.footer {
+.northern-lights .footer {
     background-color: black;
 }
 
-.footer-text {
-    color: var(--pale-pink);
+.northern-lights .footer-text {
+    color: var(--t1-pale-pink);
+}
+
+
+
+/*__________Theme 2 - Blue Wave__________*/
+
+body.blue-wave {
+
+    /* dark */
+    /* background-color: var(--t2-picton-blue-dark); */
+
+    /* light */
+    background-color: white;
+
+}
+
+.blue-wave input[type="text"] {
+    background-color: var(--t2-azure-web);
+    box-shadow: 1px 1px 3px 0px black;
+}
+
+.blue-wave select,
+.blue-wave input[type="date"] {
+    background-color: var(--t2-azure-web);
+}
+
+.blue-wave textarea {
+    background-color: var(--t2-azure-web);
+    box-shadow: 1px 1px 3px 0px black;
+}
+
+.blue-wave .title h1 {
+    color: black;
+}
+
+.blue-wave .title button {
+    background-color: var(--t2-non-photo-blue);
+    color: black;
+    box-shadow: 2px 2px 4px 0px black;
+}
+
+.blue-wave .date-display p {
+    color: black;
+}
+
+.blue-wave .left-sidebar {
+    /* dark */
+    /* background-color: var(--t2-picton-blue-dark) */
+
+    /* light */
+    background-color: white;
+}
+
+.blue-wave .left-sidebar nav:first-child,
+.blue-wave .left-sidebar nav:nth-child(2),
+.blue-wave .left-sidebar .themes {
+    /* static project nav section
+    and user created project section */
+    background-color: var(--t2-non-photo-blue);
+    color: black;
+    box-shadow: 2px 2px 4px 0px var(--t2-picton-blue-dark)
+}
+
+.blue-wave .left-sidebar button {
+    background-color: var(--t2-azure-web);
+    color: black;
+    box-shadow: 1px 1px 3px 0px black;
+}
+
+.blue-wave .left-sidebar button.active {
+    background-color: var(--t2-picton-blue-dark);
+    color: var(--t2-azure-web);
+    box-shadow: 2px 2px 4px 0px black;
+}
+
+.blue-wave dialog {
+    background-color: var(--t2-non-photo-blue); 
+}
+
+.blue-wave dialog input[type="text"],
+.blue-wave dialog input[type="date"],
+.blue-wave dialog select,
+.blue-wave dialog textarea {
+    box-shadow: 1px 1px 3px 0px black;
+}
+
+.blue-wave input[type="text"]:focus,
+.blue-wave input[type="date"]:focus,
+.blue-wave textarea:focus,
+.blue-wave select:focus {
+    box-shadow: 2px 2px 4px 0px black;
+}
+
+.blue-wave dialog::backdrop {
+    background-color: black;
+    opacity: 0.5;
+}
+
+.blue-wave dialog button {
+    background-color: var(--t2-picton-blue-dark);
+    color: var(--t2-azure-web);
+}
+
+.blue-wave #delete-warning .wrapper-div {
+    background-color: var(--t2-azure-web);
+    box-shadow: 1px 1px 3px 0px var(--t2-picton-blue)
+}
+
+.blue-wave #delete-warning input[type="radio"] {
+    border: 2px solid var(--t2-picton-blue);
+}
+
+.blue-wave #delete-warning input[type="radio"]::before {
+    background-color: var(--t2-picton-blue-dark);
+}
+
+.blue-wave #content-wrapper{
+    background-color: white;
+    border-radius: 15px;
+}
+
+.blue-wave #content-wrapper::before {
+    background-image: url('../img/blue-wave.png');
+    background-size: 104% 100%;
+    background-repeat: no-repeat;
+    opacity: 0.5;
+    border-radius: 15px;
+}
+
+.blue-wave .complete-view.active,
+.blue-wave .tasks-done.active,
+.blue-wave .project-empty.active {
+    background-color: white;
+    border: 10px solid var(--t2-non-photo-blue-pale);
+    color: black;
+}
+
+.blue-wave .task-div {
+    /* dark purple colour scheme */
+    /* background: linear-gradient(to bottom right, white, var(--t2-non-photo-blue)); */
+    background-color: white;
+    box-shadow: 3px 3px 6px 0px var(--t2-picton-blue-dark)
+}
+
+.blue-wave .task-div input[type="checkbox"] {
+    border: 0px solid var(--t2-picton-blue-dark);
+    color: var(--t2-picton-blue-dark);
+    background-color: var(--t2-azure-web);
+    box-shadow: 1px 1px 3px 0px var(--t2-picton-blue);
+}
+
+.blue-wave .task-div input[type="checkbox"]::before {
+    color: var(--t2-picton-blue-dark); 
+}
+
+.blue-wave .task-div h3 {
+    color: black;
+}
+
+.blue-wave .task-div label {
+    /* all individual details div labels */
+   color: var(--t2-picton-blue-dark)
+}
+
+.blue-wave .task-div .details select,
+.blue-wave .task-div .details input[type="date"] {
+    /* border: 3px solid var(--t2-picton-blue); */
+    background-color: var(--t2-azure-web);
+    box-shadow: 1px 1px 3px 0px var(--t2-non-photo-blue-dark);
+}
+
+.blue-wave .task-div.expanded div:nth-child(6) {
+    /* description div (expanded)*/
+   background-color: var(--t2-non-photo-blue-pale);
+   box-shadow: 1px 1px 3px 0px var(--t2-picton-blue-dark);
+}
+
+.blue-wave .task-div.expanded div:nth-child(6) label {
+   color: black;
+}
+
+.blue-wave .task-div.expanded div:nth-child(6) textarea {
+   background-color: white;
+   box-shadow: 1px 1px 3px 0px var(--t2-non-photo-blue-dark);
+}
+
+.blue-wave .task-div.expanded .user-checklist-div {
+    /* Outer div */
+    background-color: var(--t2-non-photo-blue-pale);
+    box-shadow: 1px 1px 3px 0px var(--t2-picton-blue-dark)
+}
+
+.blue-wave .task-div legend {
+    color: black;
+}
+
+.blue-wave .task-div li input[type="checkbox"] {
+    border: 1px solid var(--t2-picton-blue-dark);
+    box-shadow: none;
+    background-color: white;
+}
+
+.blue-wave .task-div li {
+    /* list items */
+    background-color: white;
+    box-shadow: 1px 1px 3px 0px var(--t2-non-photo-blue-dark);
+}
+
+.blue-wave .task-div li.item-complete::before {
+    background-color: var(--t2-non-photo-blue);
+    opacity: 0.2;
+}
+
+.blue-wave .task-div li label {
+    color: black;
+}
+
+.blue-wave .task-div li.item-complete label {
+    color: gray;
+}
+
+.blue-wave #content .user-checklist-div li > button {
+    border: 1px solid var(--t2-picton-blue-dark);
+    background-color: var(--t2-non-photo-blue);
+    color: black;
+}
+
+.blue-wave .user-checklist-div > button {
+    /* Outer div > add-button */
+    /* border: 1px solid black; */
+    background-color: var(--t2-picton-blue-dark);
+    color: var(--t2-azure-web);
+    box-shadow: 2px 2px 4px 0px black;
+}
+
+/* .blue-wave .right-sidebar {
+    background-color: var(--t2-picton-blue-dark);
+} */
+
+.blue-wave .footer-wrapper {
+    background-color: white;
+}
+
+.blue-wave .footer-text {
+    color: black;
 }
 
 /*__________theme-end__________*/
@@ -329,8 +608,16 @@ input[type="text"] {
     padding: 3px;
 }
 
+input[type="text"],
+textarea {
+    border: none;
+    border-radius: 6px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
 select,
 input[type="date"] {
+    border: 0px solid black;
     appearance: none;
     font-size: 0.9rem;
     border-radius: 5px;
@@ -347,8 +634,12 @@ input[type="date"] {
     padding: 1px 5px 0px 5px;
 }
 
+input[type="text"]:focus,
+input[type="date"]:focus,
+textarea:focus,
 select:focus {
     outline: none;
+    /* box-shadow: 2px 2px 4px 0px black */
 }
 
 /* need to create a container around select elements */
@@ -375,6 +666,16 @@ button {
     padding: 1px 5px;
     border-radius: 6px;
     cursor: pointer;
+    border: none;
+    transition: 0.5s ease;
+}
+
+button:hover {
+    -webkit-transform: scale(1.07);
+    -ms-transform: scale(1.07);
+    transform: scale(1.07);
+    transition: 0.2s ease;
+    cursor: pointer;
 }
 
 
@@ -384,16 +685,14 @@ button {
      /* row-start / column-start / row-end / column-end */
     grid-area: 1 / 1 / 2 / 4;
      display: grid;
-     grid-template-columns: 350px 1fr 250px;
+     grid-template-columns: 350px 1fr 175px;
 }
 
-.logo {
+/* .logo {
     display: flex;
     align-items: center;
     margin: 15px 15px;
-    /* justify-content: center; */
-    /* background-color: black; */
-}
+} */
 
 .logo img {
     width: 60px;
@@ -401,7 +700,7 @@ button {
 }
 
 .title {
-    grid-area: 1 / 2 / 2 / 3;
+    grid-area: 1 / 1 / 2 / 2;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -413,8 +712,22 @@ button {
     font-weight: 700; 
 }
 
-.title button {
+.project-view {
+    grid-area: 1 / 2 / 2 / 3;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0px 10%;
+}
+
+.project-view h2 {
+    font-size: 2rem;
+    font-weight: 700; 
+}
+
+.project-view button {
     /* add task button */
+    border: none;
     font-size: 1.2rem;
     padding: 6px 18px 4px 18px;
     border-radius: 6px;
@@ -422,7 +735,7 @@ button {
     margin-left: auto;
 }
 
-.title button span {
+.project-view button span {
     margin-right: 12px;
 }
 
@@ -444,13 +757,13 @@ button {
 .left-sidebar {
     grid-area: 2 / 1 / 4 / 2;
     display: grid;
-    grid-template-rows: 300px fit-content(200px) 120px 1fr;
-    padding: 0px 40px;
-    gap: 20px;
+    grid-template-rows: 250px fit-content(200px) fit-content(120px) 1fr;
+    padding: 0px 30px;
+    gap: 40px;
 }
 
 .left-sidebar button {
-    padding: 4px 15px 2px 15px;
+    padding: 3px 15px 3px 15px;
 }
 
 .left-sidebar nav:first-child,
@@ -459,14 +772,15 @@ button {
     /* static project nav section
     and user created project section */
     display: flex;
+    
     flex-direction: column;
-    margin: 20px 0px;
     padding: 10px;
     border-radius: 10px;
 }
 
 .left-sidebar nav:first-child {
     /* static project nav section */
+    margin-top: 20px;
     justify-content: space-evenly;
 }
 
@@ -474,13 +788,13 @@ button {
     /* my projects header */
     display: flex;
     justify-content: space-between;
-    margin-bottom: 40px;
+    margin-bottom: 30px;
 }
 
 .my-projects h2 {
     font-size: 1.3rem;
     font-weight: 700;
-    /* color: var(--pale-pink); */
+    /* color: var(--t1-pale-pink); */
     margin-top: 20px;
 }
 
@@ -501,7 +815,7 @@ button {
     
     align-items: center;
     width: 100%;
-    height: 25px;
+    height: 22px;
 }
 
 .user-created-projects .delete-project-btn {
@@ -511,12 +825,10 @@ button {
     padding: 3px 3px;
     display: flex;
     justify-content: center;
-    /* background-color: var(--eggplant-dark);
-    border: none; */
 }
 
 .themes h3 {
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     font-size: 1.1rem;
     font-weight: bold;
 }
@@ -526,9 +838,9 @@ button {
     justify-content: space-evenly;
 }
 
-/* .themes button {
-
-} */
+.themes button {
+    margin-bottom: 3px;
+}
 
 
 /*__________Modals (All)__________*/
@@ -589,7 +901,7 @@ dialog label {
 } 
 
 .save-div button {
-    padding: 3px 12px 2px 12px;
+    padding: 5px 14px;
     font-size: 1.1rem;
 }
 
@@ -710,7 +1022,7 @@ dialog label {
     /* grid-template-rows: 30px 1fr 40px; */
     grid-template-columns: 1fr 200px;
     row-gap: 18px;
-    color: var(--eerie-black);
+    color: var(--t1-eerie-black);
 }
 
 #delete-warning .modal-title {
@@ -825,13 +1137,13 @@ dialog label {
 
 #content-wrapper {
     position: relative;
-    grid-area: 2 / 2 / 3 / 3;
+    grid-area: 2 / 2 / 4 / 4;
 }
 
 #content-wrapper::before {
     content: "";
     background-size: cover;
-    background-repeat: repeat-y;
+    background-repeat: no-repeat;
     position: absolute;
     top: 0px;
     right: 0px;
@@ -869,7 +1181,7 @@ dialog label {
     flex-direction: column;
     align-items: center;
     padding: 20px 10%;
-
+    margin-bottom: 25px;
 }
 
 .task-div {
@@ -918,7 +1230,7 @@ dialog label {
     display: flex;
     align-items: center;
     padding-left: 20px;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-weight: 700;
     cursor: pointer;
 }
@@ -964,9 +1276,10 @@ dialog label {
 
 .task-div label {
     /* all individual details div labels */
-   font-size: 1rem;
+   font-size: 0.9rem;
    font-weight: 700;
    margin-left: 9px;
+   margin-bottom: 5px;
 }
 
 .task-div .details > div:nth-child(2) label {
@@ -975,6 +1288,7 @@ dialog label {
 
 .task-div .details select,
 .task-div .details input[type="date"] {
+    -webkit-appearance: none;
     appearance: none;
     font-size: 0.9rem;
     border-radius: 6px;
@@ -987,9 +1301,9 @@ dialog label {
    width: 100%;
 }
 
-.task-div .details select:focus {
+/* .task-div .details select:focus {
     outline: none;
-}
+} */
 
 .task-div .details div:nth-child(1),
 .task-div .details div:nth-child(3) {
@@ -1027,6 +1341,7 @@ dialog label {
 
 .task-div.expanded div:nth-child(6) label {
     margin-left: 12px;
+    margin-bottom: 4px;
 }
 
 .task-div.expanded div:nth-child(6) textarea {
@@ -1069,6 +1384,9 @@ dialog label {
 .user-checklist-div ul {
     width: 90%;
     align-self: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }
 
 .task-div li input[type="checkbox"] {
@@ -1104,7 +1422,7 @@ dialog label {
 }
 
 .task-div li.item-complete {
-    /* background-color: var(--light-gray); */
+    /* background-color: var(--t1-light-gray); */
     text-decoration: line-through;
     position: relative;
 }
@@ -1157,12 +1475,22 @@ dialog label {
 .footer {
     grid-area: 3 / 3 / 4 / 4;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    padding-top: 30px;
+} 
+
+.footer-wrapper {
+    display: flex;
+    justify-content: flex-end; 
     align-items: center;
+    position: relative;
+    border-radius: 100% 0% 0% 0%;
+    padding: 10px 10px 10px 40px;
 }
 
 .footer-text {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
+    margin-top: 10px;
 }
 
 .footer-icon > a {
@@ -1188,8 +1516,8 @@ dialog label {
 
     body {
         display: grid;
-        grid-template-rows: 100px minmax(calc(100vh - 240px), 1fr) 50px;
-        grid-template-columns: 250px 1fr;
+        grid-template-rows: 100px minmax(calc(100vh - 180px), 1fr) 80px;
+        grid-template-columns: 250px 1fr 250px;
         min-width: 1050px;
     }
 
@@ -1199,7 +1527,11 @@ dialog label {
     }
 
     .title {
-        grid-area: 1 / 2 / 2 / 4;
+        grid-area: 1 / 1 / 2 / 2;
+    }
+
+    .project-view {
+        grid-area: 1 / 2 / 2 / 3;
     }
     
     .date-display {
@@ -1211,7 +1543,7 @@ dialog label {
     }
 
     #content-wrapper {
-        grid-area: 2 / 2 / 3 / 4;
+        grid-area: 2 / 2 / 4 / 4;
     }
 
     .right-sidebar {
