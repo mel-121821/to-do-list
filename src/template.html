@@ -104,15 +104,17 @@
     <div class="header">
         <div class="title">
             <div class="logo">
-                <img src="../icon/double-check.svg" alt="home icon">
+                <img class="icon" src="../icon/double-check.svg" alt="home icon">
             </div>
             <h1>To-do List</h1>
         </div>
         <div class="project-header">
-            <h2></h2>
-            <button>
-                <span>+</span>Add Task
-            </button>
+            <div>
+                <h2></h2>
+                <button>
+                    <span>+</span>Add Task
+                </button>
+            </div>
         </div>
         <div class="date-display">
             <div>
@@ -160,20 +162,23 @@
             </div>
         </div>
    </div>
-   <div id="content-wrapper">
-        <div class="notices">
-            <div class="complete-view">
-                <p>Note: Completed tasks 30 days past the due date will be auto-deleted</p>
+   <div id="bg-img-wrapper">
+        <div class="bg-img"></div>
+        <div id="content-wrapper">
+            <div class="notices">
+                <div class="complete-view">
+                    <p>Note: Completed tasks 30 days past the due date will be auto-deleted</p>
+                </div>
+                <div class="tasks-done">
+                    <p>Congratulations! You're all caught up for today.</p>
+                </div>
+                <div class="project-empty">
+                    <p>Oops! It looks like this list is empty. Click the Add Task button to add a task to this project.</p>
+                </div>
             </div>
-            <div class="tasks-done">
-                <p>Congratulations! You're all caught up for today.</p>
+            <div id="content">
+                <!-- JS generated -->
             </div>
-            <div class="project-empty">
-                <p>Oops! It looks like this list is empty. Click the Add Task button to add a task to this project.</p>
-            </div>
-        </div>
-        <div id="content">
-            <!-- JS generated -->
         </div>
     </div>
     <div class="footer">
@@ -183,7 +188,7 @@
             </div>
             <div class="footer-icon">
                 <a href="https://github.com/mel-121821/to-do-list/" target="_blank">
-                    <img class="svg" src="../icon/github.svg" alt="Github icon"/>
+                    <img class="svg icon" src="../icon/github.svg" alt="Github icon"/>
                 </a>
             </div>
         </div>
