@@ -30,7 +30,7 @@ const domManipulator = (function() {
 
     // cacheDOM
     const dateDisplay = document.querySelector(".date-display > div > p")
-    const projectHeader = document.querySelector(".project-header > h2")
+    const projectHeader = document.querySelector(".project-header > div > h2")
     const content = document.querySelector("#content")
     
 
@@ -123,6 +123,7 @@ const domManipulator = (function() {
         editIcon.src = edit;
         editBtn.appendChild(editIcon);
         editBtn.classList.add("edit-btn")
+        editIcon.classList.add("icon")
         editBtn.addEventListener("click", toDoManager.expandTask)
         return editBtn
     }
@@ -133,6 +134,7 @@ const domManipulator = (function() {
         deleteIcon.src = trashBin;
         deleteBtn.appendChild(deleteIcon)
         deleteBtn.classList.add("delete-btn");
+        deleteIcon.classList.add("icon")
         deleteBtn.addEventListener("click", toDoManager.deleteTask)
         return deleteBtn
     }
@@ -300,14 +302,14 @@ const domManipulator = (function() {
             checklistUl.innerHTML = ""
             const checklist = task.userChecklist;
             for (const [key, value] of Object.entries(checklist)) {
-                const userItemDiv = document.createElement("li");
+                const checklistItemDiv = document.createElement("li");
 
                 // append items
-                userItemDiv.appendChild((renderChecklistCheckbox(key, index)))
-                userItemDiv.appendChild((renderChecklistItemLabel(key, index)));
-                userItemDiv.appendChild((renderBtn_DeleteChecklistItem()))
-                checklistUl.appendChild(userItemDiv);
-                applyChecklistStyles(value, userItemDiv)
+                checklistItemDiv.appendChild((renderChecklistCheckbox(key, index)))
+                checklistItemDiv.appendChild((renderChecklistItemLabel(key, index)));
+                checklistItemDiv.appendChild((renderBtn_DeleteChecklistItem()))
+                checklistUl.appendChild(checklistItemDiv);
+                applyChecklistStyles(value, checklistItemDiv)
             }
         })
     }
@@ -336,15 +338,15 @@ const domManipulator = (function() {
         return deleteBtn;
     }
 
-    function applyChecklistStyles(value, userItemDiv) {
-        const itemCheckbox = userItemDiv.firstChild
+    function applyChecklistStyles(value, checklistItemDiv) {
+        const itemCheckbox = checklistItemDiv.firstChild
         if (value === true) {
             itemCheckbox.checked = true;
-            userItemDiv.classList.add("item-complete")
+            checklistItemDiv.classList.add("item-complete")
         } else {
             itemCheckbox.checked = false;
-            if (userItemDiv.classList.contains("item-complete")) {
-                userItemDiv.classList.remove("item-complete")
+            if (checklistItemDiv.classList.contains("item-complete")) {
+                checklistItemDiv.classList.remove("item-complete")
             } else {
                 // do nothing
             }
@@ -364,7 +366,7 @@ const domManipulator = (function() {
     function clearProjectDisplays() {
         clearProjectHeader()
         hideNotices()
-        inactivateNavBtns()
+        deactivateNavBtns()
         removeDisplayOffClass()
         removeSubs()
     }
@@ -378,7 +380,7 @@ const domManipulator = (function() {
         } 
     }
 
-    function inactivateNavBtns() {
+    function deactivateNavBtns() {
         console.log("removing classes")
         const allNavBtns = document.querySelectorAll(".menu button, button.menu")
         for (const button of allNavBtns) {
@@ -438,7 +440,7 @@ const domManipulator = (function() {
             }
         }
         if (count === toDoManager.getMasterTaskList().length) {
-            console.log(`# of tasks displayed = ${count}, # of tasks total = ${toDoManager.getMasterTaskList().length}`)
+            // console.log(`# of tasks displayed = ${count}, # of tasks total = ${toDoManager.getMasterTaskList().length}`)
             result = true
         }
         return result
@@ -595,15 +597,15 @@ const domManipulator = (function() {
                 const projectListItem = document.createElement("li")
                 projectListItem.dataset.index = index
 
-                projectListItem.appendChild((renderProjectBtn(project)))
-                projectListItem.appendChild((renderProjectDeleteBtn()))
+                projectListItem.appendChild((renderBtn_ProjectX(project)))
+                projectListItem.appendChild((renderBtn_DeleteProject()))
 
                 nav_ProjectsList.appendChild(projectListItem)
                 }
         })
     }
 
-    function renderProjectBtn(project) {
+    function renderBtn_ProjectX(project) {
         const projectBtn = document.createElement("button")
         projectBtn.classList.add("menu");
         projectBtn.textContent = project.name 
@@ -623,24 +625,25 @@ const domManipulator = (function() {
         return projectBtn;
     }
 
-    function renderProjectDeleteBtn() {
+    function renderBtn_DeleteProject() {
         const deleteProjectBtn = document.createElement("button")
         const deleteIcon = document.createElement('img')
         deleteIcon.src = trashBin;
         deleteProjectBtn.appendChild(deleteIcon)
         deleteProjectBtn.classList.add("delete-project-btn");
+        deleteIcon.classList.add("icon");
 
         //event listener
         deleteProjectBtn.addEventListener("click", (e) => {
             const projectIndex = e.target.parentNode.dataset.index
             console.log(projectIndex);
-            displayModals.showProjectDeleteModal(projectIndex);
+            displayModals.showModal_DeleteProject(projectIndex);
         });
         return deleteProjectBtn;
     }
 
     function displayNotice_ProjectEmpty(){
-        hideNotices()
+        // hideNotices()
        if (checkTaskDisplay_IsEmpty() === true) {
             notices_ProjectEmpty.classList.add("active")
        }
@@ -712,8 +715,8 @@ const domManipulator = (function() {
 const displayModals = (function() {
 
     // main page DOM elements
-    const addTaskBtn = document.querySelector(".project-header > button")
-    const addProjectBtn = document.querySelector("button.add-project-btn")
+    const addTaskBtn = document.querySelector(".project-header > div > button")
+    const nav_AddProjectBtn = document.querySelector("button.add-project-btn")
     const body = document.querySelector("body")
     
 
@@ -818,8 +821,6 @@ const displayModals = (function() {
     }
 
     function removeChecklistItemInputs(){
-        // if div container contains inputs
-            // remove html input elements
         taskModal_ChecklistDiv.innerHTML = "";
     }
 
@@ -836,7 +837,7 @@ const displayModals = (function() {
 
 
     // add project modal event listeners
-    addProjectBtn.addEventListener("click", function() {
+    nav_AddProjectBtn.addEventListener("click", function() {
         projectModal.showModal()
     })
 
@@ -851,8 +852,8 @@ const displayModals = (function() {
     projectDeleteModal_Confirm.addEventListener("click", (e)=> {
         e.preventDefault()
         const projectIndex = projectDeleteModal.className
-        const radioInputs = document.querySelector("input[name='delete-project']:checked").value;
-        if (radioInputs === "true") {
+        const radioInput = document.querySelector("input[name='delete-project']:checked").value;
+        if (radioInput === "true") {
             projectManager.deleteProject(projectIndex)
             closeModal(e);
         } else {
@@ -862,7 +863,7 @@ const displayModals = (function() {
 
 
     // delete project modal logic
-    function showProjectDeleteModal(projectIndex) {
+    function showModal_DeleteProject(projectIndex) {
         projectDeleteModal.classList = "";
         projectDeleteModal.showModal()
         projectDeleteModal.classList.add(`${projectIndex}`)
@@ -959,29 +960,16 @@ const displayModals = (function() {
     }
 
     return {
-        showProjectDeleteModal,
+        showModal_DeleteProject,
         createChecklistModal
     }
 })()
 
 const displayTheme = (function(){
     const body = document.querySelector("body")
-    const allThemeBtns = document.querySelectorAll(".themes > div > button")
-    
-    // btn_Theme1.addEventListener("click", () => {
-    //     deactivateThemes()
-    //     const theme1 = toDoManager.getThemes()[0];
-    //     console.log(theme1)
-    //     theme1.active = true;
-    //     console.log(toDoManager.getThemes())
-    // })
+    const nav_ThemeBtns = document.querySelectorAll(".themes > div > button")
 
-   // when btn is clicked
-    // set theme.active to false for all
-    // set theme associated with btn as active
-    // update render 
-
-    allThemeBtns.forEach((btn, index) => {
+    nav_ThemeBtns.forEach((btn, index) => {
         btn.addEventListener("click", (e) => {
             toDoManager.setTheme(index)
             renderThemeStyles(e)
@@ -1005,7 +993,7 @@ const displayTheme = (function(){
     }
 
     function deactivateThemeBtns() {
-        allThemeBtns.forEach((btn) => {
+        nav_ThemeBtns.forEach((btn) => {
             if (btn.classList.contains("active")) {
                 btn.classList.remove("active")
             } else {
@@ -1014,19 +1002,19 @@ const displayTheme = (function(){
         })
     }
 
-    function setActiveBtn() {
+    function setThemeBtn_Active() {
         const allThemes = toDoManager.getThemes()
         allThemes.forEach((theme, index) => {
             console.log(index)
             if (theme.active === true) {
-                console.log(allThemeBtns[index])
-                allThemeBtns[index].classList.add("active")
+                console.log(nav_ThemeBtns[index])
+                nav_ThemeBtns[index].classList.add("active")
             }
         })
     }
 
     function setInitialRender() {
-        setActiveBtn()
+        setThemeBtn_Active()
         setBodyStyle()
     }
 
