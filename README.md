@@ -206,3 +206,9 @@ https://stackoverflow.com/questions/1168807/how-can-i-add-a-key-value-pair-to-a-
 
 How to remove a border from dropdowns.
 https://stackoverflow.com/questions/14639638/how-to-remove-border-of-drop-down-list-css
+
+Change an SVG color:
+https://stackoverflow.com/questions/22252472/how-can-i-change-the-color-of-an-svg-element/53336754#53336754
+
+Creating a sticky background
+https://stackoverflow.com/questions/66398033/how-to-fit-a-sticky-background-image-and-prevent-overflow-in-css/66543529#66543529
