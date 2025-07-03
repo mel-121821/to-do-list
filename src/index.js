@@ -30,35 +30,43 @@ const domManipulator = (function() {
 
     // cacheDOM
     const dateDisplay = document.querySelector(".date-display > div > p")
-    const displayInfo = document.querySelector(".notices")
-    const completeViewNote = document.querySelector(".complete-view")
-    const todayTasksCompleteNotice = document.querySelector(".tasks-done")
-    const projectEmptyNotice = document.querySelector(".project-empty")
+    const projectHeader = document.querySelector(".project-header > h2")
     const content = document.querySelector("#content")
-    const todayTasksBtn = document.querySelector(".today > button");
-    const thisWeekTasksBtn = document.querySelector(".this-week > button")
-    const completeBtn = document.querySelector(".complete > button")
-    const importantBtn = document.querySelector(".important > button")
-    const overdueBtn = document.querySelector(".overdue > button")
-    const allProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
-    const projectsList = document.querySelector(".user-created-projects > ol")
+    
+
+    // notices
+    const notices_Container = document.querySelector(".notices")
+    const notices_CompleteView = document.querySelector(".complete-view")
+    const notices_TodayTasksComplete = document.querySelector(".tasks-done")
+    const notices_ProjectEmpty = document.querySelector(".project-empty")
+
+    // nav
+    const nav_TodayTasksBtn = document.querySelector(".today > button");
+    const nav_ThisWeekTasksBtn = document.querySelector(".this-week > button")
+    const nav_completeBtn = document.querySelector(".complete > button")
+    const nav_ImportantBtn = document.querySelector(".important > button")
+    const nav_OverdueBtn = document.querySelector(".overdue > button")
+    const nav_AllProjectsBtn = document.querySelectorAll(".user-created-projects button")[0]
+    const nav_ProjectsList = document.querySelector(".user-created-projects > ol")
+
+
 
     // get data
     const allTasks = toDoManager.getMasterTaskList();
     const today = toDoManager.getDate()
     const allProjects = projectManager.getProjects();
 
-    // render
-
+    // render date
     dateDisplay.textContent = toDoManager.getFormattedDate()
 
+    // render tasks
     function renderTaskList (allTasks) {
         content.innerHTML = "";
         allTasks.forEach((task, index) => {
             // task div
             const taskDiv = document.createElement("div");
             taskDiv.classList.add("task-div");
-            checkExpandedStatus(taskDiv, task)
+            checkStatus_Expanded(taskDiv, task)
             taskDiv.dataset.index = index;
             
             // 2nd row (details section)
@@ -68,9 +76,9 @@ const domManipulator = (function() {
             // append first row
             // taskDiv.appendChild(taskCheckbox);
             taskDiv.appendChild((renderCheckbox(task)))
-            taskDiv.appendChild((renderTitle(task)));
-            taskDiv.appendChild((renderEditBtn()));
-            taskDiv.appendChild((renderDeleteBtn()));
+            taskDiv.appendChild((renderTaskTitle(task)));
+            taskDiv.appendChild((renderBtn_EditTask()));
+            taskDiv.appendChild((renderBtn_DeleteTask()));
 
             // append details row in own div
             taskDetails.appendChild((renderProjectDropdown(task)));
@@ -80,14 +88,14 @@ const domManipulator = (function() {
 
             // append description and checklist
             taskDiv.appendChild((renderDescription(task)))
-            taskDiv.appendChild((createChecklistDiv()));
+            taskDiv.appendChild((renderChecklistDiv()));
 
             // append to page
             content.appendChild(taskDiv);
         })  
     }  
 
-    function checkExpandedStatus(taskDiv, task) {
+    function checkStatus_Expanded(taskDiv, task) {
         if (task.isExpanded === true) {
             taskDiv.classList.add("expanded")
         }
@@ -102,29 +110,29 @@ const domManipulator = (function() {
         return checkbox;
     }
 
-    function renderTitle(task) {
+    function renderTaskTitle(task) {
         const taskTitle = document.createElement("h3");
         taskTitle.textContent = `${task.title}`
         taskTitle.addEventListener("click", toDoManager.expandTask)
         return taskTitle
     }
 
-    function renderEditBtn() {
+    function renderBtn_EditTask() {
         const editBtn = document.createElement("button");
         const editIcon = document.createElement('img')
         editIcon.src = edit;
         editBtn.appendChild(editIcon);
-        editBtn.classList.add("exp-col-btn")
+        editBtn.classList.add("edit-btn")
         editBtn.addEventListener("click", toDoManager.expandTask)
         return editBtn
     }
 
-    function renderDeleteBtn() {
+    function renderBtn_DeleteTask() {
         const deleteBtn = document.createElement("button");
         const deleteIcon = document.createElement('img')
         deleteIcon.src = trashBin;
         deleteBtn.appendChild(deleteIcon)
-        deleteBtn.classList.add("delete-task-btn");
+        deleteBtn.classList.add("delete-btn");
         deleteBtn.addEventListener("click", toDoManager.deleteTask)
         return deleteBtn
     }
@@ -135,7 +143,7 @@ const domManipulator = (function() {
 
         // label
         const projectLabel = document.createElement("label");
-        projectLabel.innerHTML = "Project:";
+        projectLabel.innerHTML = "PROJECT:";
        
         // dropdown wrapper
         const dropdownWrapper = document.createElement("div");
@@ -167,31 +175,18 @@ const domManipulator = (function() {
         return projectDiv;
     }
 
-    // function refreshProjectDropdown(allTasks) {
-    //     allTasks.forEach((task, index) => {
-    //         const projectInput = document.querySelectorAll(".task-project")[index];
-    //         for (const option of projectInput) {
-    //             if (option.value === task.project) {
-    //                 option.selected = true;
-    //             } else {
-    //                 // do nothing
-    //             }
-    //         }
-    //     })
-    // }
-
     function renderDatePicker(task) {
         // outer div
         const dateDiv = document.createElement("div")
 
         // label
         const dateLabel = document.createElement("label")
-        dateLabel.innerHTML = "Due date:"
+        dateLabel.innerHTML = "DUE DATE:"
 
         // date picker
         const datePicker = document.createElement("input")
         datePicker.setAttribute("type", "date");
-        datePicker.classList.add("task-duedate")
+        // datePicker.classList.add("task-duedate")
         datePicker.defaultValue = task.dueDate;
 
         // event listener
@@ -205,21 +200,13 @@ const domManipulator = (function() {
         return dateDiv;
     }
 
-
-    // function refreshDatePicker(allTasks) {
-    //     allTasks.forEach((task, index) => {
-    //         const dateInput = document.querySelectorAll(".task-duedate")[index];
-    //         dateInput.defaultValue = task.dueDate;
-    //     })
-    // }
-
     function renderPriorityDropdown (task) {
         // outer div
         const priorityDiv = document.createElement("div");
 
         // label
         const priorityLabel = document.createElement("label");
-        priorityLabel.innerHTML = "Priority:"
+        priorityLabel.innerHTML = "PRIORITY:"
         
         // priority wrapper
         const dropdownWrapper = document.createElement("div");
@@ -252,32 +239,13 @@ const domManipulator = (function() {
         return priorityDiv;
     }
 
-    // function refreshPrioritytDropdown(allTasks) {
-    //     allTasks.forEach((task, index) => {
-    //         const priorityInput = document.querySelectorAll(".task-priority")[index];
-    //         for (const option of priorityInput) {
-    //             if (option.value === task.priority) {
-    //                 option.selected = true;
-    //             } else {
-    //                 // do nothing
-    //             }
-    //         }
-    //     })
-    // }
-
-    // function refreshDetails(allTasks) {
-    //     refreshProjectDropdown(allTasks);
-    //     refreshDatePicker(allTasks);
-    //     refreshPrioritytDropdown(allTasks);
-    // }
-
     function renderDescription(task) {
         // create outer div
         const descriptionDiv = document.createElement("div");
 
         // create label
         const descriptionLabel = document.createElement("label")
-        descriptionLabel.innerHTML = "Description"
+        descriptionLabel.innerHTML = "DESCRIPTION:"
 
         // create textarea
         const description = document.createElement("textarea")
@@ -297,21 +265,13 @@ const domManipulator = (function() {
         return descriptionDiv;
     }
 
-    // function refreshDescription(allTasks) {
-    //     allTasks.forEach((task, index) => {
-    //         const descriptionInput = document.querySelectorAll(".description")[index];
-    //         descriptionInput.innerHTML = ""
-    //         descriptionInput.innerHTML = task.description;
-    //     })
-    // }
-
-    function createChecklistDiv (task) {
+    function renderChecklistDiv (task) {
         const checklistDiv = document.createElement("div");
         checklistDiv.classList.add("user-checklist-div");
 
         // create legend
         const legend = document.createElement("legend");
-        legend.textContent = "Your checklist items";    
+        legend.textContent = "YOUR CHECKLIST ITEMS:";    
         
         // create checklist items section
         const checklistUl = document.createElement("ul")
@@ -319,11 +279,11 @@ const domManipulator = (function() {
         // append items to checklist div
         checklistDiv.appendChild(legend);
         checklistDiv.appendChild(checklistUl);
-        checklistDiv.append((renderAddChecklistItemBtn()));
+        checklistDiv.append((renderBtn_AddChecklistItem()));
         return checklistDiv;
     } 
 
-    function renderAddChecklistItemBtn() {
+    function renderBtn_AddChecklistItem() {
         const addBtn = document.createElement("button");
         addBtn.textContent = "Add checklist item"
         addBtn.addEventListener("click", (e) => {
@@ -344,8 +304,8 @@ const domManipulator = (function() {
 
                 // append items
                 userItemDiv.appendChild((renderChecklistCheckbox(key, index)))
-                userItemDiv.appendChild((renderCheckboxLabel(key, index)));
-                userItemDiv.appendChild((renderChecklistDeleteBtn()))
+                userItemDiv.appendChild((renderChecklistItemLabel(key, index)));
+                userItemDiv.appendChild((renderBtn_DeleteChecklistItem()))
                 checklistUl.appendChild(userItemDiv);
                 applyChecklistStyles(value, userItemDiv)
             }
@@ -362,17 +322,17 @@ const domManipulator = (function() {
         return itemCheckbox
     }
 
-    function renderCheckboxLabel(key, index) {
+    function renderChecklistItemLabel(key, index) {
         const label = document.createElement("label");
         label.setAttribute("for", `task${index}-${key}`)
         label.innerHTML = `${key}`;
         return label
     }
 
-    function renderChecklistDeleteBtn() {
+    function renderBtn_DeleteChecklistItem() {
         const deleteBtn = document.createElement("button");
         deleteBtn.textContent = "-"
-        deleteBtn.addEventListener("click", toDoManager.deleteUserChecklistItem);
+        deleteBtn.addEventListener("click", toDoManager.deleteChecklistItem);
         return deleteBtn;
     }
 
@@ -398,18 +358,19 @@ const domManipulator = (function() {
     }
 
 
-    // Project elements and event listeners (left sidebar)
+    // Project elements and event listeners (nav)
     
     // refresh display fn()s
-    function refreshProjectDisplay() {
+    function clearProjectDisplays() {
+        clearProjectHeader()
         hideNotices()
-        removeActiveClass()
+        inactivateNavBtns()
         removeDisplayOffClass()
         removeSubs()
     }
 
     function hideNotices() {
-        const notices = displayInfo.children
+        const notices = notices_Container.children
         for (const notice of notices) {
             if (notice.classList.contains("active")) {
                 notice.classList.remove("active")
@@ -417,7 +378,7 @@ const domManipulator = (function() {
         } 
     }
 
-    function removeActiveClass() {
+    function inactivateNavBtns() {
         console.log("removing classes")
         const allNavBtns = document.querySelectorAll(".menu button, button.menu")
         for (const button of allNavBtns) {
@@ -448,25 +409,26 @@ const domManipulator = (function() {
 
 
     // event listener fn()s
-    todayTasksBtn.addEventListener("click", function(e) {
-        refreshProjectDisplay()
+    nav_TodayTasksBtn.addEventListener("click", function(e) {
+        clearProjectDisplays()
         this.classList.add("active")
-        displayTodayTasks()
-        displayTodayCompleteNotice()
-        pubSub.on("tasksRendered", displayTodayTasks)
-        pubSub.on("tasksRendered", displayTodayCompleteNotice)
+        displayTasks_Today()
+        displayNotice_TodayTasksComplete()
+        displayProjectHeader(this)
+        pubSub.on("tasksRendered", displayTasks_Today)
+        pubSub.on("tasksRendered", displayNotice_TodayTasksComplete)
         console.log(pubSub.events)
         console.log("today pubsub turned on")
     })
 
-    function displayTodayCompleteNotice(){
-        hideNotices()
-       if (checkIfDisplayIsEmpty() === true) {
-        todayTasksCompleteNotice.classList.add("active")
+    function displayNotice_TodayTasksComplete(){
+        // hideNotices()
+       if (checkTaskDisplay_IsEmpty() === true) {
+        notices_TodayTasksComplete.classList.add("active")
        }
     }
 
-    function checkIfDisplayIsEmpty() {
+    function checkTaskDisplay_IsEmpty() {
         const allTaskDivs = content.children
         let count = 0;
         let result = false
@@ -482,53 +444,58 @@ const domManipulator = (function() {
         return result
     }
 
-    thisWeekTasksBtn.addEventListener("click", function() {
-        refreshProjectDisplay()
+    nav_ThisWeekTasksBtn.addEventListener("click", function() {
+        clearProjectDisplays()
         this.classList.add("active")
-        displayThisWeekTasks()
-        pubSub.on("tasksRendered", displayThisWeekTasks)
+        displayTasks_ThisWeek()
+        displayProjectHeader(this)
+        pubSub.on("tasksRendered", displayTasks_ThisWeek)
         console.log("this week pubsub turned on")
     })
    
-    completeBtn.addEventListener("click", function () {
-        refreshProjectDisplay()
-        completeViewNote.classList.add("active")
+    nav_completeBtn.addEventListener("click", function () {
+        clearProjectDisplays()
+        notices_CompleteView.classList.add("active")
         this.classList.add("active")
-        displayCompletedTasks()
-        pubSub.on("tasksRendered", displayCompletedTasks)
+        displayTasks_Complete()
+        displayProjectHeader(this)
+        pubSub.on("tasksRendered", displayTasks_Complete)
         console.log("complete pubsub turned on")
     })
 
     
-    importantBtn.addEventListener("click", function () {
-        refreshProjectDisplay()
+    nav_ImportantBtn.addEventListener("click", function () {
+        clearProjectDisplays()
         this.classList.add("active")
-        displayImportantTasks()
-        pubSub.on("tasksRendered", displayImportantTasks)
+        displayTasks_Important()
+        displayProjectHeader(this)
+        pubSub.on("tasksRendered", displayTasks_Important)
         console.log("high priority pubsub turned on")
     })
 
     
-    overdueBtn.addEventListener("click", function () {
-        refreshProjectDisplay()
+    nav_OverdueBtn.addEventListener("click", function () {
+        clearProjectDisplays()
         this.classList.add("active")
-        displayOverdueTasks()
-        pubSub.on("tasksRendered", displayOverdueTasks)
+        displayTasks_Overdue()
+        displayProjectHeader(this)
+        pubSub.on("tasksRendered", displayTasks_Overdue)
         console.log("overdue pubsub turned on")
     })
 
     
-    allProjectsBtn.addEventListener("click", function() {
-        refreshProjectDisplay()
+    nav_AllProjectsBtn.addEventListener("click", function() {
+        clearProjectDisplays()
         this.classList.add("active")
-        displayAllProjects()
-        pubSub.on("tasksRendered", displayAllProjects)
+        displayTasks_AllProjects()
+        displayProjectHeader(this)
+        pubSub.on("tasksRendered", displayTasks_AllProjects)
         console.log("all projects pubsub turned on")
     })
 
 
     // display logic
-    function displayAllProjects() {
+    function displayTasks_AllProjects() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
             if (div.childNodes[0].checked === true) {
@@ -544,15 +511,16 @@ const domManipulator = (function() {
     }
     
     function setFirstRenderDefault(){
-        refreshProjectDisplay()
-        allProjectsBtn.classList.add("active")
-        displayAllProjects()
-        pubSub.on("tasksRendered", displayAllProjects)
+        clearProjectDisplays()
+        nav_AllProjectsBtn.classList.add("active")
+        displayTasks_AllProjects()
+        displayProjectHeader(nav_AllProjectsBtn)
+        pubSub.on("tasksRendered", displayTasks_AllProjects)
         console.log("all projects pubsub turned on")
     }
 
     // Event listener fn()s
-    function displayTodayTasks() {
+    function displayTasks_Today() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
             const dueDate = content.childNodes[div.dataset.index].childNodes[4].childNodes[1].childNodes[1].value
@@ -566,7 +534,7 @@ const domManipulator = (function() {
         // console.log(`Date: ${today}`)
     }
 
-    function displayThisWeekTasks() {
+    function displayTasks_ThisWeek() {
         const allTaskDivs = content.children
         const nextWeek = toDoManager.getDateInSevenDays()
         for (const div of allTaskDivs) {
@@ -581,7 +549,7 @@ const domManipulator = (function() {
         // console.log(`Date range: ${today} to ${nextWeek}`);
     }
 
-    function displayCompletedTasks() {
+    function displayTasks_Complete() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
             if (div.childNodes[0].checked === true){
@@ -593,7 +561,7 @@ const domManipulator = (function() {
         console.log("User clicks completedTasks")
     }
 
-    function displayImportantTasks() {
+    function displayTasks_Important() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
             if (div.children.item(4).children.item(2).lastChild.firstChild.value === "high" && div.childNodes[0].checked === false) {
@@ -605,7 +573,7 @@ const domManipulator = (function() {
         console.log("User clicks importantTasks")
     }
 
-    function displayOverdueTasks() {
+    function displayTasks_Overdue() {
         const allTaskDivs = content.children
         for (const div of allTaskDivs) {
             const dueDate = div.childNodes[4].childNodes[1].childNodes[1].value
@@ -618,8 +586,8 @@ const domManipulator = (function() {
         console.log("User clicks overdueTasks")
     }
 
-    function renderMyProjectsList() {
-        refreshProjectsList();
+    function renderNav_MyProjects() {
+        clearProjectList();
         projectManager.getProjects().forEach((project, index) => {
             if (index === 0) {
                 // index 0 = All projects btn, skip this and do nothing
@@ -630,7 +598,7 @@ const domManipulator = (function() {
                 projectListItem.appendChild((renderProjectBtn(project)))
                 projectListItem.appendChild((renderProjectDeleteBtn()))
 
-                projectsList.appendChild(projectListItem)
+                nav_ProjectsList.appendChild(projectListItem)
                 }
         })
     }
@@ -642,13 +610,14 @@ const domManipulator = (function() {
 
         // event listener
         projectBtn.addEventListener("click", function() {
-            refreshProjectDisplay()
+            clearProjectDisplays()
             this.classList.add("active")
             console.log(`${this.textContent} button is currently active`)
-            displaySelectedProject()
-            displayProjectEmptyNotice()
-            pubSub.on("tasksRendered", displaySelectedProject)
-            pubSub.on("tasksRendered", displayProjectEmptyNotice)
+            displayTasks_ProjectX()
+            displayNotice_ProjectEmpty()
+            displayProjectHeader(this)
+            pubSub.on("tasksRendered", displayTasks_ProjectX)
+            pubSub.on("tasksRendered", displayNotice_ProjectEmpty)
             console.log(`${project.name} pubsub turned on`)
         })
         return projectBtn;
@@ -670,14 +639,14 @@ const domManipulator = (function() {
         return deleteProjectBtn;
     }
 
-    function displayProjectEmptyNotice(){
+    function displayNotice_ProjectEmpty(){
         hideNotices()
-       if (checkIfDisplayIsEmpty() === true) {
-            projectEmptyNotice.classList.add("active")
+       if (checkTaskDisplay_IsEmpty() === true) {
+            notices_ProjectEmpty.classList.add("active")
        }
     }
 
-    function refreshProjectsList() {
+    function clearProjectList() {
         const allProjectItems = document.querySelectorAll(".user-created-projects .menu") 
         allProjectItems.forEach((project, index) => {
             if (index === 0) {
@@ -689,7 +658,7 @@ const domManipulator = (function() {
     }
 
     // fn to switch between projects
-    function displaySelectedProject() {
+    function displayTasks_ProjectX() {
         const activeProject = getActiveProject()
         const allTaskDivs = content.children
         console.log(`${activeProject} is active`)
@@ -704,40 +673,38 @@ const domManipulator = (function() {
 
     function getActiveProject() {
         const allProjectItems = document.querySelectorAll(".user-created-projects .menu") 
-        for (const item of allProjectItems) {
-            if (item.classList.contains("active")) { return item.textContent
+        for (const item of allProjectItems) { 
+            console.log(item)
+            if (item.classList.contains("active")) { 
+                return item.textContent
             }
         }
     }
 
+    function displayProjectHeader(target) {
+        projectHeader.innerHTML = target.innerHTML;
+    }
+
+    function clearProjectHeader() {
+        projectHeader.innerHTML = ""
+    }
 
     // task pubSubs
     pubSub.on("taskListChanged", renderFullTasks)
     pubSub.on("toggleComplete", toDoManager.autoDeleteCompletedTasks)
     pubSub.on("checklistChanged", renderChecklistItems)
-    
-    // pubSub.on("detailsChanged", refreshDetails)
-    // pubSub.on("descriptionChanged", refreshDescription)
-    
 
     // project pubsubs
-    pubSub.on("projectListChanged", renderMyProjectsList)
+    pubSub.on("projectListChanged", renderNav_MyProjects)
     pubSub.on("projectListChanged", setFirstRenderDefault)
     pubSub.on("projectDeleted", toDoManager.moveProjectsToAll)
    
 
     // Initial render
-    // renderTaskList(allTasks);
-    // renderChecklistItems(allTasks)
-    // document.addEventListener("DOMContentLoaded", () => {
-    //     renderFullTasks(allTasks)
-    //     setFirstRenderDefault()
-    //     renderMyProjectsList()
-    // })
 
     renderFullTasks(allTasks)
     setFirstRenderDefault()
-    renderMyProjectsList()
+    renderNav_MyProjects()
 
     return{ renderTaskList }
 })();
@@ -745,7 +712,7 @@ const domManipulator = (function() {
 const displayModals = (function() {
 
     // main page DOM elements
-    const addTaskBtn = document.querySelector(".title > button")
+    const addTaskBtn = document.querySelector(".project-header > button")
     const addProjectBtn = document.querySelector("button.add-project-btn")
     const body = document.querySelector("body")
     
