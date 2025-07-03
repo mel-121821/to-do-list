@@ -55,6 +55,13 @@ Image: northern-lights.jpg
 Artist: Vincent Guth
 Url:https://unsplash.com/photos/silhouette-of-trees-near-aurora-borealis-at-night-62V7ntlKgL8
 
+
+Theme 2: Blue Wave
+
+Image: blue-wave.jpg
+Artist: DrSJS
+Url: https://pixabay.com/illustrations/abstract-lines-curve-wave-design-267056/
+
 _______________________________________________
 
 
@@ -195,3 +202,6 @@ https://www.geeksforgeeks.org/how-to-remove-a-key-from-javascript-object/
 
 Add a key:value pair to an existing obj (Obj.assign):
 https://stackoverflow.com/questions/1168807/how-can-i-add-a-key-value-pair-to-a-javascript-object
+
+How to remove a border from dropdowns.
+https://stackoverflow.com/questions/14639638/how-to-remove-border-of-drop-down-list-css
