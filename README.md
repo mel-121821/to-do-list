@@ -70,6 +70,7 @@ Tools:
 
 Pull color palette from an image: https://coolors.co/image-picker
 
+Color filter for SVGs: https://codepen.io/sosuke/pen/Pjoqqp
 
 VS Keyboard Shortcuts: Use Ctrl + h to replace multiple words at once https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf
 
