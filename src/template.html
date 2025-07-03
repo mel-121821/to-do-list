@@ -20,7 +20,7 @@
                 <div class="details">
                     <div class="project">
                         <label for="project">Project type:</label>
-                        <div class="wrapper">
+                        <div class="select-wrapper">
                             <select name="project" id="project">
                                 <!-- javascript -->
                             </select>
@@ -32,7 +32,7 @@
                     </div>
                     <div class="priority">
                         <label for="priority">Priority:</label>
-                        <div class="wrapper">
+                        <div class="select-wrapper">
                             <select name="priority" id="priority">
                                 <!-- javascript -->
                             </select>
@@ -79,20 +79,22 @@
                 <legend>Warning!</legend>
                 <button class="close-modal">x</button>
             </div>
-            <div>
-                <p>Are you sure you want to delete this project?</p>
-                <p>Any projects under this category will be moved to your "All Projects" folder and you will be returned to the "All Projects" view.</p>
+            <div class="wrapper-div">
+                <div>
+                    <p>Are you sure you want to delete this project?</p>
+                    <p>Any projects under this category will be moved to your "All Projects" folder and you will be returned to the "All Projects" view.</p>
+                </div>
+                <fieldset>
+                    <div>
+                        <input type="radio" id="confirm-delete" name="delete-project" value="true">
+                        <label for="confirm-delete">Yes, I wish to delete this project.</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="cancel-delete" name="delete-project" value="false" checked>
+                        <label for="cancel-delete">No, return to home screen</label>
+                    </div>
+                </fieldset>
             </div>
-            <fieldset>
-                <div>
-                    <input type="radio" id="confirm-delete" name="delete-project" value="true">
-                    <label for="confirm-delete">Yes, I wish to delete this project.</label>
-                </div>
-                <div>
-                    <input type="radio" id="cancel-delete" name="delete-project" value="false" checked>
-                    <label for="cancel-delete">No, return to home screen</label>
-                </div>
-            </fieldset>
             <div class="save-div">
                 <button class="confirm">Confirm</button>
                 <button class="cancel">Cancel</button>
@@ -100,11 +102,14 @@
         </form>
     </dialog>
     <div class="header">
-        <div class="logo">
-            <img src="../icon/home.svg" alt="home icon">
-        </div>
         <div class="title">
+            <div class="logo">
+                <img src="../icon/double-check.svg" alt="home icon">
+            </div>
             <h1>To-do List</h1>
+        </div>
+        <div class="project-header">
+            <h2></h2>
             <button>
                 <span>+</span>Add Task
             </button>
@@ -136,7 +141,7 @@
         <nav class="dynamic-menu">
            <div class="my-projects">
                 <h2>Your Projects</h2>
-               <button class="add-project">+</button>
+               <button class="add-project-btn">+</button>
            </div>
            <div class="user-created-projects">
                <ol>
@@ -148,9 +153,11 @@
         </nav>
         <div class="themes">
             <h3>Themes:</h3>
-            <button>Theme 1</button>
-            <button>Theme 2</button>
-            <button>Theme 3</button>
+            <div>
+                <button class="theme1">1</button>
+                <button class="theme2">2</button>
+                <button class="theme3">3</button>
+            </div>
         </div>
    </div>
    <div id="content-wrapper">
@@ -162,27 +169,23 @@
                 <p>Congratulations! You're all caught up for today.</p>
             </div>
             <div class="project-empty">
-                <p>Oops! It looks like this list is empty. Click the Add Task button to add a new task to this project.</p>
+                <p>Oops! It looks like this list is empty. Click the Add Task button to add a task to this project.</p>
             </div>
         </div>
         <div id="content">
             <!-- JS generated -->
         </div>
     </div>
-   <div class="right-sidebar">
-       <!-- <div class="calendar-display">
-            <div>Calendar Placeholder</div>
-           calendar img
-       </div> -->
-    </div>
     <div class="footer">
-        <div class="footer-text">
-            Created by M.e.l.
-        </div>
-        <div class="footer-icon">
-            <a href="https://github.com/mel-121821/to-do-list/" target="_blank">
-                <img class="svg" src="../icon/github.svg" alt="Github icon"/>
-            </a>
+        <div class="footer-wrapper">
+            <div class="footer-text">
+                Created by M.e.l.
+            </div>
+            <div class="footer-icon">
+                <a href="https://github.com/mel-121821/to-do-list/" target="_blank">
+                    <img class="svg" src="../icon/github.svg" alt="Github icon"/>
+                </a>
+            </div>
         </div>
     </div>
 </body>
