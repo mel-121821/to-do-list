@@ -238,7 +238,7 @@ const toDoManager = (function() {
         pubSub.emit("checklistChanged", masterTaskList)
     }
 
-    function deleteUserChecklistItem() {
+    function deleteChecklistItem() {
         const indexOfTaskDiv = this.closest(".task-div").dataset.index;
         const checklistItem = this.parentNode.children.item(1).innerHTML
       
@@ -298,7 +298,6 @@ const toDoManager = (function() {
 
     pubSub.on("taskListChanged", storage.storeTasks)
     pubSub.on("checklistChanged", storage.storeTasks)
-    pubSub.on("descriptionChanged", storage.storeTasks)
     pubSub.on("themeChanged", storage.storeThemes)
     
     // storage.testLocalStorage()
@@ -329,7 +328,7 @@ const toDoManager = (function() {
         getFormattedDate,
         completeChecklistItem,
         autoDeleteCompletedTasks,
-        deleteUserChecklistItem,
+        deleteChecklistItem,
         addChecklistItem,
         moveProjectsToAll,
         setTheme,
