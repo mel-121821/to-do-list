@@ -125,26 +125,12 @@ const toDoManager = (function() {
         }
         console.log(masterTaskList)
         pubSub.emit("taskListChanged", masterTaskList)
-
-        // if (taskDiv.classList.contains("expanded")) {
-        //     collapseAllTasks()
-        // } else {
-        //     collapseAllTasks()
-        //     taskDiv.classList.add("expanded")
-        // }
     }
 
     function collapseAllTasks() {
         for (const task of masterTaskList) {
             task.isExpanded = false;
         }
-
-        // const allTaskDivs = content.children
-        // for (const div of allTaskDivs) {
-        //     if (div.classList.contains("expanded")) {
-        //         div.classList.remove("expanded")
-        //     }
-        // }
     }
 
 
@@ -282,8 +268,6 @@ const toDoManager = (function() {
     function setTheme(index) {
         removeCurrentTheme();
         themes[index].active = true;
-        console.log(toDoManager.getThemes())
-        console.log(themes)
         pubSub.emit("themeChanged", themes)
     }
 
