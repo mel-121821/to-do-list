@@ -109,7 +109,7 @@ html {
 body {
     display: grid;
     grid-template-rows: 100px minmax(calc(100vh - 180px), 1fr) 80px;
-    grid-template-columns: 300px 1fr 250px;
+    grid-template-columns: 300px 1fr 50px;
     /* width: minmax(600px, 100vw) */
 }
 
@@ -187,6 +187,7 @@ body.northern-lights {
 .northern-lights .left-sidebar button.active {
     background-color: var(--t1-lavender);
     color: black;
+    box-shadow: 2px 2px 4px 0px black;
 }
 
 .northern-lights dialog {
@@ -225,7 +226,7 @@ body.northern-lights {
 
 .northern-lights .bg-img {
     background-image: url('../img/northern-lights.jpg');
-    opacity: 0.8;
+    opacity: 0.6;
 }
 
 .northern-lights .complete-view.active,
@@ -238,31 +239,21 @@ body.northern-lights {
 }
 
 .northern-lights .task-div {
-    /* purple/black colour scheme */
-    /* border: 3px solid var(--t1-eggplant-pale);
-    background: linear-gradient(to bottom right, var(--t1-eerie-black), var(--t1-eggplant-dark), var(--t1-eerie-black)); */
-
     /* dark purple colour scheme */
-    background: linear-gradient(to bottom right, var(--t1-eggplant-light), var(--t1-eggplant));
-    box-shadow: 3px 3px 6px 0px black
+    background: linear-gradient(to bottom right, var(--t1-eggplant), var(--t1-eggplant));
+    box-shadow: 3px 3px 6px 0px black;
 
+    /* purple colour scheme */
+    /* background: linear-gradient(to bottom right, var(--t1-eggplant-light), var(--t1-eggplant));
+    box-shadow: 3px 3px 6px 0px black */
+
+    /* green colour scheme */
     /* background: linear-gradient(to bottom right, var(--t1-jungle-green), var(--t1-viridian));
     box-shadow: 3px 3px 6px 0px black */
 
-    /* light purple colour scheme */
-    /* box-shadow: 3px 3px 6px 0px black;
-   background-color: var(--t1-eggplant-pale); */
-
-    /* green colour scheme */
-    /* border: 3px solid var(--t1-jungle-green);
-    background: linear-gradient(to bottom right, var(--t1-eerie-black), var(--t1-viridian), var(--t1-eerie-black)); */
-
-    /* scrap */
-    /* background: linear-gradient(to bottom right, var(--t1-viridian), var(--t1-jungle-green)); */
-
-    /* background: linear-gradient(to bottom right, var(--t1-jungle-green), var(--t1-celadon)); */
-
-    /* background: linear-gradient(to bottom right, var(--t1-eggplant-light), var(--t1-lavender)); */
+    /* dark green colour scheme */
+    /* background: linear-gradient(to bottom right, var(--t1-viridian), var(--t1-viridian-dark));
+    box-shadow: 3px 3px 6px 0px black; */
 }
 
 .northern-lights .task-div input[type="checkbox"] {
@@ -353,14 +344,13 @@ body.northern-lights {
     background-color: black; 
 }
 
-.northern-lights .footer {
+.northern-lights .footer-wrapper {
     background-color: black;
 }
 
 .northern-lights .footer-text {
     color: var(--t1-pale-pink);
 }
-
 
 
 /*__________Theme 2 - Blue Wave__________*/
@@ -400,8 +390,28 @@ body.blue-wave {
     color: black;
 }
 
+.blue-wave .project-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.blue-wave .project-header > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.blue-wave .project-header h2 {
+    margin-bottom: 0px;
+}
+
 .blue-wave .project-header button {
-    background-color: var(--t2-non-photo-blue);
+    margin-bottom: 0px;
+}
+
+.blue-wave .project-header button {
+    background-color: var(--t2-non-photo-blue-pale);
     color: black;
     box-shadow: 2px 2px 4px 0px black;
 }
@@ -618,10 +628,8 @@ body.blue-wave {
 /*__________Base Styles__________*/
 
 input[type="text"] {
-    border-radius: 6px;
     font-size: 1rem;
     outline: 0;
-    padding: 3px;
 }
 
 input[type="text"],
@@ -629,25 +637,28 @@ textarea {
     border: none;
     border-radius: 6px;
     font-family: Arial, Helvetica, sans-serif;
+    padding: 4px 8px;
 }
 
 select,
 input[type="date"] {
     border: 0px solid black;
     appearance: none;
-    font-size: 0.9rem;
+    font-size: 1rem;
     border-radius: 5px;
     cursor: pointer;
+    padding: 4px 8px;
 }
 
 select {
-   padding: 2px 5px 2px 5px;
+   /* padding: 2px 5px 2px 5px; */
    width: 100%;
 }
 
 input[type="date"] {
     font-family: inherit;
-    padding: 1px 5px 0px 5px;
+    /* padding: 1px 5px 0px 5px; */
+    padding: 3px 8px 2px 8px;
 }
 
 input[type="text"]:focus,
@@ -674,7 +685,7 @@ textarea {
     padding: 7px;
     border-radius: 6px;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 button {
@@ -729,11 +740,11 @@ button:hover {
 }
 
 .project-header {
-    grid-area: 1 / 2 / 2 / 4;
+    grid-area: 1 / 2 / 2 / 3;
     display: flex;
     align-items: stretch;
     justify-content: center;
-    padding: 0px 20%;
+    padding: 0px 15%;
 }
 
 .project-header div {
@@ -790,6 +801,10 @@ button:hover {
 .left-sidebar button {
     padding: 3px 15px 3px 15px;
 }
+
+/* .left-sidebar button.active {
+    font-weight: 700;
+} */
 
 .left-sidebar nav:first-child,
 .left-sidebar nav:nth-child(2),
@@ -989,24 +1004,32 @@ dialog label {
     padding: 5px;
 }
 
-.add-task .checklist {
+.add-task .checklist-items {
     padding: 5px 5px 0px 5px;
 }
 
-.add-task .add-checklist-items {
+.add-task .checklist-inputs {
     grid-area: 4 / 1 / 5 / 2;
     display: flex;
     flex-direction: column;
 }
 
-.add-task .checklist input[type="text"] {
-    font-size: 0.8rem;
-    margin-top: 10px;
+.add-task .checklist-items label {
+    margin-bottom: 15px;
 }
 
-.add-task .checklist button {
-    margin-top: 5px;
-    padding: 1px 7px;
+.add-task .checklist-inputs {
+    margin-top: 3px;
+}
+
+.add-task .checklist-inputs input[type="text"] {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.add-task .checklist-items button {
+    margin-top: 4px;
+    padding: 3px 10px;
 }
 
 .add-task .save-div {
@@ -1161,16 +1184,16 @@ dialog label {
 /*__________Main Content__________*/
 
 #bg-img-wrapper {
-    grid-area: 2 / 2 / 4 / 4;
+    grid-area: 2 / 2 / 4 / 3;
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
-    background: blue;
 }
 
 .bg-img {
     width: 100%;
-    height: 100vh;
+    min-height: 100vh - 100px;
+    max-height: 100vh;
     grid-row: 1;
     grid-column: 1;
     position: sticky;
@@ -1244,7 +1267,7 @@ change to actual content (task-divs)
     flex-direction: column;
     align-items: center;
     padding: 20px 10%;
-    margin-bottom: 25px;
+    margin-bottom: 45px;
 }
 
 .task-div {
@@ -1339,7 +1362,7 @@ change to actual content (task-divs)
 
 .task-div label {
     /* all individual details div labels */
-   font-size: 0.9rem;
+   font-size: 1rem;
    font-weight: 700;
    margin-left: 9px;
    margin-bottom: 5px;
@@ -1353,7 +1376,7 @@ change to actual content (task-divs)
 .task-div .details input[type="date"] {
     -webkit-appearance: none;
     appearance: none;
-    font-size: 0.9rem;
+    font-size: 1rem;
     border-radius: 6px;
     cursor: pointer;
 }
@@ -1379,7 +1402,7 @@ change to actual content (task-divs)
 .task-div .details div:nth-child(3) .select-wrapper::after {
     /* Project/Priority div */
     font-size: 1.1rem;
-    top: 5px;
+    top: 3px;
     right: 12px;
 }
 
@@ -1413,7 +1436,7 @@ change to actual content (task-divs)
     padding: 7px;
     border-radius: 6px;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 0.9rem;
+    font-size: 1rem;
 }
 
 
@@ -1503,7 +1526,7 @@ change to actual content (task-divs)
     margin-top: 5px;
     margin-left: 10px;
     display: flex;
-    font-size: 0.9rem;
+    font-size: 1rem;
     position: relative;
 }
 
@@ -1536,33 +1559,37 @@ change to actual content (task-divs)
 /*__________Footer__________*/
 
 .footer {
-    grid-area: 3 / 3 / 4 / 4;
+    grid-area: 3 / 2 / 4 / 3;
     display: flex;
     justify-content: flex-end;
-    padding-top: 30px;
+    align-items: flex-end;
+    /* padding-top: 30px; */
 } 
 
 .footer-wrapper {
+    height: 60px;
     display: flex;
     justify-content: flex-end; 
-    align-items: center;
+    align-items: flex-end;
     position: relative;
     border-radius: 100% 0% 0% 0%;
-    padding: 10px 10px 10px 40px;
+    padding: 10px 0px 5px 40px;
 }
 
 .footer-text {
     font-size: 0.9rem;
-    margin-top: 10px;
+    margin-bottom: 10px;
 }
+
 
 .footer-icon > a {
     display: flex;
+    /* align-items: flex-end; */
 }
 
 .footer-icon > a > .svg{
-    height: 35px;
-    margin-left: 8px;
+    height: 40px;
+    margin-left: 10px;
 }
 
 .svg:hover {
@@ -1580,13 +1607,13 @@ change to actual content (task-divs)
     body {
         display: grid;
         grid-template-rows: 100px minmax(calc(100vh - 180px), 1fr) 80px;
-        grid-template-columns: 250px 1fr 250px;
+        grid-template-columns: 250px 1fr 50px;
         min-width: 1050px;
     }
 
     .header {
         display: grid;
-        grid-template-columns: 250px 1fr;
+        grid-template-columns: 250px 1fr 50px;
     }
 
     .title {
@@ -1605,17 +1632,13 @@ change to actual content (task-divs)
         padding: 0px 15px;
     }
 
-    .bg-container {
-        grid-area: 2 / 2 / 4 / 4;
+    .bg-img-wrapper {
+        grid-area: 2 / 2 / 4 / 3;
     }
 
     .right-sidebar {
-        grid-area: 3 / 1 / 4 / 4; 
-        display: none;
-    }
-
-    .calendar-display {
-        display: none;
+        grid-area: 2 / 3 / 3 / 4; 
+        /* display: none; */
     }
 }
 
