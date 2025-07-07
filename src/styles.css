@@ -59,13 +59,7 @@ table {
 
 
 :root {
---softened-black: rgba(0, 0, 0, 0.898);
---translucent-white: rgb(255, 255, 255, 0.8);
-
 /* HSL from Northern Lights Bg */
---t1-jungle-green: hsla(150, 32%, 49%, 1);
---t1-eerie-black: hsla(144, 24%, 8%, 1);
---t1-gray: rgb(193, 204, 204);
 --t1-light-gray: rgb(230, 241, 241);
 --t1-eggplant-dark: rgb(51, 43, 53);
 --t1-eggplant: hsla(286, 10%, 34%, 1);
@@ -73,36 +67,23 @@ table {
 --t1-eggplant-pale:rgb(150, 128, 158);
 --t1-lavender: rgb(202, 202, 202);
 --t1-pale-pink: rgb(245, 245, 245);
---t1-viridian: hsla(156, 34%, 36%, 1);
---t1-viridian-dark: rgb(26, 52, 42);
---t1-celadon: hsla(134, 61%, 77%, 1);
 
 /* HSL from Blue Wave Bg */
---t2-non-photo-blue-black: rgb(62, 98, 112);
 --t2-non-photo-blue-dark: rgb(102, 170, 197);
 --t2-non-photo-blue: hsla(197, 75%, 81%, 1);
 --t2-non-photo-blue-pale: rgb(208, 242, 255);
 --t2-picton-blue: hsla(202, 80%, 58%, 1);
 --t2-picton-blue-dark: rgb(26, 105, 150);
---sample:#8ecde6;
 --t2-azure-web: hsla(180, 100%, 97%, 1);
---t2-celeste: hsla(180, 100%, 89%, 1);
---t2-maya-blue: hsla(202, 88%, 67%, 1);
 
 /* HSL from Work Station Bg */
 --t3-davys-gray: hsla(60, 1%, 30%, 1);
---t3-green-gray: hsla(167, 17%, 42%, 1);
 --t3-cambridge-blue-dark: rgb(43, 112, 92);
 --t3-cambridge-blue: hsla(163, 27%, 56%, 1);
---t3-cambridge-blue-med:  rgb(165, 219, 203);
 --t3-cambridge-blue-light: rgb(211, 232, 226);
+--t3-cambridge-blue-pale: rgb(228, 244, 239);
 --t3-blue-gray-light: rgb(223, 246, 242);
---t3-blue-gray: rgb(197, 237, 228);
---t3-ash-gray: hsla(169, 13%, 68%, 1);
 --t3-ash-gray-light: hsla(165, 21%, 82%, 1);
---t3-antiflash-white: hsla(180, 3%, 92%, 1);
---t3-silver: hsla(180, 2%, 78%, 1);
---sample2: #4d4d4c;
 }
 
 
@@ -152,11 +133,6 @@ body.northern-lights {
     filter: invert(94%) sepia(0%) saturate(0%) hue-rotate(179deg) brightness(88%) contrast(91%);
 }
 
-/* .northern-lights button {
-    border: 1px solid var(--t1-eerie-black);
-    background-color: var(--t1-lavender);
-} */
-
 .northern-lights .title h1 {
     color: var(--t1-pale-pink);  
 }
@@ -187,7 +163,7 @@ body.northern-lights {
 .northern-lights .left-sidebar button {
     background-color: var(--t1-eggplant);
     color: var(--t1-pale-pink);
-    box-shadow: 2px 2px 4px 0px var(--t1-eerie-black);
+    box-shadow: 2px 2px 4px 0px black;
 }
 
 .northern-lights .left-sidebar nav:first-child,
@@ -217,8 +193,8 @@ body.northern-lights {
 }
 
 .northern-lights dialog::backdrop {
-    background-color: var(--t1-eerie-black);
-    opacity: 0.5;
+    background-color: black;
+    opacity: 0.3;
 }
 
 .northern-lights dialog button {
@@ -257,18 +233,6 @@ body.northern-lights {
     /* dark purple colour scheme */
     background: linear-gradient(to bottom right, var(--t1-eggplant), var(--t1-eggplant));
     box-shadow: 3px 3px 6px 0px black;
-
-    /* purple colour scheme */
-    /* background: linear-gradient(to bottom right, var(--t1-eggplant-light), var(--t1-eggplant));
-    box-shadow: 3px 3px 6px 0px black */
-
-    /* green colour scheme */
-    /* background: linear-gradient(to bottom right, var(--t1-jungle-green), var(--t1-viridian));
-    box-shadow: 3px 3px 6px 0px black */
-
-    /* dark green colour scheme */
-    /* background: linear-gradient(to bottom right, var(--t1-viridian), var(--t1-viridian-dark));
-    box-shadow: 3px 3px 6px 0px black; */
 }
 
 .northern-lights .task-div input[type="checkbox"] {
@@ -776,7 +740,7 @@ body.work-station {
 }
 
 .work-station #delete-warning .wrapper-div {
-    background-color: var(--t3-antiflash-white);
+    background-color: white;
     box-shadow: 1px 1px 3px 0px var(--t3-davys-gray);
 }
 
@@ -798,7 +762,7 @@ body.work-station {
     /* background-size: 104% 100%; */
     /* background-size: cover; */
     background-repeat: no-repeat;
-    opacity: 0.2;
+    opacity: 0.3;
     border-radius: 15px;
 }
 
@@ -847,7 +811,7 @@ body.work-station {
 
 .work-station .task-div.expanded div:nth-child(6) {
     /* description div (expanded)*/
-   background-color: var(--t3-blue-gray-light);
+   background-color: var(--t3-cambridge-blue-pale);
    box-shadow: 1px 1px 3px 0px var(--t3-davys-gray)
 }
 
@@ -862,7 +826,7 @@ body.work-station {
 
 .work-station .task-div.expanded .user-checklist-div {
     /* Outer div */
-    background-color: var(--t3-blue-gray-light);
+    background-color: var(--t3-cambridge-blue-pale);
     box-shadow: 1px 1px 3px 0px var(--t3-davys-gray);
 }
 
@@ -914,7 +878,7 @@ body.work-station {
 } */
 
 .work-station .footer-wrapper {
-    background-color: var(--t3-cambridge-blue-light);
+    background-color: var(--t3-cambridge-blue-pale);
 }
 
 .work-station .footer-text {
@@ -1368,7 +1332,7 @@ dialog label {
     /* grid-template-rows: 30px 1fr 40px; */
     grid-template-columns: 1fr 200px;
     row-gap: 18px;
-    color: var(--t1-eerie-black);
+    color: black;
 }
 
 #delete-warning .modal-title {
@@ -1806,7 +1770,6 @@ change to actual content (task-divs)
 }
 
 .task-div li.item-complete {
-    /* background-color: var(--t1-light-gray); */
     text-decoration: line-through;
     position: relative;
 }
