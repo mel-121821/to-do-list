@@ -62,7 +62,7 @@ table {
 --softened-black: rgba(0, 0, 0, 0.898);
 --translucent-white: rgb(255, 255, 255, 0.8);
 
-/* CSS HSL from Northern Lights Bg */
+/* HSL from Northern Lights Bg */
 --t1-jungle-green: hsla(150, 32%, 49%, 1);
 --t1-eerie-black: hsla(144, 24%, 8%, 1);
 --t1-gray: rgb(193, 204, 204);
@@ -84,10 +84,25 @@ table {
 --t2-non-photo-blue-pale: rgb(208, 242, 255);
 --t2-picton-blue: hsla(202, 80%, 58%, 1);
 --t2-picton-blue-dark: rgb(26, 105, 150);
---sample:#3e6270;
+--sample:#8ecde6;
 --t2-azure-web: hsla(180, 100%, 97%, 1);
 --t2-celeste: hsla(180, 100%, 89%, 1);
 --t2-maya-blue: hsla(202, 88%, 67%, 1);
+
+/* HSL from Work Station Bg */
+--t3-davys-gray: hsla(60, 1%, 30%, 1);
+--t3-green-gray: hsla(167, 17%, 42%, 1);
+--t3-cambridge-blue-dark: rgb(43, 112, 92);
+--t3-cambridge-blue: hsla(163, 27%, 56%, 1);
+--t3-cambridge-blue-med:  rgb(165, 219, 203);
+--t3-cambridge-blue-light: rgb(211, 232, 226);
+--t3-blue-gray-light: rgb(223, 246, 242);
+--t3-blue-gray: rgb(197, 237, 228);
+--t3-ash-gray: hsla(169, 13%, 68%, 1);
+--t3-ash-gray-light: hsla(165, 21%, 82%, 1);
+--t3-antiflash-white: hsla(180, 3%, 92%, 1);
+--t3-silver: hsla(180, 2%, 78%, 1);
+--sample2: #4d4d4c;
 }
 
 
@@ -619,7 +634,290 @@ body.blue-wave {
     background-color: white;
 }
 
+.blue-wave .footer-icon .icon {
+
+    /* light blue */
+    /* filter: invert(93%) sepia(45%) saturate(4315%) hue-rotate(169deg) brightness(100%) contrast(91%); */
+
+    /* med - light */
+    filter: invert(83%) sepia(6%) saturate(2628%) hue-rotate(162deg) brightness(99%) contrast(82%);
+
+    /* med - in between */
+    /* filter: invert(82%) sepia(5%) saturate(3336%) hue-rotate(165deg) brightness(93%) contrast(86%); */
+
+    /* med blue */
+    /* filter: invert(60%) sepia(42%) saturate(372%) hue-rotate(151deg) brightness(96%) contrast(96%); */
+}
+
 .blue-wave .footer-text {
+    color: black;
+}
+
+
+/* __________Theme 3__________ */
+
+body.work-station {
+
+    /* dark */
+    /* background-color: var(--t2-picton-blue-dark); */
+
+    /* light */
+    background-color: white;
+
+}
+
+.work-station input[type="text"],
+.work-station input[type="date"],
+.work-station select,
+.work-station textarea {
+    background-color: white;
+    box-shadow: 1px 1px 3px 0px black;
+}
+
+.work-station .title h1 {
+    color: black;
+}
+
+/* set to both blue wave and work-station */
+.work-station .project-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.work-station .project-header > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.work-station .project-header h2 {
+    margin-bottom: 0px;
+}
+
+.work-station .project-header button {
+    margin-bottom: 0px;
+}
+
+/* ________________________________ */
+
+
+.work-station .project-header button {
+    background-color: var(--t3-cambridge-blue-dark);
+    color: white;
+    box-shadow: 2px 2px 4px 0px var(--t3-davys-gray)
+}
+
+.work-station .date-display p {
+    color: black;
+}
+
+.work-station .left-sidebar {
+    /* dark */
+    /* background-color: var(--t2-picton-blue-dark) */
+
+    /* light */
+    background-color: white;
+}
+
+.work-station .left-sidebar nav:first-child,
+.work-station .left-sidebar nav:nth-child(2),
+.work-station .left-sidebar .themes {
+    /* static project nav section
+    and user created project section */
+    background-color: var(--t3-cambridge-blue-light);
+    color: black;
+    box-shadow: 1px 1px 3px 0px var(--t3-davys-gray)
+}
+
+.work-station .left-sidebar button {
+    background-color: white;
+    color: black;
+    box-shadow: 1px 1px 3px 0px var(--t3-davys-gray);
+}
+
+.work-station .left-sidebar button.active {
+    background-color: var(--t3-cambridge-blue-dark);
+    color: white;
+    box-shadow: 2px 2px 4px 0px black;
+}
+
+.work-station .left-sidebar .icon {
+    filter: invert(27%) sepia(6%) saturate(91%) hue-rotate(21deg) brightness(95%) contrast(83%);
+}
+
+.work-station dialog {
+    background-color: var(--t3-cambridge-blue-light); 
+}
+
+/* .work-station dialog input[type="text"],
+.work-station dialog input[type="date"],
+.work-station dialog select,
+.work-station dialog textarea {
+    background-color: white;
+    box-shadow: 1px 1px 3px 0px black;
+} */
+
+.work-station input[type="text"]:focus,
+.work-station input[type="date"]:focus,
+.work-station textarea:focus,
+.work-station select:focus {
+    box-shadow: 2px 2px 4px 0px black;
+}
+
+.work-station dialog::backdrop {
+    background-color: black;
+    opacity: 0.5;
+}
+
+.work-station dialog button {
+    background-color: var(--t3-cambridge-blue-dark);
+    color: white;
+}
+
+.work-station #delete-warning .wrapper-div {
+    background-color: var(--t3-antiflash-white);
+    box-shadow: 1px 1px 3px 0px var(--t3-davys-gray);
+}
+
+.work-station #delete-warning input[type="radio"] {
+    border: 2px solid var(--t3-cambridge-blue-dark);
+}
+
+.work-station #delete-warning input[type="radio"]::before {
+    background-color: var(--t3-cambridge-blue-dark);
+}
+
+.work-station #bg-img-wrapper{
+    background-color: white;
+    border-radius: 15px;
+}
+
+.work-station .bg-img {
+    background-image: url('../img/work-station-resized-2.jpg');
+    /* background-size: 104% 100%; */
+    /* background-size: cover; */
+    background-repeat: no-repeat;
+    opacity: 0.2;
+    border-radius: 15px;
+}
+
+.work-station .complete-view.active,
+.work-station .tasks-done.active,
+.work-station .project-empty.active {
+    background-color: white;
+    border: 10px solid var(--t3-cambridge-blue);
+    color: black;
+}
+
+.work-station .task-div {
+    /* dark purple colour scheme */
+    /* background: linear-gradient(to bottom right, white, var(--t2-non-photo-blue)); */
+
+    background-color: var(--t3-ash-gray-light);
+    box-shadow: 3px 3px 4px 0px var(--t3-davys-gray);
+}
+
+.work-station .task-div input[type="checkbox"] {
+    border: 0px solid black;
+    /* color: black; */
+    background-color: white;
+    box-shadow: 1px 1px 3px 0px var(--t3-davys-gray);
+}
+
+.work-station .task-div input[type="checkbox"]::before {
+    color: var(--t3-davys-gray)
+}
+
+.work-station .task-div h3 {
+    color: black;
+}
+
+.work-station .task-div label {
+    /* all individual details div labels */
+   color: black;
+}
+
+.work-station .task-div .details select,
+.work-station .task-div .details input[type="date"] {
+    /* border: 3px solid var(--t2-picton-blue); */
+    background-color: white;
+    box-shadow: 1px 1px 3px 0px var(--t3-davys-gray)
+}
+
+.work-station .task-div.expanded div:nth-child(6) {
+    /* description div (expanded)*/
+   background-color: var(--t3-blue-gray-light);
+   box-shadow: 1px 1px 3px 0px var(--t3-davys-gray)
+}
+
+.work-station .task-div.expanded div:nth-child(6) label {
+   color: black;
+}
+
+.work-station .task-div.expanded div:nth-child(6) textarea {
+   background-color: white;
+   box-shadow: 1px 1px 3px 0px var(--t3-cambridge-blue);
+}
+
+.work-station .task-div.expanded .user-checklist-div {
+    /* Outer div */
+    background-color: var(--t3-blue-gray-light);
+    box-shadow: 1px 1px 3px 0px var(--t3-davys-gray);
+}
+
+.work-station .task-div legend {
+    color: black;
+}
+
+.work-station .task-div li input[type="checkbox"] {
+    border: 1px solid var(--t3-davys-gray);
+    box-shadow: none;
+    background-color: var(--t3-blue-gray-light)
+}
+
+.work-station .task-div li {
+    /* list items */
+    background-color: white;
+    box-shadow: 1px 1px 3px 0px var(--t3-davys-gray);
+}
+
+.work-station .task-div li.item-complete::before {
+    background-color: var(--t3-ash-gray-light);
+    opacity: 0.2;
+}
+
+.work-station .task-div li label {
+    color: black;
+}
+
+.work-station .task-div li.item-complete label {
+    color: gray;
+}
+
+.work-station #content .user-checklist-div li > button {
+    border: 1px solid var(--t3-davys-gray);
+    background-color: var(--t3-blue-gray-light);
+    color: black;
+}
+
+.work-station .user-checklist-div > button {
+    /* Outer div > add-button */
+    /* border: 1px solid black; */
+    background-color: var(--t3-cambridge-blue-dark);
+    color: white;
+    box-shadow: 2px 2px 4px 0px black;
+}
+
+/* .work-station .right-sidebar {
+    background-color: var(--t2-picton-blue-dark);
+} */
+
+.work-station .footer-wrapper {
+    background-color: var(--t3-cambridge-blue-light);
+}
+
+.work-station .footer-text {
     color: black;
 }
 
@@ -1383,7 +1681,7 @@ change to actual content (task-divs)
 
 .task-div .details select{
     /* Project/Priority div */
-   padding: 2px 5px 2px 5px;
+   padding: 4px 5px 4px 5px;
    width: 100%;
 }
 
@@ -1402,7 +1700,7 @@ change to actual content (task-divs)
 .task-div .details div:nth-child(3) .select-wrapper::after {
     /* Project/Priority div */
     font-size: 1.1rem;
-    top: 3px;
+    top: 2px;
     right: 12px;
 }
 
@@ -1559,7 +1857,7 @@ change to actual content (task-divs)
 /*__________Footer__________*/
 
 .footer {
-    grid-area: 3 / 2 / 4 / 3;
+    grid-area: 3 / 2 / 4 / 4;
     display: flex;
     justify-content: flex-end;
     align-items: flex-end;
@@ -1567,13 +1865,13 @@ change to actual content (task-divs)
 } 
 
 .footer-wrapper {
-    height: 60px;
+    /* height: 60px; */
     display: flex;
     justify-content: flex-end; 
     align-items: flex-end;
     position: relative;
     border-radius: 100% 0% 0% 0%;
-    padding: 10px 0px 5px 40px;
+    padding: 20px 50px 5px 60px;
 }
 
 .footer-text {
