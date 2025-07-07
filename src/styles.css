@@ -1285,7 +1285,7 @@ dialog label {
 }
 
 .add-task .checklist-inputs input[type="text"] {
-    font-size: 0.9rem;
+    font-size: 1rem;
     margin-bottom: 8px;
 }
 
@@ -1802,7 +1802,7 @@ change to actual content (task-divs)
 .user-checklist-div > button {
     /* Outer div > add-button */
     align-self: center;
-    margin: 10px;
+    margin: 10px 0px 12px 0px;
     padding: 3px 20px 0px 20px;
 }
 
