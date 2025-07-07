@@ -635,7 +635,8 @@ const domManipulator = (function() {
 
         //event listener
         deleteProjectBtn.addEventListener("click", (e) => {
-            const projectIndex = e.target.parentNode.dataset.index
+            const projectIndex = e.target.closest("li").dataset.index
+            console.log(e.target.closest("li").dataset.index)
             console.log(projectIndex);
             displayModals.showModal_DeleteProject(projectIndex);
         });
@@ -732,7 +733,7 @@ const displayModals = (function() {
     const taskModal_DueDateSelector = document.querySelector("#due-date")
     const taskModal_PrioritySelector = document.querySelector("#priority")
     const taskModal_Description = document.querySelector("#description")
-    const taskModal_ChecklistDiv = document.querySelector(".add-checklist-items")
+    const taskModal_ChecklistDiv = document.querySelector(".checklist-inputs")
     const taskModal_AddChecklistItemBtn = document.querySelector(".add-item-btn")
     
 
@@ -1005,9 +1006,8 @@ const displayTheme = (function(){
     function setThemeBtn_Active() {
         const allThemes = toDoManager.getThemes()
         allThemes.forEach((theme, index) => {
-            console.log(index)
             if (theme.active === true) {
-                console.log(nav_ThemeBtns[index])
+                // console.log(nav_ThemeBtns[index]);
                 nav_ThemeBtns[index].classList.add("active")
             }
         })
