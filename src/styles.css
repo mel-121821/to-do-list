@@ -1664,7 +1664,7 @@ change to actual content (task-divs)
 .task-div .details div:nth-child(3) .select-wrapper::after {
     /* Project/Priority div */
     font-size: 1.1rem;
-    top: 2px;
+    top: 4px;
     right: 12px;
 }
 
