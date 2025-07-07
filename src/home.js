@@ -36,7 +36,7 @@ const toDoManager = (function() {
         {
             title: "My task",
             project: "All",
-            dueDate: "2025-07-05",
+            dueDate: new Date().toISOString().substring(0, 10),
             priority: "low",
             description: "My description",
             userChecklist: {
@@ -55,7 +55,7 @@ const toDoManager = (function() {
 
     let themes = [
         {
-            name:"northern-lights",
+            name:"work-station",
             active: true
         }, 
         {
@@ -63,7 +63,7 @@ const toDoManager = (function() {
             active: false
         }, 
         {
-            name: "theme-3",
+            name: "northern-lights",
             active: false
         }]
 
