@@ -51,9 +51,9 @@ Bg Images:
 
 Theme 1: Northern Lights
 
-Image: northern-lights.jpg
-Artist: Vincent Guth
-Url:https://unsplash.com/photos/silhouette-of-trees-near-aurora-borealis-at-night-62V7ntlKgL8
+Image: work-station.jpg
+Artist: Pixabay
+Url: https://www.pexels.com/photo/flat-lay-photography-of-macbook-pro-beside-white-spiral-notebook-and-green-mug-434337/
 
 
 Theme 2: Blue Wave
@@ -62,6 +62,11 @@ Image: blue-wave.jpg
 Artist: DrSJS
 Url: https://pixabay.com/illustrations/abstract-lines-curve-wave-design-267056/
 
+
+Theme 3: Northern Lights
+Image: northern-lights.jpg
+Artist: Vincent Guth
+Url:https://unsplash.com/photos/silhouette-of-trees-near-aurora-borealis-at-night-62V7ntlKgL8
 _______________________________________________
 
 
