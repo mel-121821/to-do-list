@@ -6,7 +6,6 @@ const pubSub = (function(){
         on: function (eventName, fn) {
             this.events[eventName] = this.events[eventName] || [];
             this.events[eventName].push(fn);
-            // console.log(this)
         },
         off: function(eventName, fn) {
             if (this.events[eventName]) {
