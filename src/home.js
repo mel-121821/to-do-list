@@ -17,7 +17,7 @@ const toDoManager = (function() {
         this.priority = priority;
         this.description = description;
         this.userChecklist = Object.fromEntries(userChecklist.map((x => [x, false])));
-        this.isComplete = isComplete
+        this.isComplete = isComplete;
     };
 
 
@@ -206,7 +206,7 @@ const toDoManager = (function() {
         const index = e.target.parentNode.className;
         const selectedTask = masterTaskList[index];
         const userInput = e.target.children.item(1).children.item(1).value;
-        Object.assign(selectedTask.userChecklist, {[userInput]: false})
+        Object.assign(selectedTask.userChecklist, {[userInput]: false});
         pubSub.emit("checklistChanged", masterTaskList);
     }
 
@@ -227,12 +227,12 @@ const toDoManager = (function() {
     function setTheme(index) {
         removeCurrentTheme();
         themes[index].active = true;
-        pubSub.emit("themeChanged", themes)
+        pubSub.emit("themeChanged", themes);
     }
 
     function removeCurrentTheme() {
         for (const theme of themes) {
-            theme.active = false 
+            theme.active = false; 
         }
     }
     
@@ -246,7 +246,7 @@ const toDoManager = (function() {
     // fn()s to get data
     const getMasterTaskList = () => masterTaskList;
     const getPriorities = () => priorities;
-    const getThemes = () => themes
+    const getThemes = () => themes;
 
     return {
         addTaskToMasterList,

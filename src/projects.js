@@ -6,7 +6,7 @@
  const projectManager = (function() {
 
     function Project(name){
-        this.name = name
+        this.name = name;
     }
 
     let projects = [{
@@ -46,7 +46,7 @@
         deleteProject,
         getProjects,
         getProjectsFromStorage
-    }
+    };
 })();
 
 export {projectManager};

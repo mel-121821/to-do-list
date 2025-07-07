@@ -22,10 +22,10 @@ const pubSub = (function(){
                 this.events[eventName].forEach(function(fn) {
                     fn(data);
                 });
-            }
+            };
         }
-    }
-    return events
-})()
+    };
+    return events;
+})();
 
-export{pubSub}
+export{pubSub};
