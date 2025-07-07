@@ -599,7 +599,6 @@ const domManipulator = (function() {
         //event listener
         deleteProjectBtn.addEventListener("click", (e) => {
             const projectIndex = e.target.closest("li").dataset.index;
-            console.log(projectIndex);
             displayModals.showModal_DeleteProject(projectIndex);
         });
         return deleteProjectBtn;
