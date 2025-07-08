@@ -129,6 +129,10 @@ body.northern-lights {
     box-shadow: 1px 1px 3px 0px var(--t1-eggplant-pale)
 }
 
+.northern-lights .select-wrapper::after {
+    background-color: var(--t1-lavender);
+}
+
 .northern-lights .icon {
     filter: invert(94%) sepia(0%) saturate(0%) hue-rotate(179deg) brightness(88%) contrast(91%);
 }
@@ -340,6 +344,10 @@ body.blue-wave {
 
 .blue-wave select,
 .blue-wave input[type="date"] {
+    background-color: var(--t2-azure-web);
+}
+
+.blue-wave .select-wrapper::after {
     background-color: var(--t2-azure-web);
 }
 
@@ -569,6 +577,10 @@ body.work-station {
 .work-station textarea {
     background-color: white;
     box-shadow: 1px 1px 3px 0px black;
+}
+
+.work-station .select-wrapper::after {
+    background-color: white;
 }
 
 .work-station .title h1 {
@@ -857,6 +869,7 @@ select:focus {
 .select-wrapper::after {
     content: "▼";
     position: absolute;
+    padding-left: 4px;
 }
 
 button {
@@ -964,7 +977,11 @@ button:hover {
 }
 
 .left-sidebar button {
-    padding: 3px 12px 3px 12px;
+    padding: 3px 12px;
+}
+
+.left-sidebar .themes button {
+    padding: 3px 15px;
 }
 
 .left-sidebar nav:first-child,
@@ -1760,8 +1777,9 @@ input#add-project {
     padding: 8px;
     }
 
-    .left-sidebar button {
-        padding: 3px 6px 3px 6px;
+    .left-sidebar nav:first-child button,
+    .left-sidebar nav:nth-child(2) button {
+        padding: 3px 6px;
     }
 
     .bg-img-wrapper {
