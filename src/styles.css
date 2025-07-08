@@ -116,7 +116,7 @@ body.northern-lights {
     background-color: black;
 }
 
-.northern-lights input[type="text"],
+.northern-lights input,
 .northern-lights textarea {
     background-color: var(--t1-pale-pink);
     box-shadow: 1px 1px 3px 0px var(--t1-eggplant-pale)
@@ -189,11 +189,15 @@ body.northern-lights {
     background-color: var(--t1-lavender); 
 }
 
-.northern-lights input[type="text"]:focus,
+.northern-lights input:focus,
 .northern-lights input[type="date"]:focus,
 .northern-lights textarea:focus,
 .northern-lights select:focus {
     box-shadow: 2px 2px 4px 0px var(--t1-eggplant);
+}
+
+.northern-lights dialog .select-wrapper::after {
+    background-color: var(--t1-pale-pink);
 }
 
 .northern-lights dialog::backdrop {
@@ -336,7 +340,7 @@ body.blue-wave {
     background-color: white;
 }
 
-.blue-wave input[type="text"],
+.blue-wave input,
 .blue-wave textarea {
     background-color: var(--t2-azure-web);
     box-shadow: 1px 1px 3px 0px black;
@@ -399,7 +403,7 @@ body.blue-wave {
     background-color: var(--t2-non-photo-blue-pale); 
 }
 
-.blue-wave dialog input[type="text"],
+.blue-wave dialog input,
 .blue-wave dialog input[type="date"],
 .blue-wave dialog select,
 .blue-wave dialog textarea {
@@ -407,7 +411,11 @@ body.blue-wave {
     box-shadow: 1px 1px 3px 0px black;
 }
 
-.blue-wave input[type="text"]:focus,
+.blue-wave dialog .select-wrapper::after {
+    background-color: white;
+}
+
+.blue-wave input:focus,
 .blue-wave input[type="date"]:focus,
 .blue-wave textarea:focus,
 .blue-wave select:focus {
@@ -571,7 +579,7 @@ body.work-station {
     background-color: white;
 }
 
-.work-station input[type="text"],
+.work-station input,
 .work-station input[type="date"],
 .work-station select,
 .work-station textarea {
@@ -631,7 +639,7 @@ body.work-station {
     background-color: var(--t3-cambridge-blue-light); 
 }
 
-.work-station input[type="text"]:focus,
+.work-station input:focus,
 .work-station input[type="date"]:focus,
 .work-station textarea:focus,
 .work-station select:focus {
@@ -815,7 +823,7 @@ body.work-station {
 
 /*__________Base Styles__________*/
 
-input[type="text"] {
+input {
     outline: 0;
 }
 
@@ -825,7 +833,7 @@ textarea {
     padding: 7px;
 }
 
-input[type="text"],
+input,
 textarea {
     border: none;
     border-radius: 6px;
@@ -853,7 +861,7 @@ input[type="date"] {
     padding: 3px 8px 2px 8px;
 }
 
-input[type="text"]:focus,
+input:focus,
 input[type="date"]:focus,
 textarea:focus,
 select:focus {
@@ -1204,7 +1212,7 @@ input#add-project {
     margin-top: 3px;
 }
 
-.add-task .checklist-inputs input[type="text"] {
+.add-task .checklist-inputs input {
     font-size: 1rem;
     margin-bottom: 8px;
 }
