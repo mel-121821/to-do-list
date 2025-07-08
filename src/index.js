@@ -773,6 +773,7 @@ const displayModals = (function() {
     function addChecklistItemInput() {
         const newChecklistInput = document.createElement("input");
         newChecklistInput.setAttribute("type", "text");
+        newChecklistInput.setAttribute("maxlength", 44);
         taskModal_ChecklistDiv.appendChild(newChecklistInput);
         taskModal.showModal();
     };
@@ -782,7 +783,7 @@ const displayModals = (function() {
     };
 
     const getModalChecklistItems = function() {
-        const items = document.querySelectorAll(".checklist input");
+        const items = document.querySelectorAll(".checklist-inputs input");
         const itemsArr = []; 
         for (const item of items) {
             if (item.value !== '') {
@@ -886,7 +887,8 @@ const displayModals = (function() {
 
         const input = document.createElement("input");
         input.setAttribute("type", "text");
-
+        input.setAttribute("maxlength", 44);
+        console.log(toDoManager.getMasterTaskList())
         inputDiv.appendChild(label);
         inputDiv.appendChild(input);
 
